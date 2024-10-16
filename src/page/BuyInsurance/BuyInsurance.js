@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // นำเข้า useNavigate
 
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
@@ -10,12 +10,46 @@ import icon4 from "../../assets/car4.svg";
 import icon5 from "../../assets/car5.svg";
 import CarCard from "../../components/CarCard/CarCard";
 import PageTitle from "../../components/PageTitle/PageTitle";
-function BuyInsurance() {
-  const navigate = useNavigate(); // สร้างฟังก์ชันนำทาง
+import { baseURL } from "../../App";
+import axios from "axios";
 
-  const handleCardClick = (path) => {
-    navigate(path); // นำทางไปยังเส้นทางที่ถูกส่งเข้ามา
+// * map details for vehicle type display
+const mapVehType = {
+  Motorcycle: ["รถจักรยานยนต์", icon5],
+  Freight: ["รถบรรทุก", icon2],
+  Bus: ["รถตู้", icon3],
+  Sedan: ["รถเก๋ง", icon1],
+}
+
+function BuyInsurance() {
+  const navigate = useNavigate();
+  const [vehicleType, setVehicleType] = useState([])
+
+  const handleCardClick = (path, vehCode) => {
+    // /car-info
+    navigate(path,
+      {
+        state: {vehicleCode: vehCode}
+      }
+    );
   };
+
+  // * request available vehicle type
+  async function requestVehType() {
+    try {
+        const response = await axios.post(`${baseURL}/option/cmivehicletype`);
+        if (response) {
+            setVehicleType(response.data.data);
+        }
+    } catch (error) {
+      // ! error cannot fetch 
+        console.log("error: ", error);
+    }
+  }
+
+  useEffect(() => {
+    requestVehType();
+  },[])
 
   return (
     <div className="layout-wrapper customize">
@@ -25,7 +59,21 @@ function BuyInsurance() {
         description="เฉพาะรถยนต์ส่วนบุคคลเท่านั้น และมีผลในการต่อภาษีประจำปี"
       />
 
+      {/* // * map vehicle type */}
       <div className="container-card">
+      {vehicleType.length !== 0 && vehicleType.map((type, index) => (
+        <CarCard
+            key={type.VehicleCode || index}
+            image={mapVehType[type.VehicleType][1]}
+            title={mapVehType[type.VehicleType][0]} 
+            discount="645"
+            price="499"
+            onClick={() => handleCardClick("/car-info", type.VehicleCode)}
+        />
+      ))}
+      </div>
+
+      {/* <div className="container-card">
         <CarCard
           image={icon1}
           title="รถเก๋ง"
@@ -61,7 +109,7 @@ function BuyInsurance() {
           price="499"
           onClick={() => handleCardClick("/motorbike-info")}
         />
-      </div>
+      </div> */}
     </div>
   );
 }

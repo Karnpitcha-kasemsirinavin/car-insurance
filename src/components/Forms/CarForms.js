@@ -1,5 +1,5 @@
 /*ของ React */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 /*material Ui*/
@@ -20,101 +20,53 @@ import SelectField from "./SelectField";
 
 import ResponsiveStack from "./ResponsiveStack.js";
 
+import { useLocation } from "react-router-dom";
+import { IconButton, InputAdornment } from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
+import axios from "axios";
+import { baseURL } from "../../App.js";
+
 function CarForms() {
+  // * get from previous page
+  const location = useLocation();
+  const { vehicleCode } = location.state || {};
+
   const [formData, setFormData] = useState({
-    carBrand: "", // ฟิลด์สำหรับเก็บยี่ห้อรถยนต์
-    model: "", // ฟิลด์สำหรับเก็บรุ่นรถยนต์
-    color: "", // ฟิลด์สำหรับเก็บสีรถยนต์
-    registrationType: "", // ฟิลด์สำหรับเก็บชนิดทะเบียนรถยนต์
-    licensePlate: "", // ฟิลด์สำหรับเก็บเลขทะเบียนรถ
-    licensePlate2: "", // เพิ่มฟิลด์เลขทะเบียนรถ (กลุ่มที่ 2)
-    registrationYear: "", // เพิ่มฟิลด์ปีที่จดทะเบียน
-    engineSize: "", // เพิ่มฟิลด์ขนาดรถยนต์
-    vehicleWeight: "", // เพิ่มฟิลด์นํ้าหนักรถ
-    numberSeats: "", //เพิ่มฟิลด์จํานวนที่นั่ง
-    chassisNumber: "", // /เพิ่มฟิลด์ หมายเลขตัวถัง
-    provinceRegistration: "", //เพิ่มฟิลด์ จังหวัดที่ลงทะเบียน
-    startDate: "", // เพิ่มฟิลด์ วันที่ต้องการเริ่มใช้งานเอกสาร
+    Manufacturer: "", // ฟิลด์สำหรับเก็บยี่ห้อรถยนต์
+    Model: "", // ฟิลด์สำหรับเก็บรุ่นรถยนต์
+    Colour: "", // ฟิลด์สำหรับเก็บสีรถยนต์
+    PlateType: "", // ฟิลด์สำหรับเก็บชนิดทะเบียนรถยนต์
+    RegistrationFt: "", // ฟิลด์สำหรับเก็บเลขทะเบียนรถ
+    RegistrationSd: "", // เพิ่มฟิลด์เลขทะเบียนรถ (กลุ่มที่ 2)
+    RegisteredYear: "", // เพิ่มฟิลด์ปีที่จดทะเบียน
+    Displacement: "", // เพิ่มฟิลด์ขนาดรถยนต์
+    GrossVehOrCombinedWeight: "", // เพิ่มฟิลด์นํ้าหนักรถ
+    SeatingCapacity: "", //เพิ่มฟิลด์จํานวนที่นั่ง
+    ChassisSerialNumber: "", // /เพิ่มฟิลด์ หมายเลขตัวถัง
+    RegisteredProvCd: "", //เพิ่มฟิลด์ จังหวัดที่ลงทะเบียน
+    CMIEffectiveDt: "", // เพิ่มฟิลด์ วันที่ต้องการเริ่มใช้งานเอกสาร
+    CMIExpirationDt: ""
   });
 
   const [errors, setErrors] = useState({
-    carBrand: false, // แสดงสถานะข้อผิดพลาดสำหรับฟิลด์ยี่ห้อรถยนต์
-    model: false, // แสดงสถานะข้อผิดพลาดสำหรับฟิลด์รุ่นรถยนต์
-    color: false, // แสดงสถานะข้อผิดพลาดสำหรับฟิลด์สีรถยนต์
-    registrationType: false, // แสดงสถานะข้อผิดพลาดสำหรับฟิลด์ชนิดทะเบียนรถยนต์
-    licensePlate: false, // แสดงสถานะข้อผิดพลาดสำหรับฟิลด์เลขทะเบียนรถ
-    licensePlate2: false, // เพิ่มข้อผิดพลาดสำหรับเลขทะเบียนรถ (กลุ่มที่ 2)
-    registrationYear: false, // เพิ่มข้อผิดพลาดฟิลด์ปีที่จดทะเบียน
-    engineSize: false, //  เพิ่มข้อผิดพลาดฟิลด์ขนาดรถยนต์
-    vehicleWeight: false, // เพิ่มข้อผิดพลาดฟิลด์นํ้าหนักรถ
-    numberSeats: false, // เพิ่มข้อผิดพลาดฟิลด์จํานวนที่นั้ง
-    chassisNumber: false, // เพิ่มข้อผิดพลาดฟิลด์หมายเลขตัวถัง
-    provinceRegistration: false, // เพิ่มข้อผิดพลาดฟิลด์จังหวัดที่ลงทะเบียน
-    startDate: false, // เพิ่มข้อผิดพลาดฟิลด์วันที่ต้องการเริ่มใช้งานเอกสาร
+    Manufacturer: false, // แสดงสถานะข้อผิดพลาดสำหรับฟิลด์ยี่ห้อรถยนต์
+    Model: false, // แสดงสถานะข้อผิดพลาดสำหรับฟิลด์รุ่นรถยนต์
+    Colour: false, // แสดงสถานะข้อผิดพลาดสำหรับฟิลด์สีรถยนต์
+    PlateType: false, // แสดงสถานะข้อผิดพลาดสำหรับฟิลด์ชนิดทะเบียนรถยนต์
+    RegistrationFt: false, // แสดงสถานะข้อผิดพลาดสำหรับฟิลด์เลขทะเบียนรถ
+    RegistrationSd: false, // เพิ่มข้อผิดพลาดสำหรับเลขทะเบียนรถ (กลุ่มที่ 2)
+    RegisteredYear: false, // เพิ่มข้อผิดพลาดฟิลด์ปีที่จดทะเบียน
+    Displacement: false, //  เพิ่มข้อผิดพลาดฟิลด์ขนาดรถยนต์
+    GrossVehOrCombinedWeight: false, // เพิ่มข้อผิดพลาดฟิลด์นํ้าหนักรถ
+    SeatingCapacity: false, // เพิ่มข้อผิดพลาดฟิลด์จํานวนที่นั้ง
+    ChassisSerialNumber: false, // เพิ่มข้อผิดพลาดฟิลด์หมายเลขตัวถัง
+    RegisteredProvCd: false, // เพิ่มข้อผิดพลาดฟิลด์จังหวัดที่ลงทะเบียน
+    CMIEffectiveDt: false, // เพิ่มข้อผิดพลาดฟิลด์วันที่ต้องการเริ่มใช้งานเอกสาร
+    CMIExpirationDt: false
   });
 
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery("(max-width:536px)"); // ตรวจสอบขนาดหน้าจอ
-  const carModels = {
-    Toyota: ["Camry", "Corolla", "Hilux"],
-    Honda: ["Civic", "Accord", "CR-V"],
-    Nissan: ["Altima", "370Z", "Rogue"],
-    Mazda: ["Mazda3", "CX-5", "MX-5"],
-    BMW: ["X5", "3 Series", "5 Series"],
-  };
-
-  const provinces = [
-    "กรุงเทพมหานคร",
-    "เชียงใหม่",
-    "เชียงราย",
-    "ขอนแก่น",
-    "นครราชสีมา",
-    "สงขลา",
-    "สุราษฎร์ธานี",
-    "เชียงตุง",
-    "ตาก",
-    "นครพนม",
-    "นราธิวาส",
-    "ประจวบคีรีขันธ์",
-    "ปทุมธานี",
-    "พังงา",
-    "พัทลุง",
-    "ภูเก็ต",
-    "ลำปาง",
-    "ลำพูน",
-    "อุตรดิตถ์",
-    "อุบลราชธานี",
-    "เชียงใหม่",
-    "ตรัง",
-    "สุโขทัย",
-    "อ่างทอง",
-    "บุรีรัมย์",
-    "สระบุรี",
-    "นครศรีธรรมราช",
-    "สมุทรปราการ",
-    "สมุทรสงคราม",
-    "ระนอง",
-    "ราชบุรี",
-    "เพชรบุรี",
-    "ประจวบคีรีขันธ์",
-    "สตูล",
-    "ชัยภูมิ",
-    "แม่ฮ่องสอน",
-    "นครนายก",
-    "พิษณุโลก",
-    "เพชรบูรณ์",
-    "บุรีรัมย์",
-    "หนองคาย",
-    "บึงกาฬ",
-    "สุรินทร์",
-    "พะเยา",
-    "สิงห์บุรี",
-    "กำแพงเพชร",
-    "นครสวรรค์",
-    "น่าน",
-    "พะเยา",
-    // ... เพิ่มจังหวัดอื่น ๆ ที่ต้องการ
-  ];
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -129,107 +81,219 @@ function CarForms() {
     }
   };
 
+  // * Hnadle Submit Form
   const handleSubmit = () => {
     const {
-      carBrand,
-      model,
-      color,
-      registrationType,
-      licensePlate,
-      licensePlate2,
-      registrationYear,
-      engineSize,
-      vehicleWeight,
-      numberSeats,
-      chassisNumber,
-      provinceRegistration,
-      startDate,
+      Manufacturer,
+      Model,
+      Colour,
+      PlateType,
+      RegistrationFt,
+      RegistrationSd,
+      RegisteredYear,
+      
+      Displacement,
+      GrossVehOrCombinedWeight,
+      SeatingCapacity,
+      ChassisSerialNumber,
+
+      RegisteredProvCd,
+      CMIEffectiveDt,
+      CMIExpirationDt
     } = formData;
 
+    // * requirement of fields
     const newErrors = {
-      carBrand: !carBrand,
-      model: !model,
-      color: !color,
-      registrationType: !registrationType,
-      licensePlate: false, // เริ่มต้นเป็น false เพื่อรอการตรวจสอบ
-      licensePlate2: !licensePlate2, // ตรวจสอบฟิลด์ licensePlate2
-      registrationYear: !registrationYear, // ตรวจสอบฟิลด์ ปีที่ลงทะเบียบ
-      engineSize: !engineSize, // ตรวจสอบฟิลด์ ขนาดรถยนต์
-      vehicleWeight: !vehicleWeight, // ตรวจสอบฟิลด์  นํ้าหนักรถ
-      numberSeats: !numberSeats, // ตรวจสอบฟืวด์  จํานวนที่นั่ง
-      chassisNumber: !chassisNumber, //  ตรวจสอบฟืวด์ หมายเลขตัวถัง
-      provinceRegistration: !provinceRegistration, // ตรวจสอบฟืวด์ จังหวัดที่ลงทะเบียน
-      startDate: !startDate, // ตรวจสอบฟิวด์
+      Manufacturer: !Manufacturer,
+      Model: !Model,
+      Colour: !Colour,
+      PlateType: !PlateType,
+      RegistrationFt: false, // เริ่มต้นเป็น false เพื่อรอการตรวจสอบ
+      RegistrationSd: !RegistrationSd, // ตรวจสอบฟิลด์ RegistrationSd
+      RegisteredYear: !RegisteredYear, // ตรวจสอบฟิลด์ ปีที่ลงทะเบียบ
+      Displacement: !Displacement, // ตรวจสอบฟิลด์ ขนาดรถยนต์
+      GrossVehOrCombinedWeight: !GrossVehOrCombinedWeight, // ตรวจสอบฟิลด์  นํ้าหนักรถ
+      SeatingCapacity: !SeatingCapacity, // ตรวจสอบฟืวด์  จํานวนที่นั่ง
+      ChassisSerialNumber: !ChassisSerialNumber, //  ตรวจสอบฟืวด์ หมายเลขตัวถัง
+      RegisteredProvCd: !RegisteredProvCd, // ตรวจสอบฟืวด์ จังหวัดที่ลงทะเบียน
+      CMIEffectiveDt: !CMIEffectiveDt, // ตรวจสอบฟิวด์
+      CMIExpirationDt: CMIExpirationDt
     };
 
     // ตรวจสอบเลขทะเบียนรถ
-    const licensePlateRegex = /^[ก-ฮ0-9]{1,7}$/; // ตรวจสอบ  licensePlate
-    const licensePlate2Regex = /^[ก-ฮ0-9]+$/; // ตรวจสอบ licensePlate2 (ไม่มีจำนวนจำกัด)
+    const licensePlateRegex = /^[ก-ฮ0-9]{1,7}$/; // ตรวจสอบ  RegistrationFt
+    const licensePlate2Regex = /^[ก-ฮ0-9]+$/; // ตรวจสอบ RegistrationSd (ไม่มีจำนวนจำกัด)
+    // ทำการตรวจสอบค่าต่าง ๆ
+    newErrors.RegistrationFt =
+    !RegistrationFt || !licensePlateRegex.test(RegistrationFt); // ตรวจสอบเลขทะเบียนรถ
+    newErrors.RegistrationSd =
+    !RegistrationSd || !licensePlate2Regex.test(RegistrationSd); // ตรวจสอบเลขทะเบียนรถกลุ่ม 2
 
     // ตรวจสอบให้เป็นตัวเลข 4 หลัก (ปีที่จดลงทะเบียบ)
     const yearRegex = /^[0-9]{4}$/;
+    newErrors.RegisteredYear =
+    !RegisteredYear || !yearRegex.test(RegisteredYear); // ตรวจสอบปีที่จดทะเบียน
 
-    // ตรวจสอบว่า engineSize เป็นตัวเลขเท่านั้น
+    // ตรวจสอบว่า Displacement เป็นตัวเลขเท่านั้น
     const engineSizeRegex = /^[0-9]+$/;
+    newErrors.Displacement = !Displacement || !engineSizeRegex.test(Displacement); // ตรวจสอบว่ามีค่าหรือไม่และเป็นตัวเลข
 
-    // ตรวจสอบว่า  vehicleWeight เป็นตัวเลขเท่านั้น
+    // ตรวจสอบว่า  GrossVehOrCombinedWeight เป็นตัวเลขเท่านั้น
     const vehicleWeightRegex = /^[0-9]+$/;
+    newErrors.GrossVehOrCombinedWeight =
+      !GrossVehOrCombinedWeight || !vehicleWeightRegex.test(GrossVehOrCombinedWeight); // ตรวจสอบว่ามีค่าว่างหรือเป็นตัวเลช
 
-    //ตรวจสอบว่า numberSeats
+    //ตรวจสอบว่า SeatingCapacity
     const numberSeatsRegex = /^[0-9]+$/;
+    newErrors.SeatingCapacity = !SeatingCapacity || !numberSeatsRegex.test(SeatingCapacity); // ตรวจสอบว่ามีค่าว่างหรือเป็นตัวเลข
+    setErrors(newErrors);
 
     //ตรวจสอบว่า  หมายเลขตัวถัง
     const chassisNumberRegex = /^[A-Za-z0-9]+$/; // ตัวอักษรอังกฤษและตัวเลข
+    newErrors.ChassisSerialNumber =
+    !ChassisSerialNumber || !chassisNumberRegex.test(ChassisSerialNumber); // ตรวจสอบว่ามีค่าว่างหรือเป็นตัวเลขเเละอักษรอังกฤษ
 
     // สร้าง regex สำหรับตรวจสอบชื่อจังหวัด
-    const provinceRegistrationRegex = new RegExp(`^(${provinces.join("|")})$`);
-    newErrors.provinceRegistration =
-      !provinceRegistration ||
-      !provinceRegistrationRegex.test(provinceRegistration);
+    // const provinceRegistrationRegex = new RegExp(`^(${provinces.join("|")})$`);
+    // newErrors.RegisteredProvCd =
+    //   !RegisteredProvCd ||
+    //   !provinceRegistrationRegex.test(RegisteredProvCd);
 
-    // ทำการตรวจสอบค่าต่าง ๆ
-    newErrors.licensePlate =
-      !licensePlate || !licensePlateRegex.test(licensePlate); // ตรวจสอบเลขทะเบียนรถ
-
-    newErrors.licensePlate2 =
-      !licensePlate2 || !licensePlate2Regex.test(licensePlate2); // ตรวจสอบเลขทะเบียนรถกลุ่ม 2
-
-    newErrors.registrationYear =
-      !registrationYear || !yearRegex.test(registrationYear); // ตรวจสอบปีที่จดทะเบียน
-
-    newErrors.engineSize = !engineSize || !engineSizeRegex.test(engineSize); // ตรวจสอบว่ามีค่าหรือไม่และเป็นตัวเลข
-
-    newErrors.vehicleWeight =
-      !vehicleWeight || !vehicleWeightRegex.test(vehicleWeight); // ตรวจสอบว่ามีค่าว่างหรือเป็นตัวเลช
-
-    newErrors.numberSeats = !numberSeats || !numberSeatsRegex.test(numberSeats); // ตรวจสอบว่ามีค่าว่างหรือเป็นตัวเลข
-    setErrors(newErrors);
-
-    newErrors.chassisNumber =
-      !chassisNumber || !chassisNumberRegex.test(chassisNumber); // ตรวจสอบว่ามีค่าว่างหรือเป็นตัวเลขเเละอักษรอังกฤษ
+    // CMI Effective Date
+    newErrors.CMIEffectiveDt = validateDatesStart(CMIEffectiveDt);
+    newErrors.CMIExpirationDt = validateDatesExpired(CMIEffectiveDt, CMIExpirationDt);
 
     setErrors(newErrors);
 
     if (
-      !newErrors.carBrand &&
-      !newErrors.model &&
-      !newErrors.color &&
-      !newErrors.registrationType &&
-      !newErrors.licensePlate &&
-      !newErrors.licensePlate2 &&
-      !newErrors.registrationYear && // ตรวจสอบปีที่จดทะเบียนด้วย
-      !engineSize.engineSize && // ตรวจสอบขนาดรถยนต์
-      !vehicleWeight.vehicleWeight && // ตรวจสอบนํ้าหนักรถ
-      !chassisNumber.chassisNumber && // ตรวจสอบหมายเลขตัวถัง
-      !provinceRegistration.provinceRegistration &&
-      !startDate.startDate
+      !newErrors.Manufacturer &&
+      !newErrors.Model &&
+      !newErrors.Colour &&
+      !newErrors.PlateType &&
+      !newErrors.RegistrationFt &&
+      !newErrors.RegistrationSd &&
+      !newErrors.RegisteredYear && // ตรวจสอบปีที่จดทะเบียนด้วย
+      !Displacement.Displacement && // ตรวจสอบขนาดรถยนต์
+      !GrossVehOrCombinedWeight.GrossVehOrCombinedWeight && // ตรวจสอบนํ้าหนักรถ
+      !ChassisSerialNumber.ChassisSerialNumber && // ตรวจสอบหมายเลขตัวถัง
+      !RegisteredProvCd.RegisteredProvCd &&
+      !CMIEffectiveDt.CMIEffectiveDt &&
+      !CMIExpirationDt.CMIExpirationDt
     ) {
       console.log("ข้อมูลที่ส่ง:", formData);
-      // ทำการส่งข้อมูลที่นี่
-
-      navigate("/policy-ownerInfo");
+      // * ทำการส่งข้อมูลที่นี่
+      navigate("/policy-ownerInfo", {
+        state: {
+          inputData: {vehiclecode: vehicleCode, ...formData},
+        }
+      });
     }
   };
+
+  // * check valid date (Start)
+  function validateDatesStart(CMIEffectiveDt) {
+    if (!CMIEffectiveDt) {
+      return true;
+    }
+    const start = new Date(CMIEffectiveDt);
+    const today = new Date();
+    // Set the time of 'today' to midnight for accurate comparisons
+    today.setHours(0, 0, 0, 0);
+    // Check if both dates are valid and not in the past
+    const isStartDateValid = start < today;
+    
+    return isStartDateValid ;
+  }
+
+  // * check valid date (Expired)
+  function validateDatesExpired(CMIEffectiveDt, expiredDate) {
+    const start = new Date(CMIEffectiveDt);
+    const expired = new Date(expiredDate);
+    const today = new Date();
+    // Set the time of 'today' to midnight for accurate comparisons
+    today.setHours(0, 0, 0, 0);
+    // Check if both dates are valid and not in the past
+    const isExpiredDateValid = expired < today;
+    // Check if ExpiredDate is after CMIEffectiveDt
+    const isExpiredDateAfterStartDate = expired < start;
+    
+    return isExpiredDateValid &&  isExpiredDateAfterStartDate;
+  }
+
+  // * request options ===================================================================
+  
+  // * request vehicle manufacturer and model
+  const [Brand, setBrand] = useState({})
+  const [manufacturer, setManufacturer] = useState([])
+  async function requestVehBrand() {
+    // vehiclebrand
+    try {
+      const response = await axios.post(`${baseURL}/option/vehiclebrand`, {
+        Manufacturer: null,
+        Model: null
+      });
+      if (response) {
+        setBrand(response.data)
+        setManufacturer(Object.keys(response.data).map(manu => manu))
+        // console.log(response.data)
+      }
+    } catch (error) {
+      // ! error
+      console.log("error: ", error)
+    }
+  }
+
+  // * request Colour
+  const [colour, setColour] = useState([])
+  async function requestColour() {
+    try {
+      const response = await axios.post(`${baseURL}/option/colour`);
+      if (response) {
+        const tempColour = response.data.data.map(colour => colour.value);
+        setColour(tempColour)
+      }
+    } catch (error) {
+      // ! error
+      console.log("error: ", error)
+    }
+  }
+
+  // * request platetype
+  const [platetype, setPlatetype] = useState([])
+  async function requestPlatetype() {
+    try {
+      const response = await axios.post(`${baseURL}/option/platetype`);
+      if (response) {
+        const tempPlatetype = response.data.data.map(type => type.value);
+        setPlatetype(tempPlatetype);
+      }
+    } catch (error) {
+      // ! error
+      console.log("error: ", error)
+    }
+  }
+
+  // * request province
+  const [province, setProvince] = useState([])
+  async function requestProvince() {
+    try {
+      const response = await axios.post(`${baseURL}/option/vehprovince`);
+      if (response) {
+        const tempProvince = response.data.data.map(province => province.value);
+        setProvince(tempProvince);
+      }
+    } catch (error) {
+      // ! error
+      console.log("error: ", error)
+    }
+  }
+
+  useEffect(() => {
+    requestVehBrand();
+    requestColour();
+    requestPlatetype();
+    requestProvince();
+  }, [])
 
   return (
     <div>
@@ -241,20 +305,20 @@ function CarForms() {
         <ResponsiveStack isSmallScreen={isSmallScreen}>
           <SelectField
             label="ยี่ห้อรถยนต์"
-            name="carBrand"
-            value={formData.carBrand}
+            name="Manufacturer"
+            value={formData.Manufacturer}
             onChange={handleChange}
-            options={["Toyota", "Honda", "Nissan", "Mazda", "BMW"]}
-            error={errors.carBrand}
+            options={manufacturer}
+            error={errors.Manufacturer}
           />
           <SelectField
             label="รุ่นรถยนต์"
-            name="model"
-            value={formData.model}
+            name="Model"
+            value={formData.Model}
             onChange={handleChange}
-            options={carModels[formData.carBrand] || []}
-            error={errors.model}
-            disabled={!formData.carBrand}
+            options={Brand[formData.Manufacturer] || []}
+            error={errors.Model}
+            disabled={!formData.Manufacturer}
           />
         </ResponsiveStack>
 
@@ -262,11 +326,11 @@ function CarForms() {
         <ResponsiveStack>
           <SelectField
             label="สีรถยนต์"
-            name="color"
-            value={formData.color}
+            name="Colour"
+            value={formData.Colour}
             onChange={handleChange}
-            options={["แดง", "ฟ้า", "เขียว", "ดำ", "ขาว"]}
-            error={errors.color}
+            options={colour || []}
+            error={errors.Colour}
           />
         </ResponsiveStack>
 
@@ -278,23 +342,23 @@ function CarForms() {
         <ResponsiveStack isSmallScreen={isSmallScreen}>
           <SelectField
             label="ชนิดทะเบียนรถยนต์"
-            name="registrationType" // ชื่อฟิลด์ที่ต้องการ
-            value={formData.registrationType} // ค่าของฟิลด์ที่เก็บใน state
+            name="PlateType" // ชื่อฟิลด์ที่ต้องการ
+            value={formData.PlateType} // ค่าของฟิลด์ที่เก็บใน state
             onChange={handleChange} // ฟังก์ชันที่ใช้จัดการการเปลี่ยนแปลง
-            options={["ทะเบียนทั่วไป", "ทะเบียนขาว", "ทะเบียนแดง"]} // ตัวเลือกของฟิลด์
-            error={errors.registrationType} // ข้อผิดพลาดที่เกิดขึ้น
+            options={platetype || []} // ตัวเลือกของฟิลด์
+            error={errors.PlateType} // ข้อผิดพลาดที่เกิดขึ้น
           />
           <TextField
             label="เลขทะเบียนรถ"
-            name="licensePlate" // ตั้งชื่อฟิลด์ที่เก็บใน state
-            value={formData.licensePlate} // ค่าของฟิลด์ที่เก็บใน state
+            name="RegistrationFt" // ตั้งชื่อฟิลด์ที่เก็บใน state
+            value={formData.RegistrationFt} // ค่าของฟิลด์ที่เก็บใน state
             onChange={handleChange} // ฟังก์ชันที่ใช้จัดการการเปลี่ยนแปลง
             variant="outlined"
             fullWidth
-            error={errors.licensePlate} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
+            error={errors.RegistrationFt} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
             helperText={
-              errors.licensePlate
-                ? !formData.licensePlate
+              errors.RegistrationFt
+                ? !formData.RegistrationFt
                   ? "กรุณากรอก เลขทะเบียนรถ"
                   : "กรุณากรอกเลขทะเบียนรถ (ในรูปแบบที่ถูกต้อง)"
                 : "" // ไม่มีข้อผิดพลาด
@@ -306,15 +370,15 @@ function CarForms() {
         <ResponsiveStack isSmallScreen={isSmallScreen}>
           <TextField
             label="เลขทะเบียนรถ (กลุ่มที่ 2)"
-            name="licensePlate2" // ตั้งชื่อฟิลด์ที่เก็บใน state
-            value={formData.licensePlate2} // ค่าของฟิลด์ที่เก็บใน state
+            name="RegistrationSd" // ตั้งชื่อฟิลด์ที่เก็บใน state
+            value={formData.RegistrationSd} // ค่าของฟิลด์ที่เก็บใน state
             onChange={handleChange} // ฟังก์ชันที่ใช้จัดการการเปลี่ยนแปลง
             variant="outlined"
             fullWidth
-            error={errors.licensePlate2} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
+            error={errors.RegistrationSd} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
             helperText={
-              errors.licensePlate2
-                ? !formData.licensePlate2
+              errors.RegistrationSd
+                ? !formData.RegistrationSd
                   ? "กรุณากรอกเลขทะเบียนรถ (กลุ่มที่ 2)"
                   : "กรุณากรอกเลขทะเบียนรถ (ในรูปแบบที่ถูกต้อง)"
                 : "" // ไม่มีข้อผิดพลาด
@@ -322,35 +386,44 @@ function CarForms() {
           />
           <TextField
             label="ปีที่จดทะเบียน"
-            name="registrationYear"
-            value={formData.registrationYear} // เชื่อมโยงกับ state
+            name="RegisteredYear"
+            value={formData.RegisteredYear} // เชื่อมโยงกับ state
             onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
             variant="outlined"
             fullWidth
-            error={errors.registrationYear} // แสดงข้อผิดพลาด
+            error={errors.RegisteredYear} // แสดงข้อผิดพลาด
             helperText={
-              errors.registrationYear
+              errors.RegisteredYear
                 ? "กรุณากรอก (พ.ศ เท่านั้น เช่น 2567 )"
                 : ""
             } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
           />
         </ResponsiveStack>
         <ResponsiveStack>
-          <Autocomplete
+          <SelectField
+            label="จัดหวัดที่จดทะเบียน"
+            name="RegisteredProvCd"
+            value={formData.RegisteredProvCd} 
+            onChange={handleChange} 
+            options={province || []}
+            error={errors.RegisteredProvCd}
+          />
+          {/* // TODO: fix field province */}
+          {/* <Autocomplete
             fullWidth
-            options={provinces}
+            options={province || []}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="จัดหวัดที่จดทะเบียน"
-                name="provinceRegistration"
-                value={formData.provinceRegistration} // เชื่อมโยงกับ state
+                name="RegisteredProvCd"
+                value={formData.RegisteredProvCd} // เชื่อมโยงกับ state
                 onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
                 variant="outlined"
-                error={errors.provinceRegistration} // แสดงข้อผิดพลาด
+                error={errors.RegisteredProvCd} // แสดงข้อผิดพลาด
                 helperText={
-                  errors.provinceRegistration
-                    ? !formData.provinceRegistration
+                  errors.RegisteredProvCd
+                    ? !formData.RegisteredProvCd
                       ? "กรุณาเลือก จัดหวัดที่จดทะเบียน"
                       : "กรุณากรอกให้ถูกต้อง ไม่เว้นเพิ่มที่ว่าง"
                     : ""
@@ -358,7 +431,7 @@ function CarForms() {
               />
             )}
             freeSolo
-          />
+          /> */}
         </ResponsiveStack>
 
         <SectionTitle text="ข้อมูลทางเทคนิค" iconClass="fa fa-cogs" />
@@ -366,15 +439,15 @@ function CarForms() {
         <ResponsiveStack isSmallScreen={isSmallScreen}>
           <TextField
             label="ขนาดเครื่องยนต์ cc" // ป้ายฟิลด์
-            name="engineSize" // ชื่อฟิลด์ที่เก็บใน state
-            value={formData.engineSize} // ค่าของฟิลด์ที่เก็บใน state
+            name="Displacement" // ชื่อฟิลด์ที่เก็บใน state
+            value={formData.Displacement} // ค่าของฟิลด์ที่เก็บใน state
             onChange={handleChange} // ฟังก์ชันที่ใช้จัดการการเปลี่ยนแปลง
             variant="outlined"
             fullWidth
-            error={errors.engineSize} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
+            error={errors.Displacement} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
             helperText={
-              errors.engineSize
-                ? !formData.engineSize
+              errors.Displacement
+                ? !formData.Displacement
                   ? "กรุณากรอกขนาดเครื่องยนต์ cc"
                   : "กรุณากรอกขนาดเครื่องยนต์เป็นตัวเลข"
                 : "" // ข้อความช่วยเหลือ
@@ -382,15 +455,15 @@ function CarForms() {
           />
           <TextField
             label="นํ้าหนักรถ" // นํ้าหนักรถฟิลด์
-            name="vehicleWeight"
-            value={formData.vehicleWeight}
+            name="GrossVehOrCombinedWeight"
+            value={formData.GrossVehOrCombinedWeight}
             onChange={handleChange}
             variant="outlined"
             fullWidth
-            error={errors.vehicleWeight}
+            error={errors.GrossVehOrCombinedWeight}
             helperText={
-              errors.vehicleWeight
-                ? !formData.vehicleWeight
+              errors.GrossVehOrCombinedWeight
+                ? !formData.GrossVehOrCombinedWeight
                   ? "กรุณากรอก นํ้าหนักรถ"
                   : "กรุณากรอก เป็นตัวเลข"
                 : "" // ข้อความช่วยเหลือ
@@ -401,15 +474,15 @@ function CarForms() {
         <ResponsiveStack isSmallScreen={isSmallScreen}>
           <TextField
             label="จํานวนที่นั่ง" // ป้ายฟิลด์
-            name="numberSeats" // ชื่อฟิลด์ที่เก็บใน state
-            value={formData.numberSeats} // ค่าของฟิลด์ที่เก็บใน state
+            name="SeatingCapacity" // ชื่อฟิลด์ที่เก็บใน state
+            value={formData.SeatingCapacity} // ค่าของฟิลด์ที่เก็บใน state
             onChange={handleChange} // ฟังก์ชันที่ใช้จัดการการเปลี่ยนแปลง
             variant="outlined"
             fullWidth
-            error={errors.numberSeats} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
+            error={errors.SeatingCapacity} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
             helperText={
-              errors.numberSeats
-                ? !formData.numberSeats
+              errors.SeatingCapacity
+                ? !formData.SeatingCapacity
                   ? "กรุณากรอก จํานวนที่นั่ง"
                   : "กรุณากรอก เป็นตัวเลข"
                 : "" // ข้อความช่วยเหลือ
@@ -417,15 +490,15 @@ function CarForms() {
           />
           <TextField
             label="หมายเลขตัวถัง" // ป้ายฟิลด์
-            name="chassisNumber" // ชื่อฟิลด์ที่เก็บใน state
-            value={formData.chassisNumber} // ค่าของฟิลด์ที่เก็บใน state
+            name="ChassisSerialNumber" // ชื่อฟิลด์ที่เก็บใน state
+            value={formData.ChassisSerialNumber} // ค่าของฟิลด์ที่เก็บใน state
             onChange={handleChange} // ฟังก์ชันที่ใช้จัดการการเปลี่ยนแปลง
             variant="outlined"
             fullWidth
-            error={errors.chassisNumber} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
+            error={errors.ChassisSerialNumber} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
             helperText={
-              errors.chassisNumber
-                ? !formData.chassisNumber
+              errors.ChassisSerialNumber
+                ? !formData.ChassisSerialNumber
                   ? "กรุณากรอก หมายเลขตัวถัง"
                   : "กรุณากรอก (ต้องเป็นตัวเลขและตัวอักษร)"
                 : ""
@@ -438,15 +511,46 @@ function CarForms() {
           <TextField
             label="วันที่ต้องการเริ่มใช้งานเอกสาร"
             type="date"
-            name="startDate"
-            value={formData.startDate}
+            name="CMIEffectiveDt"
+            value={formData.CMIEffectiveDt}
             onChange={handleChange}
-            error={errors.startDate} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
+            error={errors.CMIEffectiveDt} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
             helperText={
-              errors.startDate ? "กรุณากรอก วันที่ต้องการเริ่มใช้งานเอกสาร" : ""
+              errors.CMIEffectiveDt ? "กรุณากรอก วันที่ต้องการเริ่มใช้งานเอกสาร" : ""
             } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
             InputLabelProps={{
               shrink: true,
+            }}
+            fullWidth
+          />
+          <TextField
+            label="วันที่สิ้นสุดการใช้งานเอกสาร"
+            type="date"
+            name="CMIExpirationDt"
+            value={formData.CMIExpirationDt}
+            onChange={handleChange}
+            error={errors.CMIExpirationDt} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
+            helperText={
+              errors.CMIExpirationDt ? "กรุณากรอก วันที่หลังจาก วันที่ต้องการเริ่มใช้งานเอกสาร" : ""
+            } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
+            InputLabelProps={{
+              shrink: true,
+            }}
+            InputProps={{
+              endAdornment: (
+                formData.CMIExpirationDt && (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() =>
+                        handleChange({ target: { name: "CMIExpirationDt", value: '' } })
+                      }
+                      edge="end"
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  </InputAdornment>
+                )
+              ),
             }}
             fullWidth
           />

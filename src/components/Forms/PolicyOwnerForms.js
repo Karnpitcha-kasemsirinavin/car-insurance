@@ -1,5 +1,5 @@
 /*ของ React */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 /*material Ui*/
 import { Stack, useMediaQuery, Autocomplete, TextField } from "@mui/material";
@@ -19,13 +19,26 @@ import SelectField from "./SelectField";
 
 import ResponsiveStack from "./ResponsiveStack.js";
 
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { baseURL } from "../../App.js";
+import { type } from "@testing-library/user-event/dist/type/index.js";
+import { IconButton, InputAdornment } from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
+
 function PolicyOwnerForms() {
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery("(max-width:536px)"); // ตรวจสอบขนาดหน้าจอ
 
-  const handleChange = (event) => {
+  // * get from previous page
+  const location = useLocation();
+  const { inputData } = location.state || {};
+  // * nedd to be request according to each other
+  const requestFields = ["SubDistrict", "District", "Province", "PostalCode"]
+  // * assign value from input fields
+  const handleChange = async (event) => {
     const { name, value } = event.target;
 
     setFormData({
@@ -36,36 +49,47 @@ function PolicyOwnerForms() {
     if (value) {
       setErrors({ ...errors, [name]: false });
     }
+
   };
+
+  // * handle Submit form
   const handleSubmit = () => {
     const {
-      prefix,
-      name,
-      surname,
-      insuranceType,
-      idType,
-      idCardNumber,
-      expirationDate,
-      address,
-      postalCode,
-      province,
-      district,
-      subdistrict,
+      InsuredTitle,
+      InsuredName,
+      InsuredSurname,
+      BirthDt,
+      PhoneNumber,
+
+      InsuredType,
+      IDType,
+      InsuredUniqueID,
+      InsuredUniqueIDExpDt,
+
+      Addr,
+      PostalCode,
+      Province,
+      District,
+      SubDistrict,
     } = formData;
 
     const newErrors = {
-      prefix: !prefix,
-      name: !name,
-      surname: !surname,
-      insuranceType: !insuranceType,
-      idType: !idType,
-      idCardNumber: !idCardNumber,
-      expirationDate: !expirationDate,
-      address: !address,
-      postalCode: !postalCode,
-      province: !province,
-      district: !district,
-      subdistrict:!subdistrict
+      InsuredTitle: !InsuredTitle,
+      InsuredName: !InsuredName,
+      InsuredSurname: !InsuredSurname,
+      BirthDt: !BirthDt,
+      PhoneNumber: !PhoneNumber,
+
+      InsuredType: !InsuredType,
+      IDType: !IDType,
+      InsuredUniqueID: !InsuredUniqueID,
+      InsuredUniqueIDExpDt: !InsuredUniqueIDExpDt,
+
+      Addr: !Addr,
+      PostalCode: !PostalCode,
+      Province: !Province,
+      District: !District,
+      SubDistrict:!SubDistrict
     };
 
     //  กําหนดความถูกต้อง
@@ -73,38 +97,173 @@ function PolicyOwnerForms() {
     const surnameRegex = /^[ก-ฮA-Za-z]+$/; // รองรับเฉพาะอักษรไทยและอังกฤษ
     const idCardNumberRegex = /^\d{13}$/; // รองรับเฉพาะตัวเลข 13 หลัก
     const postalCodeRegex = /^[0-9]{5}$/; // รองรับเฉพาะตัวเลข 5 หลัก
-    const districtRegex = /^[ก-ฮA-Za-z\s]+$/; // รองรับเฉพาะอักษรไทย (ก-ฮ) และอังกฤษ (A-Z, a-z) และเว้นวรรค
-    const subdistrictRegex = /^[ก-ฮA-Za-z\s]+$/; // รองรับเฉพาะอักษรไทย (ก-ฮ) และอังกฤษ (A-Z, a-z) และเว้นวรรค
+    const phoneNumberRegex = /^[0-9]{10}$/;
+    // const districtRegex = /^[ก-ฮA-Za-z\s]+$/; // รองรับเฉพาะอักษรไทย (ก-ฮ) และอังกฤษ (A-Z, a-z) และเว้นวรรค
+    // const subdistrictRegex = /^[ก-ฮA-Za-z\s]+$/; // รองรับเฉพาะอักษรไทย (ก-ฮ) และอังกฤษ (A-Z, a-z) และเว้นวรรค
+
     // ตรวจสอบค่าว่าง เเละความถูกต้อง
-    newErrors.name = !name || !nameRegex.test(name);
-    newErrors.surname = !surname || !surnameRegex.test(surname);
-    newErrors.idCardNumber =
-      !idCardNumber || !idCardNumberRegex.test(idCardNumber);
-    newErrors.postalCode = !postalCode || !postalCodeRegex.test(postalCode);
+    newErrors.InsuredName = !InsuredName || !nameRegex.test(InsuredName);
+    newErrors.InsuredSurname = !InsuredSurname || !surnameRegex.test(InsuredSurname);
+    newErrors.InsuredUniqueID =
+      !InsuredUniqueID || !idCardNumberRegex.test(InsuredUniqueID);
+    newErrors.PostalCode = !PostalCode || !postalCodeRegex.test(PostalCode);
 
-    newErrors.district = !district || !districtRegex.test(district); // ตรวจสอบว่าค่าว่างหรือไม่และตรงตามรูปแบบ
-    newErrors.subdistrict = !subdistrict || !subdistrictRegex.test(subdistrict);
+    // newErrors.District = !District || !districtRegex.test(District); // ตรวจสอบว่าค่าว่างหรือไม่และตรงตามรูปแบบ
+    // newErrors.SubDistrict = !SubDistrict || !subdistrictRegex.test(SubDistrict);
     setErrors(newErrors);
-
+    
+    // * requirement of fields
     if (
-      !newErrors.prefix &&
-      !newErrors.name &&
-      !newErrors.surname &&
-      !newErrors.insuranceType &&
-      !newErrors.idType &&
-      !newErrors.idCardNumber &&
-      !expirationDate.expirationDate &&
-      !address.address &&
-      !province.province &&
-      !district.district &&
-      !subdistrict.subdistrict
-    ) {
+      !newErrors.InsuredTitle &&
+      !newErrors.InsuredName &&
+      !newErrors.InsuredSurname &&
+      !BirthDt.BirthDt &&
+      !PhoneNumber.PhoneNumber &&
+
+      !newErrors.InsuredType &&
+      !newErrors.IDType &&
+      !newErrors.InsuredUniqueID &&
+      !InsuredUniqueIDExpDt.InsuredUniqueIDExpDt &&
+
+      !Addr.Addr &&
+      !Province.Province &&
+      !District.District &&
+      !SubDistrict.SubDistrict
+    ) 
+    {
       console.log("ข้อมูลที่ส่ง:", formData);
       // ทำการส่งข้อมูลที่นี่
-
-      navigate("/payment-page");
+      requestDocument()
+      // navigate("/payment-page");
     }
   };
+
+  // * request Document (create order)
+  async function requestDocument() {
+    console.log(formData)
+    try {
+        const response = await axios.post(`${baseURL}/createDoc`, {
+            ...inputData,
+            ...formData,
+            IDType: IDType[formData.IDType],
+            Company: "ind",
+            PackageCode: inputData.vehiclecode,
+            VehicleCode: inputData.vehiclecode,
+            Product: "test2", //TODO: fix change product Id
+            },
+            { withCredentials: true},
+        );
+        console.log(response)
+        if (response.status === 200) {
+          console.log(response.data.data)
+            // setResult(response.data.data);
+            
+            // * check whether the user is already login
+            if (!response.data.validUser) {
+                // * go to auth page
+                // router.push('/auth');
+            } else {
+                // * proceed to next step
+                // setActiveStep((prevStep) => prevStep + 1);
+            }
+
+        }
+    } catch (error) {
+        console.log("error: ", error);
+    }
+}
+
+  // * request options ===================================================================
+
+  // * request title
+  const [titleNType, setTitleNType] = useState({});
+  const [title, setTitle] = useState([])
+  async function requestTitle() {
+    try {
+      const response = await axios.post(`${baseURL}/option/title`);
+      if (response) {
+        setTitleNType(response.data.data);
+        const tempTitle = response.data.data.map(title => Object.keys(title)[0]);
+        setTitle(tempTitle)
+      }
+    } catch (error) {
+      // ! error
+      console.log("error: ", error)
+    }
+  }
+
+  // * request insured type
+  const [insuredType, setInsuredType] = useState([])
+  async function requestInsuredType() {
+    try {
+      const response = await axios.post(`${baseURL}/option/insuredtype`);
+      if (response) {
+        setInsuredType(response.data.data)
+      }
+    } catch (error) {
+      // ! error
+      console.log("error: ", error)
+    }
+  }
+
+  // * request id type
+  const [IDType, setIDType] = useState({});
+  const [IDTypeOptions, setIDTypeOptions] = useState([]);
+  async function requestIDType() {
+    try {
+      const response = await axios.post(`${baseURL}/option/idtype`);
+      if (response) {
+        setIDType(response.data.data)
+        const tempType = response.data.data.map(title => title.description);
+        setIDTypeOptions(tempType);
+      }
+    } catch (error) {
+      // ! error
+      console.log("error: ", error)
+    }
+  }
+
+  // * request Addr
+  // const [IDType, setIDType] = useState({});
+  // const [IDTypeOptions, setIDTypeOptions] = useState([]);
+  const [subDistrict, setSubDistrict] = useState([]);
+  const [district, setDistrict] = useState([]);
+  const [province, setProvince] = useState([]);
+  const [postalCode, setPostalCode] = useState([]);
+
+  async function requestAddr() {
+    try {
+      const response = await axios.post(`${baseURL}/option/addr`, {
+        SubDistrict: formData.SubDistrict !== "" ? formData.SubDistrict : null,
+        District: formData.District !== "" ? formData.District : null,
+        Province: formData.Province !== "" ? formData.Province : null,
+        PostalCode: formData.PostalCode !== "" ? formData.PostalCode : null
+      });
+      if (response) {
+        const tempAddr = response.data.data;
+        setSubDistrict(tempAddr.SubDistrict);
+        setDistrict(tempAddr.District);
+        setProvince(tempAddr.Province);
+        setPostalCode(tempAddr.PostalCode);
+      }
+    } catch (error) {
+      // ! error
+      console.log("error: ", error)
+    }
+  }
+
+  useEffect(() => {
+    // * request options
+    requestTitle();
+    requestInsuredType();
+    requestIDType();
+  }, [])
+
+  // * request addr every time input change
+  useEffect(() => {
+    requestAddr();
+  }, [formData.SubDistrict, formData.District, formData.Province, formData.PostalCode])
+
   return (
     <div>
       <MainTitle text="ข้อมูลเจ้าของกรมธรรม์" />
@@ -114,25 +273,25 @@ function PolicyOwnerForms() {
         <ResponsiveStack>
           <SelectField
             label="คำนำหน้าชื่อ"
-            name="prefix"
-            value={formData.prefix}
+            name="InsuredTitle"
+            value={formData.InsuredTitle}
             onChange={handleChange}
-            options={["นาย", "นาง", "นางสาว"]}
-            error={errors.prefix}
+            options={title || []}
+            error={errors.InsuredTitle}
             fullWidth
           />
         </ResponsiveStack>
         <ResponsiveStack isSmallScreen={isSmallScreen}>
           <TextField
             label="ชื่อ"
-            name="name"
-            value={formData.name}
+            name="InsuredName"
+            value={formData.InsuredName}
             onChange={handleChange}
-            error={errors.name}
+            error={errors.InsuredName}
             fullWidth
             helperText={
-              errors.name
-                ? !formData.name
+              errors.InsuredName
+                ? !formData.InsuredName
                   ? "กรุณากรอก ชื่อ"
                   : "กรุณากรอก (ในรูปแบบที่ถูกต้อง)"
                 : "" // ไม่มีข้อผิดพลาด
@@ -140,20 +299,53 @@ function PolicyOwnerForms() {
           ></TextField>
           <TextField
             label="นามสกุล"
-            name="surname"
-            value={formData.surname}
+            name="InsuredSurname"
+            value={formData.InsuredSurname}
             onChange={handleChange}
-            error={errors.surname}
+            error={errors.InsuredSurname}
             fullWidth
             helperText={
-              errors.surname
-                ? !formData.surname
+              errors.InsuredSurname
+                ? !formData.InsuredSurname
                   ? "กรุณากรอก นามสกุล"
                   : "กรุณากรอก (ในรูปแบบที่ถูกต้อง)"
                 : "" // ไม่มีข้อผิดพลาด
             } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
           ></TextField>
         </ResponsiveStack>
+        <ResponsiveStack>
+          <TextField
+            label="วันเกิด"
+            type="date" // กำหนดประเภทเป็นวันที่
+            name="BirthDt" // ชื่อฟิลด์
+            value={formData.BirthDt} // ค่าปัจจุบันจากฟอร์ม
+            onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
+            error={errors.BirthDt} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
+            helperText={
+              errors.BirthDt ? "กรุณากรอกวันเกิดให้ถูกต้อง" : "" // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
+            }
+            InputLabelProps={{
+              shrink: true,
+            }}
+            fullWidth
+          />
+          <TextField
+            label="เบอร์โทร"
+            type="tel" // กำหนดประเภทเป็นวันที่
+            name="PhoneNumber" // ชื่อฟิลด์
+            value={formData.PhoneNumber} // ค่าปัจจุบันจากฟอร์ม
+            onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
+            error={errors.PhoneNumber} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
+            helperText={
+              errors.PhoneNumber ? "กรุณากรอกเบอร์โทรให้ถูกต้อง" : "" // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
+            }
+            InputLabelProps={{
+              shrink: true,
+            }}
+            fullWidth
+          />
+        </ResponsiveStack>
+
         <SectionTitle
           text="ข้อมูลผู้เอาประกัน"
           iconClass="fa-solid fa-user-shield"
@@ -161,34 +353,34 @@ function PolicyOwnerForms() {
         <ResponsiveStack>
           <SelectField
             label="ประเภทของผู้เอาประกัน"
-            name="insuranceType" // ชื่อฟิลด์
-            value={formData.insuranceType} // ค่าปัจจุบันจากฟอร์ม
+            name="InsuredType" // ชื่อฟิลด์
+            value={formData.InsuredType} // ค่าปัจจุบันจากฟอร์ม
             onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
-            options={["บุคคลธรรมดา", "นิติบุคคล", "บริษัทประกัน"]} // ตัวเลือกที่ให้ผู้ใช้เลือก
-            error={errors.insuranceType} // ข้อผิดพลาด (ถ้ามี)
+            options={insuredType || []} // ตัวเลือกที่ให้ผู้ใช้เลือก
+            error={errors.InsuredType} // ข้อผิดพลาด (ถ้ามี)
             fullWidth // ทำให้ฟิลด์มีความกว้างเต็ม
           />
           <SelectField
             label="ประเภทของเอกสารประจำตัว"
-            name="idType" // ชื่อฟิลด์
-            value={formData.idType} // ค่าปัจจุบันจากฟอร์ม
+            name="IDType" // ชื่อฟิลด์
+            value={formData.IDType} // ค่าปัจจุบันจากฟอร์ม
             onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
-            options={["บัตรประชาชน", "ใบขับขี่", "หนังสือเดินทาง"]} // ตัวเลือกที่ให้ผู้ใช้เลือก
-            error={errors.idType} // ข้อผิดพลาด (ถ้ามี)
+            options={IDTypeOptions || []} // ตัวเลือกที่ให้ผู้ใช้เลือก
+            error={errors.IDType} // ข้อผิดพลาด (ถ้ามี)
             fullWidth // ทำให้ฟิลด์มีความกว้างเต็ม
           />
         </ResponsiveStack>
         <ResponsiveStack isSmallScreen={isSmallScreen}>
           <TextField
             label="หมายเลขบัตรประชาชน"
-            name="idCardNumber" // ชื่อฟิลด์
-            value={formData.idCardNumber} // ค่าปัจจุบันจากฟอร์ม
+            name="InsuredUniqueID" // ชื่อฟิลด์
+            value={formData.InsuredUniqueID} // ค่าปัจจุบันจากฟอร์ม
             onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
-            error={errors.idCardNumber} // ข้อผิดพลาด (ถ้ามี)
+            error={errors.InsuredUniqueID} // ข้อผิดพลาด (ถ้ามี)
             fullWidth // ทำให้ฟิลด์มีความกว้างเต็ม
             helperText={
-              errors.idCardNumber // ตรวจสอบข้อผิดพลาดสำหรับหมายเลขบัตรประชาชน
-                ? !formData.idCardNumber // ถ้าไม่มีการกรอกหมายเลข
+              errors.InsuredUniqueID // ตรวจสอบข้อผิดพลาดสำหรับหมายเลขบัตรประชาชน
+                ? !formData.InsuredUniqueID // ถ้าไม่มีการกรอกหมายเลข
                   ? "กรุณากรอก หมายเลขบัตรประชาชน" // ข้อความช่วยเหลือเมื่อไม่มีการกรอก
                   : "กรุณากรอก ให้ถูกต้อง 13หลัก" // ข้อความช่วยเหลือเมื่อกรอกไม่ถูกต้อง
                 : "" // ไม่มีข้อผิดพลาด
@@ -198,12 +390,12 @@ function PolicyOwnerForms() {
           <TextField
             label="วันหมดอายุ"
             type="date" // กำหนดประเภทเป็นวันที่
-            name="expirationDate" // ชื่อฟิลด์
-            value={formData.expirationDate} // ค่าปัจจุบันจากฟอร์ม
+            name="InsuredUniqueIDExpDt" // ชื่อฟิลด์
+            value={formData.InsuredUniqueIDExpDt} // ค่าปัจจุบันจากฟอร์ม
             onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
-            error={errors.expirationDate} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
+            error={errors.InsuredUniqueIDExpDt} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
             helperText={
-              errors.expirationDate ? "กรุณากรอกวันหมดอายุให้ถูกต้อง" : "" // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
+              errors.InsuredUniqueIDExpDt ? "กรุณากรอกวันหมดอายุให้ถูกต้อง" : "" // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
             }
             InputLabelProps={{
               shrink: true,
@@ -218,79 +410,75 @@ function PolicyOwnerForms() {
         <ResponsiveStack>
           <TextField
             label="ที่อยู่ตามบัตรประชาชน"
-            name="address"
-            value={formData.address}
+            name="Addr"
+            value={formData.Addr}
             onChange={handleChange}
-            error={errors.address}
-            helperText={errors.address ? "กรุณากรอกที่อยู่ตามบัตร" : ""} // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
+            error={errors.Addr}
+            helperText={errors.Addr ? "กรุณากรอกที่อยู่ตามบัตร" : ""} // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
             multiline // ทำให้สามารถกรอกข้อความหลายบรรทัดได้
             rows={2} // จำนวนบรรทัดเริ่มต้นที่แสดง
             fullWidth
           />
         </ResponsiveStack>
         <ResponsiveStack isSmallScreen={isSmallScreen}>
-          <TextField
-            label="รหัสไปรษณีย์"
-            name="postalCode" // ชื่อฟิลด์
-            value={formData.postalCode} // ค่าปัจจุบันจากฟอร์ม
-            onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
-            error={errors.postalCode} // ข้อผิดพลาด (ถ้ามี)
-            fullWidth // ทำให้ฟิลด์มีความกว้างเต็ม
-            helperText={
-              errors.postalCode // ตรวจสอบข้อผิดพลาดสำหรับรหัสไปรษณีย์
-                ? !formData.postalCode // ถ้าไม่มีการกรอกหมายเลข
-                  ? "กรุณากรอกรหัสไปรษณีย์" // ข้อความช่วยเหลือเมื่อไม่มีการกรอก
-                  : "กรุณากรอกให้ถูกต้อง (รหัสไปรษณีย์ต้องเป็นตัวเลข 5 หลัก)" // ข้อความช่วยเหลือเมื่อกรอกไม่ถูกต้อง
-                : "" // ไม่มีข้อผิดพลาด
-            } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
-          />
           <SelectField
-            label="จังหวัด" // ชื่อฟิลด์ที่จะแสดงให้ผู้ใช้เห็น
-            name="province" // ชื่อฟิลด์สำหรับการจัดการค่าของจังหวัด
-            value={formData.province} // ค่าปัจจุบันจากฟอร์มที่เก็บจังหวัด
-            onChange={handleChange} // ฟังก์ชันที่ใช้ในการจัดการการเปลี่ยนแปลงเมื่อผู้ใช้เลือกจังหวัด
-            options={[
-              "กรุงเทพมหานคร",
-              "เชียงใหม่",
-              "เชียงราย",
-              "ภูเก็ต",
-              "นครราชสีมา",
-              // เพิ่มจังหวัดอื่น ๆ ที่คุณต้องการให้ผู้ใช้เลือก
-            ]} // ตัวเลือกที่ให้ผู้ใช้เลือก
-            error={errors.province} // ข้อผิดพลาด (ถ้ามี) สำหรับฟิลด์จังหวัด
-            fullWidth // ทำให้ฟิลด์มีความกว้างเต็ม
-          />
-        </ResponsiveStack>
-        <ResponsiveStack isSmallScreen={isSmallScreen}>
-          <TextField
             label="เขต/อำเภอ" // ชื่อฟิลด์ที่จะแสดงให้ผู้ใช้เห็น
-            name="district" // ชื่อฟิลด์สำหรับการจัดการค่าของเขต/อำเภอ
-            value={formData.district} // ค่าปัจจุบันจากฟอร์มที่เก็บเขต/อำเภอ
-            onChange={handleChange} // ฟังก์ชันที่ใช้ในการจัดการการเปลี่ยนแปลงเมื่อผู้ใช้กรอกข้อมูล
-            error={errors.district} // ข้อผิดพลาด (ถ้ามี) สำหรับฟิลด์เขต/อำเภอ
+            name="District" // ชื่อฟิลด์สำหรับการจัดการค่าของจังหวัด
+            value={formData.District} // ค่าปัจจุบันจากฟอร์มที่เก็บจังหวัด
+            onChange={handleChange} // ฟังก์ชันที่ใช้ในการจัดการการเปลี่ยนแปลงเมื่อผู้ใช้เลือกจังหวัด
+            options={district || []} // ตัวเลือกที่ให้ผู้ใช้เลือก
+            error={errors.District} // ข้อผิดพลาด (ถ้ามี) สำหรับฟิลด์จังหวัด
             fullWidth // ทำให้ฟิลด์มีความกว้างเต็ม
             helperText={
               // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
-              errors.district // ตรวจสอบข้อผิดพลาดสำหรับเขต/อำเภอ
-                ? !formData.district // ถ้าไม่มีการกรอก
+              errors.District // ตรวจสอบข้อผิดพลาดสำหรับเขต/อำเภอ
+                ? !formData.District // ถ้าไม่มีการกรอก
                   ? "กรุณากรอกเขต/อำเภอ" // ข้อความช่วยเหลือเมื่อไม่มีการกรอก
                   : "กรุณากรอก (ในรูปแบบที่ถูกต้อง)" // ข้อความช่วยเหลือเมื่อกรอกไม่ถูกต้อง
                 : "" // ไม่มีข้อผิดพลาด
             }
           />
-          <TextField
+          <SelectField
             label="แขวง/ตำบล" // ชื่อฟิลด์ที่จะแสดงให้ผู้ใช้เห็น
-            name="subdistrict" // ชื่อฟิลด์สำหรับการจัดการค่าของแขวง/ตำบล
-            value={formData.subdistrict} // ค่าปัจจุบันจากฟอร์มที่เก็บแขวง/ตำบล
-            onChange={handleChange} // ฟังก์ชันที่ใช้ในการจัดการการเปลี่ยนแปลงเมื่อผู้ใช้กรอกข้อมูล
-            error={errors.subdistrict} // ข้อผิดพลาด (ถ้ามี) สำหรับฟิลด์แขวง/ตำบล
+            name="SubDistrict" // ชื่อฟิลด์สำหรับการจัดการค่าของจังหวัด
+            value={formData.SubDistrict} // ค่าปัจจุบันจากฟอร์มที่เก็บจังหวัด
+            onChange={handleChange} // ฟังก์ชันที่ใช้ในการจัดการการเปลี่ยนแปลงเมื่อผู้ใช้เลือกจังหวัด
+            options={subDistrict || []} // ตัวเลือกที่ให้ผู้ใช้เลือก
+            error={errors.SubDistrict} // ข้อผิดพลาด (ถ้ามี) สำหรับฟิลด์จังหวัด
             fullWidth // ทำให้ฟิลด์มีความกว้างเต็ม
             helperText={
               // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
-              errors.subdistrict // ตรวจสอบข้อผิดพลาดสำหรับแขวง/ตำบล
-                ? !formData.subdistrict // ถ้าไม่มีการกรอก
+              errors.SubDistrict // ตรวจสอบข้อผิดพลาดสำหรับแขวง/ตำบล
+                ? !formData.SubDistrict // ถ้าไม่มีการกรอก
                   ? "กรุณากรอก แขวง/ตำบล" // ข้อความช่วยเหลือเมื่อไม่มีการกรอก
                   : "กรุณากรอก (ในรูปแบบที่ถูกต้อง)" // ข้อความช่วยเหลือเมื่อกรอกไม่ถูกต้อง
+                : "" // ไม่มีข้อผิดพลาด
+            }
+          />
+        </ResponsiveStack>
+        <ResponsiveStack isSmallScreen={isSmallScreen}>
+          <SelectField
+            label="จังหวัด" // ชื่อฟิลด์ที่จะแสดงให้ผู้ใช้เห็น
+            name="Province" // ชื่อฟิลด์สำหรับการจัดการค่าของจังหวัด
+            value={formData.Province} // ค่าปัจจุบันจากฟอร์มที่เก็บจังหวัด
+            onChange={handleChange} // ฟังก์ชันที่ใช้ในการจัดการการเปลี่ยนแปลงเมื่อผู้ใช้เลือกจังหวัด
+            options={province || []} // ตัวเลือกที่ให้ผู้ใช้เลือก
+            error={errors.Province} // ข้อผิดพลาด (ถ้ามี) สำหรับฟิลด์จังหวัด
+            fullWidth // ทำให้ฟิลด์มีความกว้างเต็ม
+          />
+          <SelectField
+            label="รหัสไปรษณีย์" // ชื่อฟิลด์ที่จะแสดงให้ผู้ใช้เห็น
+            name="PostalCode" // ชื่อฟิลด์สำหรับการจัดการค่าของจังหวัด
+            value={formData.PostalCode} // ค่าปัจจุบันจากฟอร์มที่เก็บจังหวัด
+            onChange={handleChange} // ฟังก์ชันที่ใช้ในการจัดการการเปลี่ยนแปลงเมื่อผู้ใช้เลือกจังหวัด
+            options={postalCode || []} // ตัวเลือกที่ให้ผู้ใช้เลือก
+            error={errors.PostalCode} // ข้อผิดพลาด (ถ้ามี) สำหรับฟิลด์จังหวัด
+            fullWidth // ทำให้ฟิลด์มีความกว้างเต็ม
+            helperText={
+              errors.PostalCode // ตรวจสอบข้อผิดพลาดสำหรับรหัสไปรษณีย์
+                ? !formData.PostalCode // ถ้าไม่มีการกรอกหมายเลข
+                  ? "กรุณากรอกรหัสไปรษณีย์" // ข้อความช่วยเหลือเมื่อไม่มีการกรอก
+                  : "กรุณากรอกให้ถูกต้อง (รหัสไปรษณีย์ต้องเป็นตัวเลข 5 หลัก)" // ข้อความช่วยเหลือเมื่อกรอกไม่ถูกต้อง
                 : "" // ไม่มีข้อผิดพลาด
             }
           />
