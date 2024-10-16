@@ -55,7 +55,8 @@
 
 @media (max-width:425px) {
   .button {
-    height: 40px !important;
-    width: 130px !important;
+    /*   height: 40px !important;
+    width: 130px !important;*/
+ 
   }
 }

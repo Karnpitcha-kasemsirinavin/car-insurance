@@ -1,15 +1,16 @@
 import React from "react";
 import { Typography } from "@mui/material";
 
-const SectionTitleTypography = ({ text, iconClass }) => {
+const SectionTitleTypography = ({ text, iconClass, fontSize ="19px" , fontWeight="300"}) => {
   return (
     <Typography
       variant="h1"
       sx={{
-        fontSize: "19px",
+        fontSize: fontSize,
         fontFamily: '"Prompt", sans-serif',
         display: "flex",
         gap: "8px",
+        fontWeight:fontWeight        
       }}
     >
       <i

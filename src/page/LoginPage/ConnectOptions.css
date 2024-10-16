@@ -1,0 +1,36 @@
+.connect-options{
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;  
+  gap: 20px
+  ;
+}
+.connect-options h1{
+font-size: var(--font-size-14-custom);
+color: #7C7C8A;
+font-weight: 500;
+}
+.connect-options__box{
+  display: flex;
+}
+.connect-options__box--item{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+background: var(--color-white);
+padding: 10px;
+border-radius: 8px;
+box-shadow: 0 0px 3px rgba(0, 0, 0, 0.2);
+}
+.connect-options__box--item img{
+width: 38px;
+
+
+}
+
+.connect-options p{
+font-size: var(--font-size-12-custom);
+}
+
+
