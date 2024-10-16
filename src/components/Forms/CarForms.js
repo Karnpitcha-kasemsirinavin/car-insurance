@@ -102,85 +102,44 @@ function CarForms() {
       CMIExpirationDt
     } = formData;
 
+     //  * correction and test
+    // 4-digit number (Registered Year)
+    const yearRegex = /^[0-9]{4}$/;
+    // only number allow
+    const numberSizeRegex = /^[0-9]+$/;
+    // Chassis number pattern
+    const chassisNumberRegex = /^[A-Za-z0-9]+$/;
+    // RegistrationFt
+    const licensePlateRegex =  /^[ก-ฮ]{2}$/;
+    // 
+
     // * requirement of fields
     const newErrors = {
       Manufacturer: !Manufacturer,
       Model: !Model,
       Colour: !Colour,
+
       PlateType: !PlateType,
-      RegistrationFt: false, // เริ่มต้นเป็น false เพื่อรอการตรวจสอบ
-      RegistrationSd: !RegistrationSd, // ตรวจสอบฟิลด์ RegistrationSd
-      RegisteredYear: !RegisteredYear, // ตรวจสอบฟิลด์ ปีที่ลงทะเบียบ
-      Displacement: !Displacement, // ตรวจสอบฟิลด์ ขนาดรถยนต์
-      GrossVehOrCombinedWeight: !GrossVehOrCombinedWeight, // ตรวจสอบฟิลด์  นํ้าหนักรถ
-      SeatingCapacity: !SeatingCapacity, // ตรวจสอบฟืวด์  จํานวนที่นั่ง
-      ChassisSerialNumber: !ChassisSerialNumber, //  ตรวจสอบฟืวด์ หมายเลขตัวถัง
-      RegisteredProvCd: !RegisteredProvCd, // ตรวจสอบฟืวด์ จังหวัดที่ลงทะเบียน
-      CMIEffectiveDt: !CMIEffectiveDt, // ตรวจสอบฟิวด์
-      CMIExpirationDt: CMIExpirationDt
+      RegistrationFt: !RegistrationFt || !licensePlateRegex.test(RegistrationFt),
+      RegistrationSd: !RegistrationSd || !numberSizeRegex.test(RegistrationSd) || RegistrationSd.length !== 4, 
+      RegisteredYear: !RegisteredYear || !yearRegex.test(RegisteredYear),
+      
+      Displacement: !Displacement || !numberSizeRegex.test(Displacement), 
+      GrossVehOrCombinedWeight: !GrossVehOrCombinedWeight || !numberSizeRegex.test(GrossVehOrCombinedWeight),
+      SeatingCapacity: !SeatingCapacity || !numberSizeRegex.test(SeatingCapacity),
+      ChassisSerialNumber: !ChassisSerialNumber || !chassisNumberRegex.test(ChassisSerialNumber),
+      RegisteredProvCd: !RegisteredProvCd,
+
+      CMIEffectiveDt: !CMIEffectiveDt || validateDatesStart(CMIEffectiveDt),
+      CMIExpirationDt: validateDatesExpired(CMIEffectiveDt, CMIExpirationDt)
     };
 
-    // ตรวจสอบเลขทะเบียนรถ
-    const licensePlateRegex = /^[ก-ฮ0-9]{1,7}$/; // ตรวจสอบ  RegistrationFt
-    const licensePlate2Regex = /^[ก-ฮ0-9]+$/; // ตรวจสอบ RegistrationSd (ไม่มีจำนวนจำกัด)
-    // ทำการตรวจสอบค่าต่าง ๆ
-    newErrors.RegistrationFt =
-    !RegistrationFt || !licensePlateRegex.test(RegistrationFt); // ตรวจสอบเลขทะเบียนรถ
-    newErrors.RegistrationSd =
-    !RegistrationSd || !licensePlate2Regex.test(RegistrationSd); // ตรวจสอบเลขทะเบียนรถกลุ่ม 2
-
-    // ตรวจสอบให้เป็นตัวเลข 4 หลัก (ปีที่จดลงทะเบียบ)
-    const yearRegex = /^[0-9]{4}$/;
-    newErrors.RegisteredYear =
-    !RegisteredYear || !yearRegex.test(RegisteredYear); // ตรวจสอบปีที่จดทะเบียน
-
-    // ตรวจสอบว่า Displacement เป็นตัวเลขเท่านั้น
-    const engineSizeRegex = /^[0-9]+$/;
-    newErrors.Displacement = !Displacement || !engineSizeRegex.test(Displacement); // ตรวจสอบว่ามีค่าหรือไม่และเป็นตัวเลข
-
-    // ตรวจสอบว่า  GrossVehOrCombinedWeight เป็นตัวเลขเท่านั้น
-    const vehicleWeightRegex = /^[0-9]+$/;
-    newErrors.GrossVehOrCombinedWeight =
-      !GrossVehOrCombinedWeight || !vehicleWeightRegex.test(GrossVehOrCombinedWeight); // ตรวจสอบว่ามีค่าว่างหรือเป็นตัวเลช
-
-    //ตรวจสอบว่า SeatingCapacity
-    const numberSeatsRegex = /^[0-9]+$/;
-    newErrors.SeatingCapacity = !SeatingCapacity || !numberSeatsRegex.test(SeatingCapacity); // ตรวจสอบว่ามีค่าว่างหรือเป็นตัวเลข
     setErrors(newErrors);
-
-    //ตรวจสอบว่า  หมายเลขตัวถัง
-    const chassisNumberRegex = /^[A-Za-z0-9]+$/; // ตัวอักษรอังกฤษและตัวเลข
-    newErrors.ChassisSerialNumber =
-    !ChassisSerialNumber || !chassisNumberRegex.test(ChassisSerialNumber); // ตรวจสอบว่ามีค่าว่างหรือเป็นตัวเลขเเละอักษรอังกฤษ
-
-    // สร้าง regex สำหรับตรวจสอบชื่อจังหวัด
-    // const provinceRegistrationRegex = new RegExp(`^(${provinces.join("|")})$`);
-    // newErrors.RegisteredProvCd =
-    //   !RegisteredProvCd ||
-    //   !provinceRegistrationRegex.test(RegisteredProvCd);
-
-    // CMI Effective Date
-    newErrors.CMIEffectiveDt = validateDatesStart(CMIEffectiveDt);
-    newErrors.CMIExpirationDt = validateDatesExpired(CMIEffectiveDt, CMIExpirationDt);
-
-    setErrors(newErrors);
-
-    if (
-      !newErrors.Manufacturer &&
-      !newErrors.Model &&
-      !newErrors.Colour &&
-      !newErrors.PlateType &&
-      !newErrors.RegistrationFt &&
-      !newErrors.RegistrationSd &&
-      !newErrors.RegisteredYear && // ตรวจสอบปีที่จดทะเบียนด้วย
-      !Displacement.Displacement && // ตรวจสอบขนาดรถยนต์
-      !GrossVehOrCombinedWeight.GrossVehOrCombinedWeight && // ตรวจสอบนํ้าหนักรถ
-      !ChassisSerialNumber.ChassisSerialNumber && // ตรวจสอบหมายเลขตัวถัง
-      !RegisteredProvCd.RegisteredProvCd &&
-      !CMIEffectiveDt.CMIEffectiveDt &&
-      !CMIExpirationDt.CMIExpirationDt
-    ) {
+    
+    // * no Error
+    if (Object.values(newErrors).every(value => value === false)) {
       console.log("ข้อมูลที่ส่ง:", formData);
+      console.log("pass")
       // * ทำการส่งข้อมูลที่นี่
       navigate("/policy-ownerInfo", {
         state: {
@@ -202,7 +161,7 @@ function CarForms() {
     // Check if both dates are valid and not in the past
     const isStartDateValid = start < today;
     
-    return isStartDateValid ;
+    return isStartDateValid;
   }
 
   // * check valid date (Expired)
@@ -295,6 +254,7 @@ function CarForms() {
     requestProvince();
   }, [])
 
+  // * Display ===========================================================
   return (
     <div>
       {/* เพิ่มหัวข้อหลัก */}
@@ -355,6 +315,9 @@ function CarForms() {
             onChange={handleChange} // ฟังก์ชันที่ใช้จัดการการเปลี่ยนแปลง
             variant="outlined"
             fullWidth
+            inputProps={{
+              maxLength: 2
+            }}
             error={errors.RegistrationFt} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
             helperText={
               errors.RegistrationFt
@@ -371,6 +334,7 @@ function CarForms() {
           <TextField
             label="เลขทะเบียนรถ (กลุ่มที่ 2)"
             name="RegistrationSd" // ตั้งชื่อฟิลด์ที่เก็บใน state
+            type="number"
             value={formData.RegistrationSd} // ค่าของฟิลด์ที่เก็บใน state
             onChange={handleChange} // ฟังก์ชันที่ใช้จัดการการเปลี่ยนแปลง
             variant="outlined"
@@ -383,10 +347,14 @@ function CarForms() {
                   : "กรุณากรอกเลขทะเบียนรถ (ในรูปแบบที่ถูกต้อง)"
                 : "" // ไม่มีข้อผิดพลาด
             } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
+            inputProps={{
+              maxLength: 4
+            }}
           />
           <TextField
             label="ปีที่จดทะเบียน"
             name="RegisteredYear"
+            type="number"
             value={formData.RegisteredYear} // เชื่อมโยงกับ state
             onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
             variant="outlined"
@@ -394,7 +362,7 @@ function CarForms() {
             error={errors.RegisteredYear} // แสดงข้อผิดพลาด
             helperText={
               errors.RegisteredYear
-                ? "กรุณากรอก (พ.ศ เท่านั้น เช่น 2567 )"
+                ? "กรุณากรอก (ค.ศ เท่านั้น เช่น 2001 )"
                 : ""
             } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
           />
@@ -438,8 +406,9 @@ function CarForms() {
         {/* เเถวที่5 */}
         <ResponsiveStack isSmallScreen={isSmallScreen}>
           <TextField
-            label="ขนาดเครื่องยนต์ cc" // ป้ายฟิลด์
+            label="ขนาดเครื่องยนต์ (CC)" // ป้ายฟิลด์
             name="Displacement" // ชื่อฟิลด์ที่เก็บใน state
+            type="number"
             value={formData.Displacement} // ค่าของฟิลด์ที่เก็บใน state
             onChange={handleChange} // ฟังก์ชันที่ใช้จัดการการเปลี่ยนแปลง
             variant="outlined"
@@ -454,8 +423,9 @@ function CarForms() {
             }
           />
           <TextField
-            label="นํ้าหนักรถ" // นํ้าหนักรถฟิลด์
+            label="นํ้าหนักรถ (KG)" // นํ้าหนักรถฟิลด์
             name="GrossVehOrCombinedWeight"
+            type="number"
             value={formData.GrossVehOrCombinedWeight}
             onChange={handleChange}
             variant="outlined"
@@ -475,6 +445,7 @@ function CarForms() {
           <TextField
             label="จํานวนที่นั่ง" // ป้ายฟิลด์
             name="SeatingCapacity" // ชื่อฟิลด์ที่เก็บใน state
+            type="number"
             value={formData.SeatingCapacity} // ค่าของฟิลด์ที่เก็บใน state
             onChange={handleChange} // ฟังก์ชันที่ใช้จัดการการเปลี่ยนแปลง
             variant="outlined"

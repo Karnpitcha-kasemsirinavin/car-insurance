@@ -53,7 +53,7 @@ function PolicyOwnerForms() {
   };
 
   // * handle Submit form
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const {
       InsuredTitle,
       InsuredName,
@@ -73,17 +73,26 @@ function PolicyOwnerForms() {
       SubDistrict,
     } = formData;
 
+    //  * correction and test
+    // name and surname
+    const nameRegex = /^[ก-ฮA-Za-z]+$/;
+    // 13-digit id card
+    const idCardNumberRegex = /^\d{13}$/;
+    // phone number
+    const phoneNumberRegex = /^[0-9]{10}$/;
+
+    // * requirement of fields
     const newErrors = {
       InsuredTitle: !InsuredTitle,
-      InsuredName: !InsuredName,
-      InsuredSurname: !InsuredSurname,
-      BirthDt: !BirthDt,
-      PhoneNumber: !PhoneNumber,
+      InsuredName: !InsuredName || !nameRegex.test(InsuredName),
+      InsuredSurname: !InsuredSurname || !nameRegex.test(InsuredSurname),
+      BirthDt: !BirthDt || validateBeforeToday(BirthDt),
+      PhoneNumber: !PhoneNumber || !phoneNumberRegex.test(PhoneNumber),
 
       InsuredType: !InsuredType,
       IDType: !IDType,
-      InsuredUniqueID: !InsuredUniqueID,
-      InsuredUniqueIDExpDt: !InsuredUniqueIDExpDt,
+      InsuredUniqueID: !InsuredUniqueID || !idCardNumberRegex.test(InsuredUniqueID),
+      InsuredUniqueIDExpDt: !InsuredUniqueIDExpDt || validateAfterOrToday(InsuredUniqueIDExpDt),
 
       Addr: !Addr,
       PostalCode: !PostalCode,
@@ -92,51 +101,48 @@ function PolicyOwnerForms() {
       SubDistrict:!SubDistrict
     };
 
-    //  กําหนดความถูกต้อง
-    const nameRegex = /^[ก-ฮA-Za-z]+$/; // รองรับเฉพาะอักษรไทยและอังกฤษ
-    const surnameRegex = /^[ก-ฮA-Za-z]+$/; // รองรับเฉพาะอักษรไทยและอังกฤษ
-    const idCardNumberRegex = /^\d{13}$/; // รองรับเฉพาะตัวเลข 13 หลัก
-    const postalCodeRegex = /^[0-9]{5}$/; // รองรับเฉพาะตัวเลข 5 หลัก
-    const phoneNumberRegex = /^[0-9]{10}$/;
-    // const districtRegex = /^[ก-ฮA-Za-z\s]+$/; // รองรับเฉพาะอักษรไทย (ก-ฮ) และอังกฤษ (A-Z, a-z) และเว้นวรรค
-    // const subdistrictRegex = /^[ก-ฮA-Za-z\s]+$/; // รองรับเฉพาะอักษรไทย (ก-ฮ) และอังกฤษ (A-Z, a-z) และเว้นวรรค
-
-    // ตรวจสอบค่าว่าง เเละความถูกต้อง
-    newErrors.InsuredName = !InsuredName || !nameRegex.test(InsuredName);
-    newErrors.InsuredSurname = !InsuredSurname || !surnameRegex.test(InsuredSurname);
-    newErrors.InsuredUniqueID =
-      !InsuredUniqueID || !idCardNumberRegex.test(InsuredUniqueID);
-    newErrors.PostalCode = !PostalCode || !postalCodeRegex.test(PostalCode);
-
-    // newErrors.District = !District || !districtRegex.test(District); // ตรวจสอบว่าค่าว่างหรือไม่และตรงตามรูปแบบ
-    // newErrors.SubDistrict = !SubDistrict || !subdistrictRegex.test(SubDistrict);
     setErrors(newErrors);
+
+    console.log(newErrors)
     
-    // * requirement of fields
-    if (
-      !newErrors.InsuredTitle &&
-      !newErrors.InsuredName &&
-      !newErrors.InsuredSurname &&
-      !BirthDt.BirthDt &&
-      !PhoneNumber.PhoneNumber &&
-
-      !newErrors.InsuredType &&
-      !newErrors.IDType &&
-      !newErrors.InsuredUniqueID &&
-      !InsuredUniqueIDExpDt.InsuredUniqueIDExpDt &&
-
-      !Addr.Addr &&
-      !Province.Province &&
-      !District.District &&
-      !SubDistrict.SubDistrict
-    ) 
-    {
+    // * no Error
+    if (Object.values(newErrors).every(value => value === false)) {
       console.log("ข้อมูลที่ส่ง:", formData);
-      // ทำการส่งข้อมูลที่นี่
-      requestDocument()
+      // * ทำการส่งข้อมูลที่นี่
+      await requestDocument()
       // navigate("/payment-page");
     }
   };
+
+  // * check valid date (Birth Date)
+  function validateBeforeToday(date) {
+    if (!date) {
+      return true;
+    }
+    const inputDate = new Date(date);
+    const today = new Date();
+    // Set the time of 'today' to midnight for accurate comparisons
+    today.setHours(0, 0, 0, 0);
+    // Check if both dates are valid and not in the past
+    const isStartDateValid = inputDate >= today;
+    
+    return isStartDateValid;
+  }
+
+  // * check valid date (Expiratiuon Date)
+  function validateAfterOrToday(date) {
+    if (!date) {
+      return true;
+    }
+    const inputDate = new Date(date);
+    const today = new Date();
+    // Set the time of 'today' to midnight for accurate comparisons
+    today.setHours(0, 0, 0, 0);
+    // Check if both dates are valid and not in the past
+    const isStartDateValid = inputDate < today;
+    
+    return isStartDateValid;
+  }
 
   // * request Document (create order)
   async function requestDocument() {

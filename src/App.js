@@ -10,10 +10,10 @@ import UploadReceipt from "./page/UploadReceipt/UploadReceipt.js"
 import  DocumentPage from "./page/DocumentPage/DocumentPage.js"
 import TaxRenewal from "./page/TaxRenewal/TaxRenewal.js";
 import TaxPaymentPage from "./page/TaxPaymentPage/TaxPaymentPage.js"
+import TaxSummary from "./page/TaxSummary/TaxSummary.js"
 
 export const baseURL = "http://localhost:8000";
 
-import TaxSummary from "./page/TaxSummary/TaxSummary.js"
 function App() {
   return (
     <Router>
