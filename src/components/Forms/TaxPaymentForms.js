@@ -18,13 +18,34 @@ import StickyFooter from "../StickyFooter/StickyFooter.js";
 import SelectField from "./SelectField";
 
 import ResponsiveStack from "./ResponsiveStack.js";
-import FileUpload from '../FileUpload/FileUpload';
 
 function TaxPaymentForms() {
-  const [formData, setFormData] = useState({});
-  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState({
+    engineCapacity: "",
+    registrationDate: "",
+    lastPaidYear: "",
+    paymentDate: "",
+    paymentTime: "",
+    deliveryType: "",
+    registrationBook: null,
+    inspectionCertificate: null,
+    vehicleTax: null,
+  });
+
+  const [errors, setErrors] = useState({
+    engineCapacity: false,
+    registrationDate: false,
+    lastPaidYear: false,
+    paymentDate: false,
+    paymentTime: false,
+    deliveryType: false,
+    registrationBook: false,
+    inspectionCertificate: false,
+    vehicleTax: false,
+  });
+
   const navigate = useNavigate();
-  const isSmallScreen = useMediaQuery("(max-width:536px)"); // ตรวจสอบขนาดหน้าจอ
+  const isSmallScreen = useMediaQuery("(max-width:536px)");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -38,46 +59,43 @@ function TaxPaymentForms() {
       setErrors({ ...errors, [name]: false });
     }
   };
+
   const handleSubmit = () => {
-    const {  /* ลบได้เลย ข้างใน*/
-     
-      prefix,
-      name,
-      surname,
-      insuranceType,
-      idType,
-      idCardNumber,
-      expirationDate,
-      address,
-      postalCode,
-      province,
-      district,
-      subdistrict,
+    const {
+      engineCapacity,
+      registrationDate,
+      lastPaidYear,
+      paymentDate,
+      paymentTime,
+      deliveryType,
+      registrationBook,
+      inspectionCertificate,
+      vehicleTax,
     } = formData;
 
-    const newErrors = { /* ลบได้เลย ข้างใน*/
-      prefix: !prefix,
-      name: !name,
-      surname: !surname,
-      insuranceType: !insuranceType,
-      idType: !idType,
-      idCardNumber: !idCardNumber,
-      expirationDate: !expirationDate,
-      address: !address,
-      postalCode: !postalCode,
-      province: !province,
-      district: !district,
-      subdistrict: !subdistrict,
+    const newErrors = {
+      engineCapacity: !engineCapacity,
+      registrationDate: !registrationDate,
+      lastPaidYear: !lastPaidYear,
+      paymentDate: !paymentDate,
+      paymentTime: !paymentTime,
+      deliveryType: !deliveryType,
+      registrationBook: !registrationBook,
+      inspectionCertificate: !inspectionCertificate,
+      vehicleTax: !vehicleTax,
     };
-
-    //  กําหนดความถูกต้อง
-
-    // ตรวจสอบค่าว่าง เเละความถูกต้อง
-
-
+    setErrors(newErrors);
+    console.log("ข้อมูลปัจจุบันของฟอร์ม:", formData); // ตรวจสอบข้อมูลทุกครั้งที่คลิก
     if (
-   
-      !subdistrict.subdistrict
+      !newErrors.engineCapacity &&
+      !newErrors.registrationDate &&
+      !newErrors.lastPaidYear &&
+      !newErrors.paymentDate &&
+      !newErrors.paymentTime &&
+      !newErrors.deliveryType &&
+      !newErrors.registrationBook &&
+      !newErrors.inspectionCertificate &&
+      !newErrors.vehicleTax
     ) {
       console.log("ข้อมูลที่ส่ง:", formData);
       // ทำการส่งข้อมูลที่นี่
@@ -85,6 +103,10 @@ function TaxPaymentForms() {
       navigate("/payment-page");
     }
   };
+  const handleGoTo = () => {
+    navigate("/tax-summary"); // นำทางไปหน้าอื่น
+  };
+  
   return (
     <div>
       <MainTitle text="ข้อมูลการชำระภาษี" />
@@ -178,26 +200,55 @@ function TaxPaymentForms() {
         </ResponsiveStack>
         <SectionTitle text="การจัดส่ง" iconClass="fa-solid fa-truck-fast" />
         <ResponsiveStack>
-          <SelectField
-            label="ประเภทการจัดส่ง"
-            name="deliveryType" // ชื่อฟิลด์
-            value={formData.deliveryType} // ค่าปัจจุบันจากฟอร์ม
-            onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
-            options={[
-              "จัดส่งภายในประเทศ",
-              "จัดส่งต่างประเทศ",
-              "จัดส่งด่วน",
-              "จัดส่งธรรมดา",
-            ]} // ตัวเลือกที่ให้ผู้ใช้เลือก
-            error={errors.deliveryType} // ข้อผิดพลาด (ถ้ามี)
-            fullWidth // ทำให้ฟิลด์มีความกว้างเต็ม
+          <TextField
+            label="สมุดคู่มือจดทะเบียนรถ (ฉบับจริง หรือสำเนาก็ได้)"
+            type="file"
+            name="registrationBook" // เปลี่ยนชื่อฟิลด์เป็น registrationBook
+            onChange={handleChange} // ใช้ฟังก์ชันจัดการการเปลี่ยนแปลง
+            error={errors.registrationBook} // ข้อผิดพลาดสำหรับ registrationBook
+            fullWidth
+            helperText={errors.registrationBook ? "กรุณาอัปโหลดเอกสาร" : ""}
+            InputLabelProps={{
+              shrink: true, // ทำให้ label อยู่ด้านบน
+            }}
           />
         </ResponsiveStack>
-        <FileUpload/>
+
+        <ResponsiveStack>
+          <TextField
+            label="หนังสือรับรองการตรวจสภาพรถ"
+            type="file"
+            name="inspectionCertificate" // เปลี่ยนชื่อฟิลด์เป็น inspectionCertificate
+            onChange={handleChange} // ใช้ฟังก์ชันจัดการการเปลี่ยนแปลง
+            error={errors.inspectionCertificate} // ข้อผิดพลาดสำหรับ inspectionCertificate
+            fullWidth
+            helperText={
+              errors.inspectionCertificate ? "กรุณาอัปโหลดเอกสาร" : ""
+            }
+            InputLabelProps={{
+              shrink: true, // ทำให้ label อยู่ด้านบน
+            }}
+          />
+        </ResponsiveStack>
+
+        <ResponsiveStack>
+          <TextField
+            label="ใบภาษีรถยนต์"
+            type="file"
+            name="vehicleTax" // เปลี่ยนชื่อฟิลด์เป็น vehicleTax
+            onChange={handleChange} // ใช้ฟังก์ชันจัดการการเปลี่ยนแปลง
+            error={errors.vehicleTax} // ข้อผิดพลาดสำหรับ vehicleTax
+            fullWidth
+            helperText={errors.vehicleTax ? "กรุณาอัปโหลดเอกสาร" : ""}
+            InputLabelProps={{
+              shrink: true, // ทำให้ label อยู่ด้านบน
+            }}
+          />
+        </ResponsiveStack>
       </FormContainer>
 
       <StickyFooter>
-        <Buttons onClick={handleSubmit} variant="primary" label="บันทึก" />
+        <Buttons onClick={handleGoTo} variant="primary" label="บันทึก" />
       </StickyFooter>
     </div>
   );

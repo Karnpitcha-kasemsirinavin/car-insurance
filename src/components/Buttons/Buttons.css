@@ -16,6 +16,20 @@
   color: white;
   border-bottom: 6px solid #3586A9;
 }
+/* ปุ่มถัดไป (accent) */
+.button.accent{
+  background-color: var(--accent-color);
+  color: white;
+  border-bottom: 3px solid #BF5630;
+}
+.button.accent:hover{
+  background-color: #f89977;
+}
+.button.accent:active{
+  transform: translateY(2px);
+  background-color: #c86e4e;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
 
 /* ปุ่มยกเลิก (cancel) */
 .button.cancel {
@@ -37,4 +51,11 @@
 
 .button.cancel:hover {
   background-color: #f0f0f0; /* เปลี่ยนพื้นหลังเมื่อ hover */
+}
+
+@media (max-width:425px) {
+  .button {
+    height: 40px !important;
+    width: 130px !important;
+  }
 }

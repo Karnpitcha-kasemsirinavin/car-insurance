@@ -1,0 +1,34 @@
+.tax-conten{
+  display: grid;
+  background: var(--color-white);
+padding: 12px;
+gap: 10px;
+border-radius: 8px;
+box-shadow: 0px 3px 2.8px rgba(0, 0, 0, 0.2);
+
+
+}
+.tax-conten__title h1{
+  font-size: var( --font-size-s1-regular);
+}
+
+.tax-conten__conten{
+  display: flex;
+  justify-content: space-between;
+}
+.tax-conten__left{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.tax-conten__left p{
+  font-size: var(--font-size-s2-medium);
+  color: var(--text-color);
+}
+.tax-conten__left i{
+  color:  var( --primary-color);
+}
+.tax-conten__right p{
+  font-size: var(--font-size-s2-medium);
+  color: var(--text-color);
+}

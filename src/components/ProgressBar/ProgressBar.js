@@ -19,7 +19,7 @@ function ProgressBar({ type }) {
       return [
         { name: "เริ่ม", path: ["/tax-renewal"] },
         { name: "กรอกข้อมูล", path: ["/tax-payment-page"] },
-        { name: "ตรวจสอบ", path: ["/check"] },
+        { name: "ตรวจสอบ", path: ["/tax-summary"] },
         { name: "แจ้งชำระเงิน", path: ["/payment-notification"] },
         { name: "ใบเสร็จ", path: ["/receipt"] },
       ];
