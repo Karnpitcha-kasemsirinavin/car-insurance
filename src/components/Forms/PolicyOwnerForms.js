@@ -102,15 +102,19 @@ function PolicyOwnerForms() {
     };
 
     setErrors(newErrors);
-
     console.log(newErrors)
     
     // * no Error
     if (Object.values(newErrors).every(value => value === false)) {
       console.log("ข้อมูลที่ส่ง:", formData);
       // * ทำการส่งข้อมูลที่นี่
-      await requestDocument()
-      // navigate("/payment-page");
+      // check user
+      const isUserValid = await requestDocument()
+      console.log(isUserValid);
+      if (!isUserValid) {
+        navigate("/login-page");
+      }
+      navigate("/payment-page");
     }
   };
 
@@ -161,20 +165,14 @@ function PolicyOwnerForms() {
         );
         console.log(response)
         if (response.status === 200) {
-          console.log(response.data.data)
-            // setResult(response.data.data);
-            
-            // * check whether the user is already login
-            if (!response.data.validUser) {
-                // * go to auth page
-                // router.push('/auth');
-            } else {
-                // * proceed to next step
-                // setActiveStep((prevStep) => prevStep + 1);
-            }
+          return response.data.validUser
 
+        } else {
+          // ! error
+          console.log("error cannot document" );
         }
     } catch (error) {
+      // ! error
         console.log("error: ", error);
     }
 }

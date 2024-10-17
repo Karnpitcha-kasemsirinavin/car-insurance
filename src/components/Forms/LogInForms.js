@@ -122,10 +122,8 @@ function LogInForms() {
   <Stack  alignItems="center" >
   <Buttons onClick={handleSubmit} variant="primary" label="Login" fontSize="16px" width="100%!important"   />
 
-  
   </Stack>
 
- 
 </FormContainer>
 
     </div>

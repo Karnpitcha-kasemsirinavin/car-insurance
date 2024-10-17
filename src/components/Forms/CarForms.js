@@ -82,7 +82,7 @@ function CarForms() {
   };
 
   // * Hnadle Submit Form
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const {
       Manufacturer,
       Model,
@@ -131,15 +131,32 @@ function CarForms() {
       RegisteredProvCd: !RegisteredProvCd,
 
       CMIEffectiveDt: !CMIEffectiveDt || validateDatesStart(CMIEffectiveDt),
-      CMIExpirationDt: validateDatesExpired(CMIEffectiveDt, CMIExpirationDt)
+      CMIExpirationDt: validateDatesExpired(CMIEffectiveDt, CMIExpirationDt),
+
+      // check plate validation
+      PlateValidity: true,
+      // check chassis number validation
+      ChassisValidity: true,
+
     };
 
+    // * request checking when all info available
+    if (CMIEffectiveDt) {
+      if (RegistrationFt && RegistrationSd) {
+        newErrors.PlateValidity = !(await checkPlateValidity());
+      }
+
+      if (ChassisSerialNumber) {
+        newErrors.ChassisValidity = !(await checkChassisValidity());
+      }
+    }
+
+    console.log(newErrors);
     setErrors(newErrors);
     
     // * no Error
     if (Object.values(newErrors).every(value => value === false)) {
       console.log("ข้อมูลที่ส่ง:", formData);
-      console.log("pass")
       // * ทำการส่งข้อมูลที่นี่
       navigate("/policy-ownerInfo", {
         state: {
@@ -240,6 +257,41 @@ function CarForms() {
       if (response) {
         const tempProvince = response.data.data.map(province => province.value);
         setProvince(tempProvince);
+      }
+    } catch (error) {
+      // ! error
+      console.log("error: ", error)
+    }
+  }
+
+  // * check validity of registration plate
+  async function checkPlateValidity() {
+    try {
+      const response = await axios.post(`${baseURL}/plateValidity`, {
+        RegistrationFt: formData.RegistrationFt,
+        RegistrationSd: formData.RegistrationSd,
+        CMIEffectiveDt: formData.CMIEffectiveDt,
+      });
+      console.log(response);
+      if (response && response.data.status === "success") {
+        return response.data.RegistrationValid;
+      }
+    } catch (error) {
+      // ! error
+      console.log("error: ", error)
+    }
+  }
+
+  // * check validity of registration plate
+  async function checkChassisValidity() {
+    try {
+      const response = await axios.post(`${baseURL}/ChassisValidity`, {
+        ChassisSerialNumber: formData.ChassisSerialNumber,
+        CMIEffectiveDt: formData.CMIEffectiveDt,
+      });
+      console.log(response);
+      if (response && response.data.status === "success") {
+        return response.data.RegistrationValid;
       }
     } catch (error) {
       // ! error
