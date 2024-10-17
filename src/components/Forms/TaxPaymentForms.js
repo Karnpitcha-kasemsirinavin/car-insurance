@@ -18,14 +18,19 @@ import StickyFooter from "../StickyFooter/StickyFooter.js";
 import SelectField from "./SelectField";
 
 import ResponsiveStack from "./ResponsiveStack.js";
+import { useLocation } from "react-router-dom";
 
 function TaxPaymentForms() {
+  // * get from previous page
+  const location = useLocation();
+  const { vehicleCode, displayVeh } = location.state || {};
+
   const [formData, setFormData] = useState({
-    engineCapacity: "",
-    registrationDate: "",
-    lastPaidYear: "",
-    paymentDate: "",
-    paymentTime: "",
+    value: "",
+    RegisteredYear: "",
+    DocumentYear: "",
+    IssuedDate: "",
+    IssuedTime: "",
     deliveryType: "",
     registrationBook: null,
     inspectionCertificate: null,
@@ -33,11 +38,11 @@ function TaxPaymentForms() {
   });
 
   const [errors, setErrors] = useState({
-    engineCapacity: false,
-    registrationDate: false,
-    lastPaidYear: false,
-    paymentDate: false,
-    paymentTime: false,
+    value: false,
+    RegisteredYear: false,
+    DocumentYear: false,
+    IssuedDate: false,
+    IssuedTime: false,
     deliveryType: false,
     registrationBook: false,
     inspectionCertificate: false,
@@ -60,52 +65,93 @@ function TaxPaymentForms() {
     }
   };
 
+  // * handle submit form
   const handleSubmit = () => {
     const {
-      engineCapacity,
-      registrationDate,
-      lastPaidYear,
-      paymentDate,
-      paymentTime,
-      deliveryType,
-      registrationBook,
-      inspectionCertificate,
-      vehicleTax,
+      value,
+      RegisteredYear,
+      DocumentYear,
+      IssuedDate,
+      IssuedTime,
     } = formData;
 
+    // phone number
+    const numberRegex = /^[0-9]+$/;
+
     const newErrors = {
-      engineCapacity: !engineCapacity,
-      registrationDate: !registrationDate,
-      lastPaidYear: !lastPaidYear,
-      paymentDate: !paymentDate,
-      paymentTime: !paymentTime,
-      deliveryType: !deliveryType,
-      registrationBook: !registrationBook,
-      inspectionCertificate: !inspectionCertificate,
-      vehicleTax: !vehicleTax,
+      value: !value || !numberRegex.test(value),
+      RegisteredYear: !RegisteredYear || !validateDatesStart(RegisteredYear),
+      DocumentYear: !DocumentYear || !validateDatesStart(DocumentYear),
+      IssuedDate: !IssuedDate || !validateAfterToday(IssuedDate),
+      IssuedTime: !IssuedTime,
+
+      checkDate: true,
     };
+
+    // * check date
+    if (RegisteredYear && DocumentYear) {
+      newErrors.checkDate = !validateDocumentNRegistered(DocumentYear, RegisteredYear);
+    }
+
     setErrors(newErrors);
-    console.log("ข้อมูลปัจจุบันของฟอร์ม:", formData); // ตรวจสอบข้อมูลทุกครั้งที่คลิก
-    if (
-      !newErrors.engineCapacity &&
-      !newErrors.registrationDate &&
-      !newErrors.lastPaidYear &&
-      !newErrors.paymentDate &&
-      !newErrors.paymentTime &&
-      !newErrors.deliveryType &&
-      !newErrors.registrationBook &&
-      !newErrors.inspectionCertificate &&
-      !newErrors.vehicleTax
-    ) {
+    console.log("ข้อมูลปัจจุบันของฟอร์ม:", formData);
+    if (Object.values(newErrors).every(value => value === false)) {
       console.log("ข้อมูลที่ส่ง:", formData);
       // ทำการส่งข้อมูลที่นี่
 
-      navigate("/payment-page");
+      // * send data with it
+      navigate("/tax-summary", {
+        state: {
+          inputData: {...formData, vehiclecode: vehicleCode},
+          displayVeh: displayVeh
+        }
+      });
     }
   };
-  const handleGoTo = () => {
-    navigate("/tax-summary"); // นำทางไปหน้าอื่น
-  };
+
+  // const handleGoTo = () => {
+  //   navigate("/tax-summary"); // นำทางไปหน้าอื่น
+  // };
+
+  // * check before today
+  function validateDatesStart(date) {
+    if (!date) {
+      return true;
+    }
+    const start = new Date(date);
+    const today = new Date();
+    // Set the time of 'today' to midnight for accurate comparisons
+    today.setHours(0, 0, 0, 0);
+
+    const isStartDateValid = start < today;
+    return isStartDateValid;
+  }
+
+  // * check after today
+  function validateAfterToday(date) {
+    if (!date) {
+      return true;
+    }
+    const start = new Date(date);
+    const today = new Date();
+    // Set the time of 'today' to midnight for accurate comparisons
+    today.setHours(0, 0, 0, 0);
+
+    const isStartDateValid = start >= today;
+    return isStartDateValid;
+  }
+
+  // * check before last DocumentYear after RegisteredYear
+  function validateDocumentNRegistered(documentYear, registeredYear) {
+    const start = new Date(registeredYear);
+    const lastDate = new Date(documentYear);
+    // Set the time of 'today' to midnight for accurate comparisons
+    lastDate.setHours(0, 0, 0, 0);
+
+    const isStartDateValid = start <= lastDate;
+    console.log(isStartDateValid);
+    return isStartDateValid;
+  }
   
   return (
     <div>
@@ -115,15 +161,15 @@ function TaxPaymentForms() {
         <SectionTitle text="ข้อมูลเครื่องยนต์" iconClass="fa-solid fa-car" />
         <ResponsiveStack>
           <TextField
-            label="ความจุกระบอกสูบ (ซีซี)"
-            name="engineCapacity"
-            value={formData.engineCapacity}
+            label="ความจุกระบอกสูบ (CC)"
+            name="value"
+            value={formData.value}
             onChange={handleChange}
-            error={errors.engineCapacity}
+            error={errors.value}
             fullWidth
             helperText={
-              errors.engineCapacity
-                ? !formData.engineCapacity
+              errors.value
+                ? !formData.value
                   ? "กรุณากรอกความจุกระบอกสูบ"
                   : "กรุณากรอกความจุกระบอกสูบในรูปแบบที่ถูกต้อง"
                 : "" // ไม่มีข้อผิดพลาด
@@ -138,12 +184,16 @@ function TaxPaymentForms() {
           <TextField
             label="วันที่จดทะเบียน"
             type="date" // กำหนดประเภทเป็นวันที่
-            name="registrationDate" // ชื่อฟิลด์
-            value={formData.registrationDate} // ค่าปัจจุบันจากฟอร์ม
+            name="RegisteredYear" // ชื่อฟิลด์
+            value={formData.RegisteredYear} // ค่าปัจจุบันจากฟอร์ม
             onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
-            error={errors.registrationDate} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
+            error={errors.RegisteredYear} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
             helperText={
-              errors.registrationDate ? "กรุณากรอกวันที่จดทะเบียน" : ""
+              errors.RegisteredYear 
+              ? !formData.RegisteredYear
+              ? "กรุณากรอกวันที่จดทะเบียน" 
+              : "กรุณากรอกวันที่จดทะเบียนในรูปแบบที่ถูกต้อง" 
+              : ""
             } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
             InputLabelProps={{
               shrink: true,
@@ -153,11 +203,11 @@ function TaxPaymentForms() {
           <TextField
             label="ปีล่าสุดที่จ่าย"
             type="date" // กำหนดประเภทเป็นวันที่
-            name="lastPaidYear" // ชื่อฟิลด์
-            value={formData.lastPaidYear} // ค่าปัจจุบันจากฟอร์ม
+            name="DocumentYear" // ชื่อฟิลด์
+            value={formData.DocumentYear} // ค่าปัจจุบันจากฟอร์ม
             onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
-            error={errors.lastPaidYear} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
-            helperText={errors.lastPaidYear ? "กรุณากรอกปีล่าสุดที่จ่าย" : ""} // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
+            error={errors.DocumentYear} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
+            helperText={errors.DocumentYear ? "กรุณากรอกปีล่าสุดที่จ่าย" : ""} // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
             InputLabelProps={{
               shrink: true,
             }}
@@ -169,12 +219,12 @@ function TaxPaymentForms() {
           <TextField
             label="วันที่ต้องการทําการจ่ายภาษี"
             type="date" // กำหนดประเภทเป็นวันที่
-            name="paymentDate" // ชื่อฟิลด์
-            value={formData.paymentDate} // ค่าปัจจุบันจากฟอร์ม
+            name="IssuedDate" // ชื่อฟิลด์
+            value={formData.IssuedDate} // ค่าปัจจุบันจากฟอร์ม
             onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
-            error={errors.paymentDate} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
+            error={errors.IssuedDate} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
             helperText={
-              errors.paymentDate ? "กรุณากรอกวันที่ต้องการทําการจ่ายภาษี" : ""
+              errors.IssuedDate ? "กรุณากรอกวันที่ต้องการทําการจ่ายภาษี" : ""
             } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
             InputLabelProps={{
               shrink: true,
@@ -185,12 +235,12 @@ function TaxPaymentForms() {
           <TextField
             label="เวลาที่ต้องการทําการ"
             type="time" // กำหนดประเภทเป็นเวลา
-            name="paymentTime" // ชื่อฟิลด์ (เปลี่ยนเป็น "paymentTime" เพื่อชัดเจนว่าเป็นเวลา)
-            value={formData.paymentTime} // ค่าปัจจุบันจากฟอร์ม
+            name="IssuedTime" // ชื่อฟิลด์ (เปลี่ยนเป็น "IssuedTime" เพื่อชัดเจนว่าเป็นเวลา)
+            value={formData.IssuedTime} // ค่าปัจจุบันจากฟอร์ม
             onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
-            error={errors.paymentTime} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
+            error={errors.IssuedTime} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
             helperText={
-              errors.paymentTime ? "กรุณากรอกเวลาที่ต้องการทําการ" : ""
+              errors.IssuedTime ? "กรุณากรอกเวลาที่ต้องการทําการ" : ""
             } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
             InputLabelProps={{
               shrink: true,
@@ -198,57 +248,10 @@ function TaxPaymentForms() {
             fullWidth
           />
         </ResponsiveStack>
-        <SectionTitle text="การจัดส่ง" iconClass="fa-solid fa-truck-fast" />
-        <ResponsiveStack>
-          <TextField
-            label="สมุดคู่มือจดทะเบียนรถ (ฉบับจริง หรือสำเนาก็ได้)"
-            type="file"
-            name="registrationBook" // เปลี่ยนชื่อฟิลด์เป็น registrationBook
-            onChange={handleChange} // ใช้ฟังก์ชันจัดการการเปลี่ยนแปลง
-            error={errors.registrationBook} // ข้อผิดพลาดสำหรับ registrationBook
-            fullWidth
-            helperText={errors.registrationBook ? "กรุณาอัปโหลดเอกสาร" : ""}
-            InputLabelProps={{
-              shrink: true, // ทำให้ label อยู่ด้านบน
-            }}
-          />
-        </ResponsiveStack>
-
-        <ResponsiveStack>
-          <TextField
-            label="หนังสือรับรองการตรวจสภาพรถ"
-            type="file"
-            name="inspectionCertificate" // เปลี่ยนชื่อฟิลด์เป็น inspectionCertificate
-            onChange={handleChange} // ใช้ฟังก์ชันจัดการการเปลี่ยนแปลง
-            error={errors.inspectionCertificate} // ข้อผิดพลาดสำหรับ inspectionCertificate
-            fullWidth
-            helperText={
-              errors.inspectionCertificate ? "กรุณาอัปโหลดเอกสาร" : ""
-            }
-            InputLabelProps={{
-              shrink: true, // ทำให้ label อยู่ด้านบน
-            }}
-          />
-        </ResponsiveStack>
-
-        <ResponsiveStack>
-          <TextField
-            label="ใบภาษีรถยนต์"
-            type="file"
-            name="vehicleTax" // เปลี่ยนชื่อฟิลด์เป็น vehicleTax
-            onChange={handleChange} // ใช้ฟังก์ชันจัดการการเปลี่ยนแปลง
-            error={errors.vehicleTax} // ข้อผิดพลาดสำหรับ vehicleTax
-            fullWidth
-            helperText={errors.vehicleTax ? "กรุณาอัปโหลดเอกสาร" : ""}
-            InputLabelProps={{
-              shrink: true, // ทำให้ label อยู่ด้านบน
-            }}
-          />
-        </ResponsiveStack>
       </FormContainer>
 
       <StickyFooter>
-        <Buttons onClick={handleGoTo} variant="primary" label="บันทึก" />
+        <Buttons onClick={handleSubmit} variant="primary" label="คำนวณ" />
       </StickyFooter>
     </div>
   );

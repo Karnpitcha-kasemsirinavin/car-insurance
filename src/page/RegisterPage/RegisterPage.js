@@ -5,6 +5,7 @@ import "./RegisterPage.css";
 import RegisterForms from "../../components/Forms/RegisterForms";
 import ConnectOptions from "../../components/ConnectOptions/ConnectOptions";
 import CityDriver from "../../assets/City driver-rafiki.svg"
+
 function RegisterPage() {
   return (
     <div className="auth-page">

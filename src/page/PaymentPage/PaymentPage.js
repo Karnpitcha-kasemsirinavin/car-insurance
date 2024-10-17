@@ -11,6 +11,7 @@ import Buttons from "../../components/Buttons/Buttons";
 import axios from "axios";
 import { baseURL } from "../../App.js";
 import { useState } from "react";
+import Cookies from "js-cookie";
 
 function PaymentPage() {
   const [price, setPrice] = useState(0.00);
@@ -19,6 +20,8 @@ function PaymentPage() {
   const handleNextClick = () => {
     navigate("/upload-receipt"); // นำทางไปยังหน้า /upload-receipt
   };
+
+  const [isCookieSet, setIsCookieSet] = useState(false);
 
   // * create payment CMI
   async function requestPaymentCMI() {
@@ -38,8 +41,19 @@ function PaymentPage() {
   }
 
   useEffect(() => {
-    requestPaymentCMI();
-  })
+    const order = Cookies.get("order");
+    const token = Cookies.get("token");
+    console.log("order: ", order)
+    if (order && token) {
+      setIsCookieSet(true); // Indicate that the cookie is set
+    }
+  }, []);
+
+  useEffect(() => {
+
+    requestPaymentCMI(); 
+    
+  }, []);
 
 
   return (
@@ -52,10 +66,10 @@ function PaymentPage() {
         <div className="container-payment">
           <img src={BankLogo} className="bank-logo" alt="" />
           <h1>QR PAYMENT</h1>
-          <div className="payment-time">
+          {/* <div className="payment-time">
             <p>Payment Time Left</p>
             <h5>14:39</h5>
-          </div>
+          </div> */}
           {/* // TODO: According to sys */}
           <img src={QrPayment} className="qr-payment" alt="" />
           {/* // TODO: According to sys */}

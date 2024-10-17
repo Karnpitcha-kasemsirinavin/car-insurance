@@ -50,9 +50,9 @@ function Navbar() {
           </span>
           <div className={`dropdown ${openDropdown === "insurance" ? "open" : ""}`}>
             <ul>
-              <li><i class="fa-solid fa-shield"></i>รายการ 1</li>
-              <li><i class="fa-solid fa-shield"></i>รายการ 2</li>
-              <li><i class="fa-solid fa-shield"></i>รายการ 3</li>
+              <li><i className="fa-solid fa-shield"></i>รายการ 1</li>
+              <li><i className="fa-solid fa-shield"></i>รายการ 2</li>
+              <li><i className="fa-solid fa-shield"></i>รายการ 3</li>
             </ul>
           </div>
         </div>

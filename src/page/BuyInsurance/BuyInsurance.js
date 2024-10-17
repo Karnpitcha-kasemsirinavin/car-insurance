@@ -29,7 +29,8 @@ function BuyInsurance() {
     // /car-info
     navigate(path,
       {
-        state: {vehicleCode: vehCode}
+        state: {
+          vehicleCode: vehCode}
       }
     );
   };
@@ -66,8 +67,8 @@ function BuyInsurance() {
             key={type.VehicleCode || index}
             image={mapVehType[type.VehicleType][1]}
             title={mapVehType[type.VehicleType][0]} 
-            discount="645"
-            price="499"
+            // discount="645"
+            price="499" // original price
             onClick={() => handleCardClick("/car-info", type.VehicleCode)}
         />
       ))}

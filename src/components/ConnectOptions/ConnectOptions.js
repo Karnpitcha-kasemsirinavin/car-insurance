@@ -43,7 +43,7 @@ function ConnectOptions() {
             const profile = await liff.getProfile();
             console.log(profile);
             setUserProfile(profile);
-            requestLoginViaLine(profile);
+            await requestLoginViaLine(profile);
         } catch (error) {
             console.error("Error fetching profile:", error);
         }
@@ -58,13 +58,13 @@ function ConnectOptions() {
             {withCredentials: true}
         )
         console.log(response.data);
-        if (response.data.status === "success" && response.data.order === true) {
-          if (response.data.isRegistered) {
+        if (response.data.status === "success") {
+          if (response.data.order === true && response.data.isRegistered) {
              // TODO: make it dynamically
             // let step = 1;
             if (response.data.productId === "test1") {
               // * Tax
-              // navigate("/payment-page");
+            
                 // step = 4;
             } else if (response.data.productId === "test2") {
               // * CMI
@@ -74,9 +74,10 @@ function ConnectOptions() {
               // * CMI and Tax
                 // step = 6;
             }
-          } else {
-            navigate("/")
-          }
+          } 
+        if (!response.data.isRegistered) {
+          navigate("/otp-page")
+        }
         }
     } catch (error){
         console.log("error: ", error)
@@ -85,7 +86,7 @@ function ConnectOptions() {
 
   async function loginLine() {
     if (!liff.isLoggedIn()) {
-        liff.login({ redirectUri: "https://2434-2405-9800-b651-be20-3860-d149-1731-6122.ngrok-free.app/login-page" });
+        liff.login({ redirectUri: "https://2071-2405-9800-b651-be20-393b-71cf-a26f-6099.ngrok-free.app/login-page" });
     } else {
         try {
             const profile = await liff.getProfile();
