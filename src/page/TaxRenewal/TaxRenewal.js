@@ -52,7 +52,7 @@ function TaxRenewal() {
   },[])
 
   return (
-    <div className="layout-wrapper customize">
+    <div className="layout-wrapper">
       <ProgressBar type="tax" />
       <PageTitle title="ประเภทรถของคุณคือ?" />
       <div className="container-card customize">

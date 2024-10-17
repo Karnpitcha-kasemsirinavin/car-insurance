@@ -18,7 +18,7 @@ function ProgressBar({ type }) {
     } else if (type === "tax") {
       return [
         { name: "เริ่ม", path: ["/tax-renewal"] },
-        { name: "กรอกข้อมูล", path: ["/tax-payment-page"] },
+        { name: "กรอกข้อมูล", path: ["/tax-payment-page","/fileUploader-Page"] },
         { name: "ตรวจสอบ", path: ["/tax-summary"] },
         { name: "แจ้งชำระเงิน", path: ["/payment-notification"] },
         { name: "ใบเสร็จ", path: ["/receipt"] },

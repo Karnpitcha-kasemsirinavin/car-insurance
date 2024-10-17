@@ -53,7 +53,7 @@ function BuyInsurance() {
   },[])
 
   return (
-    <div className="layout-wrapper customize">
+    <div className="layout-wrapper">
       <ProgressBar type="act" />  
       <PageTitle
         title="ประเภทรถของคุณคือ?"

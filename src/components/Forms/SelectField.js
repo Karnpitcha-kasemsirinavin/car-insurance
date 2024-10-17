@@ -29,6 +29,15 @@ function SelectField({ label, name, value, onChange, options, error, disabled })
           },
         },
       }}
+      SelectProps={{
+        MenuProps: {
+          PaperProps: {
+            style: {
+              maxHeight: 48 * 5 + 8, // ปรับให้แสดงผลได้ 5 รายการ
+            },
+          },
+        },
+      }}
     >
       <MenuItem value="">
         <em>กรุณาเลือก</em>

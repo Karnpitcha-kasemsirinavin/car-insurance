@@ -15,17 +15,16 @@ import LoginPage from "./page/LoginPage/LoginPage.js";
 import RegisterPage from "./page/RegisterPage/RegisterPage.js";
 import OtpPage from "./page/OtpPage/OtpPage.js";
 import VerifiedPage from "./page/VerifiedPage/VerifiedPage.js"
-
+import PoliciesPage from "./page/PoliciesPage/PoliciesPage.js"
+import TaxPaymentUploadPage from "./page/TaxPaymentUpLoadPage/TaxPaymentPage.js";
+import FileUploaderPage from "./page/FileUploaderPage/FileUploaderPage.js"
 function AppContent() {
   const location = useLocation(); // ใช้ useLocation ภายใน Router context
 
   return (
     <div>
       {/* แสดง Navbar ถ้าเส้นทางไม่ใช่ /login-page */}
-      {(location.pathname !== "/login-page" && 
-  location.pathname !== "/register-page" && 
-  location.pathname !== "/otp-page" && 
-  location.pathname !== "/verified-page") && <Navbar />}
+      {!['/login-page', '/register-page', '/otp-page', '/verified-page'].includes(location.pathname) && <Navbar />}
 
       
       <Routes>
@@ -43,6 +42,8 @@ function AppContent() {
         <Route path="/register-page" element={<RegisterPage />} />
         <Route path="/otp-page" element={<OtpPage />} />
         <Route path="/verified-page" element={<VerifiedPage />} />
+        <Route path="/policies-page" element={<PoliciesPage />} />
+        <Route path="/fileUploader-Page" element={<FileUploaderPage />} />
       </Routes>
     </div>
   );

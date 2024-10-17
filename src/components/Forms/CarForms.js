@@ -3,7 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 /*material Ui*/
-import { TextField, useMediaQuery, Autocomplete } from "@mui/material";
+import {
+  TextField,
+  useMediaQuery,
+  Autocomplete,
+  MenuItem,
+} from "@mui/material";
 
 /*เเสดงผลฟอร์ม ui*/
 import FormContainer from "./FormContainer.js"; /* โครงสร้างฟอร์ม */
@@ -343,6 +348,13 @@ function CarForms() {
             onChange={handleChange}
             options={colour || []}
             error={errors.Colour}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 48 * 5 + 8, // ปรับให้แสดงผลได้ 5 รายการ
+                },
+              },
+            }}
           />
         </ResponsiveStack>
 

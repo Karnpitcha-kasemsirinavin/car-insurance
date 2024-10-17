@@ -2,6 +2,8 @@
   padding: 30px 60px; 
   max-width: 720px; /* กำหนดความกว้างสูงสุด */
   margin: 0 auto; /* ทำให้คอนเทนต์อยู่ตรงกลางแนวนอน */
+  display: grid;
+  gap: 19px;
 }
 
 .layout-wrapper.customize{
