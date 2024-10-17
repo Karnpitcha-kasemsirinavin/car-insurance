@@ -1,22 +1,23 @@
 import React from "react";
-import "./LoginPage.css";
 import Logo from "../../components/Logos/Logo"; // นำเข้าคอมโพเนนต์โลโก้
 import CarIllustration from "../../components/Illustrations/CarIllustration"; // นำเข้าคอมโพเนนต์ภาพประกอบรถ
-import LogInForms from "../../components/Forms/LogInForms";
+import "./RegisterPage.css";
+import RegisterForms from "../../components/Forms/RegisterForms";
 import ConnectOptions from "../../components/ConnectOptions/ConnectOptions";
-function LoginPage() {
+import CityDriver from "../../assets/City driver-rafiki.svg"
+function RegisterPage() {
   return (
-    <div className="login-page">
-      <div className="login-container">
-        <div className="login-image">
+    <div className="auth-page">
+      <div className="auth-container" style={{ position: "relative" }}>
+        <div className="auth-image">
           <Logo /> {/* แสดงโลโก้ */}
-          <CarIllustration /> {/* แสดงภาพประกอบรถ */}
+          <CarIllustration  src={CityDriver} width="234px"/> {/* แสดงภาพประกอบรถ */}
         </div>
-        <LogInForms />
+        <RegisterForms />
         <ConnectOptions />
       </div>
     </div>
   );
 }
 
-export default LoginPage;
+export default RegisterPage;

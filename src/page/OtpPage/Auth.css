@@ -1,0 +1,57 @@
+
+.auth-page{
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to right, #3FABD9 0%, #7666E1 100%);
+
+
+}
+.auth-container{
+ 
+
+  background: var(--bg-color);
+  padding: 44px;
+  border-radius: 32px;
+  max-width: 334px;
+  width: 100%;
+}
+.auth-image{
+
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+.company-logo {
+  width: 200px;
+}
+.car-illustration{
+width: 160px;
+}
+.auth__title {
+text-align: center;
+}
+.auth__title h1{
+color: var(--primary-color);
+  font-size: 25px;
+}
+.auth-container.customize{
+  display: grid;
+  gap: 30px
+  ;
+}
+@media (max-width: 768px) {
+  .login-container {
+    padding: 20px; /* Reduce padding on smaller screens */
+  }
+
+
+}
+
+@media (max-width: 500px) {
+  .auth-page{
+     background: var(--bg-color);}
+     .auth-container{ padding: 22px !important;}
+    
+}

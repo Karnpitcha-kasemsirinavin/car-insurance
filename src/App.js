@@ -12,7 +12,9 @@ import TaxRenewal from "./page/TaxRenewal/TaxRenewal.js";
 import TaxPaymentPage from "./page/TaxPaymentPage/TaxPaymentPage.js";
 import TaxSummary from "./page/TaxSummary/TaxSummary.js";
 import LoginPage from "./page/LoginPage/LoginPage.js";
-
+import RegisterPage from "./page/RegisterPage/RegisterPage.js";
+import OtpPage from "./page/OtpPage/OtpPage.js";
+import VerifiedPage from "./page/VerifiedPage/VerifiedPage.js"
 
 function AppContent() {
   const location = useLocation(); // ใช้ useLocation ภายใน Router context
@@ -20,7 +22,12 @@ function AppContent() {
   return (
     <div>
       {/* แสดง Navbar ถ้าเส้นทางไม่ใช่ /login-page */}
-      {location.pathname !== "/login-page" && <Navbar />}
+      {(location.pathname !== "/login-page" && 
+  location.pathname !== "/register-page" && 
+  location.pathname !== "/otp-page" && 
+  location.pathname !== "/verified-page") && <Navbar />}
+
+      
       <Routes>
         <Route path="/" element={<SelectService />} />
         <Route path="/buy-insurance" element={<BuyInsurance />} />
@@ -33,6 +40,9 @@ function AppContent() {
         <Route path="/tax-payment-page" element={<TaxPaymentPage />} />
         <Route path="/tax-summary" element={<TaxSummary />} />
         <Route path="/login-page" element={<LoginPage />} />
+        <Route path="/register-page" element={<RegisterPage />} />
+        <Route path="/otp-page" element={<OtpPage />} />
+        <Route path="/verified-page" element={<VerifiedPage />} />
       </Routes>
     </div>
   );
