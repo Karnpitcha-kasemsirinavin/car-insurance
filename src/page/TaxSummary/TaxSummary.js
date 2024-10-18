@@ -27,7 +27,6 @@ function TaxSummary() {
   const location = useLocation();
   const { inputData, displayVeh } = location.state || {};
 
-  console.log(inputData);
 
   const [result, setResult] = useState({});
 
@@ -119,9 +118,16 @@ function TaxSummary() {
     requestCalculation(inputData);
   }, [])
 
+  // * naviagte to upload page
   const handlePurchaseClick = () => {
-    navigate('/payment-page'); // นำผู้ใช้ไปยังหน้าชำระเงิน
+    navigate("/fileUploader-Page", {
+      state: {
+        inputData: {...inputData, ...result}
+      }
+    })
   };
+
+
   return (
     <div>
       <HandleBack /> {/* ปุ่มย้อนกลับ */}
@@ -149,7 +155,7 @@ function TaxSummary() {
               padding: "20px",
             }}
           >
-            <TaxIncluded totalPrice="3,542 บาท" />
+            <TaxIncluded totalPrice={`${(result.TotalPrice) ?? "ไม่ทราบ"} บาท`} />
 
             <Buttons
               label="ซื้อเลย"

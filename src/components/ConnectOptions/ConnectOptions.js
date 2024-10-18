@@ -61,19 +61,7 @@ function ConnectOptions() {
         if (response.data.status === "success") {
           if (response.data.order === true && response.data.isRegistered) {
              // TODO: make it dynamically
-            // let step = 1;
-            if (response.data.productId === "test1") {
-              // * Tax
-            
-                // step = 4;
-            } else if (response.data.productId === "test2") {
-              // * CMI
-              navigate("/payment-page");
-                // step = 4;
-            } else  if (response.data.productId === "test3") {
-              // * CMI and Tax
-                // step = 6;
-            }
+              navigate(`/payment-page?product=${response.data.productId}`);
           } 
         if (!response.data.isRegistered) {
           navigate("/otp-page")
@@ -86,7 +74,7 @@ function ConnectOptions() {
 
   async function loginLine() {
     if (!liff.isLoggedIn()) {
-        liff.login({ redirectUri: "https://2071-2405-9800-b651-be20-393b-71cf-a26f-6099.ngrok-free.app/login-page" });
+        liff.login({ redirectUri: "https://6e67-2405-9800-b651-be20-855d-251c-879e-604a.ngrok-free.app/login-page" });
     } else {
         try {
             const profile = await liff.getProfile();

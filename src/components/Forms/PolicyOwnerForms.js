@@ -159,7 +159,8 @@ function PolicyOwnerForms() {
             Company: "ind",
             PackageCode: inputData.vehiclecode,
             VehicleCode: inputData.vehiclecode,
-            Product: "test2", //TODO: fix change product Id
+            CMINTax: false,
+            // Product: "test2", //TODO: fix change product Id
             },
             { withCredentials: true},
         );

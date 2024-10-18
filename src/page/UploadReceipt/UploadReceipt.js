@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // นำเข้า useNavigate
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
 import "../../components/layout-wrapper/layout-wrapper.css";
@@ -9,10 +9,16 @@ import Buttons from "../../components/Buttons/Buttons";
 import axios from "axios";
 import { baseURL } from "../../App.js";
 
+import { useSearchParams } from 'react-router-dom';
+
 function UploadReceipt() {
   const [file, setFile] = useState(null);
   const navigate = useNavigate(); // สร้างฟังก์ชัน navigate
   const [convertedFile, setConvertedFile] = useState(null)
+  // Get a specific parameter
+  const [searchParams] = useSearchParams();
+  const [product, setProduct] = useState();
+
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -65,7 +71,7 @@ function UploadReceipt() {
   // * update payment
   async function updateSlipPayment() {
     try {
-        const response = await axios.post(`${baseURL}/transaction/updatePaymentCMI`,
+        const response = await axios.post(`${baseURL}/transaction/updatePayment/${product}`,
             {
                 Slip: convertedFile
             },
@@ -81,7 +87,13 @@ function UploadReceipt() {
     } catch (error) {
         console.log("error: ", error);
     }
-}
+  }
+
+  useEffect(() => {
+    const tempProduct = searchParams.get('product');
+    setProduct(tempProduct);
+    
+  }, []);
 
   return (
     <div>

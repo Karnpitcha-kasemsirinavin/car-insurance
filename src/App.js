@@ -35,12 +35,15 @@ function AppContent() {
         <Route path="/payment-page" element={<PaymentPage />} />
         <Route path="/upload-receipt" element={<UploadReceipt />} />
         <Route path="/document-page" element={<DocumentPage />} />
+
         <Route path="/tax-renewal" element={<TaxRenewal />} />
         <Route path="/tax-payment-page" element={<TaxPaymentPage />} />
         <Route path="/tax-summary" element={<TaxSummary />} />
+
         <Route path="/login-page" element={<LoginPage />} />
         <Route path="/register-page" element={<RegisterPage />} />
         <Route path="/otp-page" element={<OtpPage />} />
+        
         <Route path="/verified-page" element={<VerifiedPage />} />
         <Route path="/policies-page" element={<PoliciesPage />} />
         <Route path="/fileUploader-Page" element={<FileUploaderPage />} />

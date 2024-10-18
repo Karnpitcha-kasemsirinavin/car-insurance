@@ -18,8 +18,19 @@ import StickyFooter from "../StickyFooter/StickyFooter.js";
 import SelectField from "./SelectField.js";
 
 import ResponsiveStack from "./ResponsiveStack.js";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { baseURL } from "../../App.js";
+
 
 function TaxPaymentForms() {
+  const navigate = useNavigate();
+  // * get from previous page
+  const location = useLocation();
+  const { inputData } = location.state || {};
+
+  console.log(inputData);
+
   const [formData, setFormData] = useState({
     registrationBook: null,
     inspectionCertificate: null,
@@ -32,7 +43,6 @@ function TaxPaymentForms() {
     vehicleTax: false,
   });
 
-  const navigate = useNavigate();
   const isSmallScreen = useMediaQuery("(max-width:536px)");
 
   const handleChange = (event) => {
@@ -48,6 +58,41 @@ function TaxPaymentForms() {
     }
   };
 
+  
+  const handleFileChange = (e) => {
+    const { name, value } = e.target;
+
+    const file = e.currentTarget.files && e.currentTarget.files[0];
+    if (file) {
+        const reader = new FileReader();
+
+        // Handle the file as a Data URL (for image preview)
+        reader.onloadend = () => {
+            if (reader.result && typeof reader.result === 'string') {
+                // Optionally, you can call an update function if needed
+                setFormData({
+                  ...formData,
+                  [name]: reader.result,
+                });
+            }
+        };
+    reader.readAsDataURL(file);
+    setErrors({ ...errors, [name]: false });    
+    }
+  };
+
+  // const handleUpload = async () => {
+  //   if (file) {
+  //     console.log("Uploading file:", file);
+  //     // เพิ่มโค้ดการอัปโหลดที่นี่
+  //     await updateSlipPayment()
+  //     // หลังจากอัปโหลดเสร็จแล้ว นำทางไปยังหน้าเอกสารกรมธรรม์
+  //     // navigate("/document-page");
+  //   } else {
+  //     alert("กรุณาเลือกไฟล์ก่อน");
+  //   }
+  // };
+
   const handleSubmit = () => {
     const { registrationBook, inspectionCertificate, vehicleTax } = formData;
 
@@ -56,8 +101,10 @@ function TaxPaymentForms() {
       inspectionCertificate: !inspectionCertificate,
       vehicleTax: !vehicleTax,
     };
+
     setErrors(newErrors);
-    console.log("ข้อมูลปัจจุบันของฟอร์ม:", formData); // ตรวจสอบข้อมูลทุกครั้งที่คลิก
+    console.log("ข้อมูลปัจจุบันของฟอร์ม:", formData);
+
     if (
       !newErrors.registrationBook &&
       !newErrors.inspectionCertificate &&
@@ -65,13 +112,34 @@ function TaxPaymentForms() {
     ) {
       console.log("ข้อมูลที่ส่ง:", formData);
       // ทำการส่งข้อมูลที่นี่
-
-      navigate("/payment-page");
+      requestCreateResult()
+      // navigate("/payment-page");
     }
   };
-  const handleGoTo = () => {
-    navigate("/tax-summary"); // นำทางไปหน้าอื่น
-  };
+
+  // * create tax result
+  async function requestCreateResult() {
+    try {
+        const response = await axios.post(`${baseURL}/tax/create`, {
+            ...inputData,
+            ...formData
+        }, { withCredentials: true })
+
+        console.log("pass: ", response);
+        if (response.data.status === "success") {
+            // * check whether the user is already login
+            if (!response.data.validUser) {
+                // * go to auth page
+                navigate('/login-page');
+            } else {
+                // * proceed to next step
+                navigate("/payment-page")
+            }
+        }
+    } catch (error) {
+        console.log("error: ", error )
+    }
+}
 
   return (
     <div>
@@ -87,10 +155,11 @@ function TaxPaymentForms() {
             label="สมุดคู่มือจดทะเบียนรถ (ฉบับจริง หรือสำเนาก็ได้)"
             type="file"
             name="registrationBook" // เปลี่ยนชื่อฟิลด์เป็น registrationBook
-            onChange={handleChange} // ใช้ฟังก์ชันจัดการการเปลี่ยนแปลง
+            onChange={handleFileChange} // ใช้ฟังก์ชันจัดการการเปลี่ยนแปลง
             error={errors.registrationBook} // ข้อผิดพลาดสำหรับ registrationBook
             fullWidth
             helperText={errors.registrationBook ? "กรุณาอัปโหลดเอกสาร" : ""}
+            accept=".png, .jpg, .jpeg"
             InputLabelProps={{
               shrink: true, // ทำให้ label อยู่ด้านบน
             }}
@@ -102,12 +171,13 @@ function TaxPaymentForms() {
             label="หนังสือรับรองการตรวจสภาพรถ"
             type="file"
             name="inspectionCertificate" // เปลี่ยนชื่อฟิลด์เป็น inspectionCertificate
-            onChange={handleChange} // ใช้ฟังก์ชันจัดการการเปลี่ยนแปลง
+            onChange={handleFileChange} // ใช้ฟังก์ชันจัดการการเปลี่ยนแปลง
             error={errors.inspectionCertificate} // ข้อผิดพลาดสำหรับ inspectionCertificate
             fullWidth
             helperText={
               errors.inspectionCertificate ? "กรุณาอัปโหลดเอกสาร" : ""
             }
+            accept=".png, .jpg, .jpeg"
             InputLabelProps={{
               shrink: true, // ทำให้ label อยู่ด้านบน
             }}
@@ -119,10 +189,11 @@ function TaxPaymentForms() {
             label="ใบภาษีรถยนต์"
             type="file"
             name="vehicleTax" // เปลี่ยนชื่อฟิลด์เป็น vehicleTax
-            onChange={handleChange} // ใช้ฟังก์ชันจัดการการเปลี่ยนแปลง
+            onChange={handleFileChange} // ใช้ฟังก์ชันจัดการการเปลี่ยนแปลง
             error={errors.vehicleTax} // ข้อผิดพลาดสำหรับ vehicleTax
             fullWidth
             helperText={errors.vehicleTax ? "กรุณาอัปโหลดเอกสาร" : ""}
+            accept=".png, .jpg, .jpeg"
             InputLabelProps={{
               shrink: true, // ทำให้ label อยู่ด้านบน
             }}
@@ -131,7 +202,7 @@ function TaxPaymentForms() {
       </FormContainer>
 
       <StickyFooter>
-        <Buttons onClick={handleGoTo} variant="primary" label="บันทึก" />
+        <Buttons onClick={handleSubmit} variant="primary" label="บันทึก" />
       </StickyFooter>
     </div>
   );

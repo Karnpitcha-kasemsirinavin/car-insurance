@@ -13,20 +13,28 @@ import { baseURL } from "../../App.js";
 import { useState } from "react";
 import Cookies from "js-cookie";
 
+import { useSearchParams } from 'react-router-dom';
+
 function PaymentPage() {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  // Get a specific parameter
+  const [product, setProduct] = useState();
+
+
   const [price, setPrice] = useState(0.00);
 
-  const navigate = useNavigate();
   const handleNextClick = () => {
-    navigate("/upload-receipt"); // นำทางไปยังหน้า /upload-receipt
+    navigate(`/upload-receipt?product=${product}`); // นำทางไปยังหน้า /upload-receipt
   };
 
   const [isCookieSet, setIsCookieSet] = useState(false);
 
   // * create payment CMI
   async function requestPaymentCMI() {
+    console.log("pass")
     try {
-        const response = await axios.post(`${baseURL}/transaction/createCMI`, {
+        const response = await axios.post(`${baseURL}/transaction/createPayment/${product}`, {
         }, {
             withCredentials: true 
         });
@@ -41,19 +49,17 @@ function PaymentPage() {
   }
 
   useEffect(() => {
-    const order = Cookies.get("order");
-    const token = Cookies.get("token");
-    console.log("order: ", order)
-    if (order && token) {
-      setIsCookieSet(true); // Indicate that the cookie is set
-    }
+    const tempProduct = searchParams.get('product');
+    setProduct(tempProduct);
+    
   }, []);
 
   useEffect(() => {
-
-    requestPaymentCMI(); 
+    if (product) {
+      requestPaymentCMI(); 
+    }
     
-  }, []);
+  }, [product]);
 
 
   return (
