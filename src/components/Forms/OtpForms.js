@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 /*material Ui*/
-import { TextField, useMediaQuery, Autocomplete ,Stack,Button,Link} from "@mui/material";
+import { TextField, useMediaQuery, Autocomplete ,Stack,Button,Link, Typography} from "@mui/material";
 
 /*เเสดงผลฟอร์ม ui*/
 import FormContainer from "./FormContainer.js"; /* โครงสร้างฟอร์ม */
@@ -19,25 +19,33 @@ import StickyFooter from "../StickyFooter/StickyFooter.js";
 import SelectField from "./SelectField.js";
 
 import ResponsiveStack from "./ResponsiveStack.js";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { baseURL } from "../../App.js";
 
 function OtpForms() {
-  const [formData, setFormData] = useState({
+  // * get from previous page
+  const location = useLocation();
+  const { userData, productId } = location.state || {};
+  const [refNo, setRefNo] = useState();
 
-    Password: "",
-    phoneNumber: "",
+  console.log(userData);
+
+  const [formData, setFormData] = useState({
+    pin: "",
   });
 
   const [errors, setErrors] = useState({
-    Password: false,
-    phoneNumber: true,
+    pin: false,
   });
 
   const navigate = useNavigate();
-  const isSmallScreen = useMediaQuery("(max-width:536px)"); // ตรวจสอบขนาดหน้าจอ
+  const isSmallScreen = useMediaQuery("(max-width:536px)");
 
   // phone number
   const phoneNumberRegex = /^[0-9]{10}$/;
-  const [isSendPhone, setIsSendPhone] = useState(false)
+  const [isSendPhone, setIsSendPhone] = useState(false);
+  const [OTPCount, setOTPCount] = useState(0);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -52,112 +60,101 @@ function OtpForms() {
     }
   };
 
-  const handleSubmit = () => {
-    const { Username, Password, phoneNumber } = formData;
+  const handleSubmit = async () => {
+    const { pin } = formData;
 
     const newErrors = {
-      phoneNumber: !phoneNumber || phoneNumberRegex.test(phoneNumber),
-      Password: !Password,
+      pin: !pin,
     };
 
     setErrors(newErrors);
 
-    if (!newErrors.Username && !newErrors.Password) {
+    if (!newErrors.pin) {
       console.log("ข้อมูลที่ส่ง:", formData);
       // ทำการส่งข้อมูลที่นี่
-
-      navigate("/policy-ownerInfo");
+      await handleRequestVerification();
+      // navigate("/policy-ownerInfo");
     }
   };
 
-  // * check phonennumber validity then requerst OTP
-  const handleRequestOTP = () => {
-    const { Username, Password, phoneNumber } = formData
-
-    const newErrors = {
-      phoneNumber: !phoneNumber || !phoneNumberRegex.test(phoneNumber)
-    };
-
-    if (newErrors.phoneNumber) {
-      setErrors(newErrors);
-      return;
-    }
+  // * check phonenumber validity then requerst OTP
+  const handleRequestOTP = async () => {
 
     try {
-      setIsSendPhone(true);
+      // * request OTP
+      const response = await axios.post(`${baseURL}/OTP/send`, userData,
+        {
+          withCredentials: true
+        }
+      );
+      if (response.data && response.data.status === "success") {
+        setRefNo(response.data.data);
+        setOTPCount(OTPCount+1);
+      }
     } catch (error) {
-
+      console.log("error: ", error);
     }
+  }
 
-
+  const handleRequestVerification = async() => {
+    try {
+      const response = await axios.post(`${baseURL}/OTP/verify`, {
+        ...formData,
+        ...userData
+      },
+        {
+          withCredentials: true
+        }
+      );
+      
+      if (response.data && response.data.status === "success") {
+        if (productId) {
+          navigate(`/payment-page?product=${productId}`);
+        } else {
+          navigate('/')
+        }
+      }
+    } catch (error) {
+      console.log("error: ", error);
+    }
   }
 
   return (
     <div>
     <FormContainer  paddingBottom="40px"  padding="0px" backgroundColor="" boxShadow="none">
   {/* เเถวที่ 1 */}
-
-  {!isSendPhone ?
-    <>
+    <SectionTitle text={`Ref: ${refNo ?? ""}`} fontSize="16px" fontWeight="500" />
     <ResponsiveStack>
     <TextField
-      label="Enter Phone Number "
-      type="tel"
-      name="phoneNumber"
-      value={formData.phoneNumber}
+      label="PIN"
+      name="pin"
+      value={formData.pin}
       onChange={handleChange}
-      error={!!errors.phoneNumber} // เปลี่ยนเป็น boolean เพื่อแสดงข้อผิดพลาด
+      error={!!errors.pin} 
       fullWidth
       InputLabelProps={{
         shrink: true, // ทำให้ label อยู่ด้านบน
       }}
       helperText={
-        errors.phoneNumber
-          ? !formData.phoneNumber
-            ? "Please enter your PhoneNumber."
+        errors.pin
+          ? !formData.pin
+            ? "Please enter your pin."
             : "Invalid Format"
           : "" // ไม่มีข้อผิดพลาด
       } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
     />
   </ResponsiveStack>
 
-  <Buttons onClick={handleRequestOTP} variant="primary" label="enter" fontSize="16px" width="100%!important"   />
-  </>
-  : <>
-    <ResponsiveStack>
-    <TextField
-      label="Enter OTP 8-digit "
-      name="Password"
-      value={formData.Password}
-      onChange={handleChange}
-      error={!!errors.Password} // เปลี่ยนเป็น boolean เพื่อแสดงข้อผิดพลาด
-      type="password"
-      fullWidth
-      disabled={!formData.phoneNumber}
-      InputLabelProps={{
-        shrink: true, // ทำให้ label อยู่ด้านบน
-      }}
-      helperText={
-        errors.Password
-          ? !formData.Password
-            ? "Please enter your password."
-            : ""
-          : "" // ไม่มีข้อผิดพลาด
-      } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
-    />
-  </ResponsiveStack>
-  
-
   <Stack spacing={1} alignItems="flex-end"  sx={{ marginTop: "15px !important" }}>
-    <Link href="/forgot-password" variant="body2" color="#3FABD9" sx={{ textAlign: "right" ,fontSize: "10px" , fontFamily: "Prompt", textDecoration: "none"          }}>
+    <Link onClick={OTPCount < 3 ? handleRequestOTP : undefined}  variant="body2"  color={OTPCount < 3 ? "#3FABD9" : "gray"}
+    sx={{ textAlign: "right" ,fontSize: "10px" , fontFamily: "Prompt", textDecoration: "none"}}>
     Resend code? 28s
     </Link>
   </Stack>
   <Stack  alignItems="center" >
-  <Buttons onClick={handleSubmit} variant="primary" label="enter" fontSize="16px" width="100%!important"   />
+  {!refNo ?  <Buttons onClick={handleRequestOTP} variant="primary" label="ขอรหัส OTP" fontSize="16px" width="100%!important"   />
+  :<Buttons onClick={handleSubmit} variant="primary" label="enter" fontSize="16px" width="100%!important"   />}
   </Stack>
-  </>
-  }
 
 </FormContainer>
 

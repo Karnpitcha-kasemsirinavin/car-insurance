@@ -15,7 +15,6 @@ function RegisterPage() {
           <CarIllustration  src={CityDriver} width="234px"/> {/* แสดงภาพประกอบรถ */}
         </div>
         <RegisterForms />
-        <ConnectOptions />
       </div>
     </div>
   );

@@ -43,7 +43,7 @@ function ConnectOptions() {
             const profile = await liff.getProfile();
             console.log(profile);
             setUserProfile(profile);
-            await requestLoginViaLine(profile);
+            // await requestLoginViaLine(profile);
         } catch (error) {
             console.error("Error fetching profile:", error);
         }
@@ -60,11 +60,15 @@ function ConnectOptions() {
         console.log(response.data);
         if (response.data.status === "success") {
           if (response.data.order === true && response.data.isRegistered) {
-             // TODO: make it dynamically
               navigate(`/payment-page?product=${response.data.productId}`);
           } 
         if (!response.data.isRegistered) {
-          navigate("/otp-page")
+          console.log(response.data)
+          navigate("/register-page", {
+            state: {
+              productId: response.data.productId
+            }
+          })
         }
         }
     } catch (error){
