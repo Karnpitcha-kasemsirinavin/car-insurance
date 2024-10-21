@@ -4,7 +4,7 @@
   background: var(--color-white);
   padding: 40px;
   gap: 24px;
-  min-height: 297mm; /* ความสูงของ A4 */
+  height: 275.9mm; /* ความสูงของ A4  height: 297mm;*/
 }
 .receipt__header{
   display: flex;
@@ -139,4 +139,11 @@ font-weight: 300;
 }
 .bold-text {
   font-weight: bold; /* ทำให้ข้อความเป็นตัวหนา */
+}
+
+
+#receipt-content{
+  display: flex; /* เปลี่ยนเป็น Flexbox */
+  flex-direction: column; /* จัดเรียงเป็นแนวตั้ง */
+  gap: 20px;
 }

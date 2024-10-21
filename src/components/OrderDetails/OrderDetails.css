@@ -1,0 +1,86 @@
+.container-order-details{
+  display: flex; /* เปลี่ยนเป็น Flexbox */
+  flex-direction: column; /* จัดเรียงเป็นแนวตั้ง */
+  background: var(--color-white);
+  padding: 40px;
+  gap: 24px;
+  min-height: 297mm; /* ความสูงของ A4 */
+}
+.order-details__title{
+text-align: center;
+
+}
+.order-details__title h1{
+  font-size: var(--font-size-32-custom);
+}
+.order-details__container{
+  height: 100%;
+  display: flex;
+  gap: 20px;
+  border: 2.5px solid var(--primary-color);
+  padding: 20px;
+  border-radius: 25px;
+  flex-direction: column;
+}
+.order-details__header-product-detail{
+  display: grid;
+  gap: 10px;
+}
+.order-details__header-section{
+display: flex;
+justify-content: space-between;
+}
+.order-details__header-product-box{
+display: flex;
+
+gap: 10px;
+}
+.order-details__header-company{
+  
+  text-align: center;
+  font-size: var(--font-size-14-custom);
+  font-weight: bold;
+}
+.order-details__header-company img{
+width: 83px;
+}
+.order-details__header-product-detail-box{
+  font-size: var(--font-size-12-custom);
+  display: grid;
+  gap: 2px
+  ;
+}
+.order-details__header-product-detail-box p{
+ font-weight: bold;
+}
+
+.order-details__header-product-detail-box span{
+  font-weight: 500;
+ }
+.order-details__content-section{
+  display: flex;
+  gap: 40px;
+  justify-content: space-around;
+}
+.order-details__content-box{
+
+}
+ .order-details__content-title{
+ padding: 5px 0px;
+
+ }
+ .order-details__content-title h1{
+font-size: var(--font-size-18-custom);
+ }
+
+
+.order-details__content-item img{
+  width: 28px;
+  height: 40px;
+}
+ .order-details__content-item{
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  padding: 10px 0px;
+ }

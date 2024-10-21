@@ -21,6 +21,22 @@ import FileUploaderPage from "./page/FileUploaderPage/FileUploaderPage.js"
 import ReceiptPage  from "./page/ReceiptPage/ReceiptPage.js";
 import UsersBoard from "./page/Admin/Dashboard/UsersBoard.js";
 
+import InsurancePageTaxAndLaw from "./page/insurancePage-taxAndLaw/insurancePagetaxAndLaw.js";
+import CarInfoPagetaxAndLaw from "./page/CarInfoPage-taxAndLaw/CarInfoPagetaxAndLaw.js";
+
+import PolicyPagetaxAndLaw from "./page/policyPage-taxAndLaw/policyPagetaxAndLaw"
+import PaymenPagetaxAndLaw from "./page/PaymenPage-taxAndLaw/PaymenPagetaxAndLaw.js"
+
+import TaxPaymentPagetaxAndLaw from "./page/TaxPaymentPage-taxAndLaw/TaxPaymentPagetaxAndLaw.js"
+import TaxSummaryPagetaxAndLaw from "./page/TaxSummaryPage-taxAndLaw/TaxSummary.js"
+
+import FileUploaderPagetaxAndLaw from "./page/fileUploader-page-taxAndLaw/FileUploaderPage.js";
+
+
+import UploadReceiptPageTaxAndLaw from "./page/UploadReceiptPage-taxAndLaw/UploadReceipt.js"
+
+
+import ReceiptPageTaxAndLaw from "./page/ReceiptPage-taxAndLaw/ReceiptPage"
 function AppContent() {
   const location = useLocation(); // ใช้ useLocation ภายใน Router context
 
@@ -54,6 +70,20 @@ function AppContent() {
 
         <Route path="/admin/users" element={<UsersBoard/>}/>
 
+        <Route path="/insurance-page-taxAndLaw" element={<InsurancePageTaxAndLaw />} /> 
+
+        <Route path="/carInfo-page-taxAndLaw" element={<CarInfoPagetaxAndLaw/>} /> 
+        <Route path="/policy-page-taxAndLaw" element={<PolicyPagetaxAndLaw/>} /> 
+        <Route path="/policy-page-taxAndLaw" element={<PolicyPagetaxAndLaw/>} /> 
+        <Route path="/paymen-page-taxAndLaw" element={<PaymenPagetaxAndLaw/>} /> 
+        <Route path="/tax-payment-page-taxAndLaw" element={<TaxPaymentPagetaxAndLaw/>} /> 
+
+        <Route path="/tax-summary-page-taxAndLaw" element={< TaxSummaryPagetaxAndLaw/>} /> 
+
+        <Route path="/fileUp-loader-page-taxAndLaw" element={<FileUploaderPagetaxAndLaw/>} /> 
+        <Route path="/uploadReceipt-page-taxAndLaw" element={<UploadReceiptPageTaxAndLaw/>} /> 
+        <Route path="/receipt-page-taxAndLaw" element={<ReceiptPageTaxAndLaw/>} /> 
+     
       </Routes>
     </div>
   );

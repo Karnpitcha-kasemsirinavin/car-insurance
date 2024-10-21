@@ -1,0 +1,60 @@
+.container-uploadReceipt{
+  display: grid;
+
+  align-items: center;
+  justify-items: center;
+  gap: 20px;
+  padding: 20px;
+  background: var(--color-white);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* เพิ่มเงาจาง ๆ */
+  border-radius: 8px;
+}
+
+.uploadReceipt__title-box{
+  display: flex;
+  justify-content: center;
+
+  justify-items: center;
+  gap: 10px;
+}
+
+.uploadReceipt__title-box i{
+ font-size: 40px;
+  color: var(--primary-color);
+}
+.uploadReceipt__title-box h4{
+font-size: var(--font-size-h4-regular);
+color: var(--text-color);
+}
+
+.drop-area{
+
+width: 100%;
+  border: 2px dashed #ccc;
+  border-radius:10px;
+
+  text-align: center;
+  cursor: pointer;
+}
+.drop-area:hover {
+  background-color:var(--bg-color); /* เปลี่ยนสีเมื่อ hover */
+}
+.drop-area h6{
+  font-size: var(--font-size-h6-medium);
+font-weight: 300;
+}
+.drop-area p{
+  font-size: var(--font-size-s1-regular);
+  color: var(--border-color);
+  font-weight: 300;
+}
+.file-upload-message {
+  padding: 10px;
+  height: 300px;
+  display: grid;             /* ใช้ Flexbox */
+  justify-content: center;   /* จัดให้อยู่กลางตามแนวนอน */
+  align-items: center;       /* จัดให้อยู่กลางตามแนวตั้ง */
+  text-align: center;        /* จัดข้อความให้ตรงกลาง */
+
+ 
+}

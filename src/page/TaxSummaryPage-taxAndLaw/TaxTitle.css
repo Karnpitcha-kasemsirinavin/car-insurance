@@ -1,0 +1,29 @@
+.tax-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--primary-color);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.tax-title h1{
+   font-size: var(--font-size-h5-regular);
+   color: var(--color-white);
+}
+.tax-title i{
+  font-size: 30px;
+  color: var(--color-white);
+}
+
+@media (max-width:375px) {
+  .tax-title h1{
+    font-size: var(--font-size-h6-medium);
+    
+ }
+ .tax-title i{
+  font-size: 25px;
+  color: var(--color-white);
+}
+}

@@ -5,7 +5,7 @@ import Logo from "../../assets/logo.svg";
 function Receipt() {
   return (
     
-    <div className="container-receipt">
+    <div className="container-receipt" id="receipt-content">
       <div className="receipt__header">
         <div className="receipt__summary-top">
           <h1>ใบเสร็จ</h1>

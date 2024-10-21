@@ -25,11 +25,11 @@ function ProgressBar({ type }) {
       ];
     } else if (type === "act&tax") {
       return [
-        { name: "เริ่ม", path: ["/tax-renewal"] },
-        { name: "ผู้เอาประกัน", path: ["/tax-payment-page","/fileUploader-Page"] },
-        { name: "ชําระภาษี", path: ["/tax-summary"] },
-        { name: "ชําระเงิน", path: ["/payment-notification"] },
-        { name: "เเจ้งชําระเงิน", path: ["/receipt"] },
+        { name: "เริ่ม", path: ["/insurance-page-taxAndLaw","/carInfo-page-taxAndLaw"] },
+        { name: "ผู้เอาประกัน", path: ["/policy-page-taxAndLaw"] },
+        { name: "ข้อมูลชําระภาษี", path: ["/tax-Summary-page-taxAndLaw","/tax-payment-page-taxAndLaw","/fileUp-loader-page-taxAndLaw"] },
+        { name: "ชําระเงิน", path: ["/paymen-page-taxAndLaw"] },
+        { name: "เเจ้งชําระเงิน", path: ["/UploadReceipt-taxAndLaw"] },
         { name: "ใบเสร็จ", path: ["/receipt"] },
       ];
     }

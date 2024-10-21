@@ -1,0 +1,58 @@
+.container-payment{
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+  gap: 10px;
+  padding: 20px;
+  background: var(--color-white);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* เพิ่มเงาจาง ๆ */
+  border-radius: 8px;
+}
+
+.container-payment h1{
+font-size: var(--font-size-h6-medium);
+color: var(--text-color);
+font-weight: 500;
+}
+
+.payment-time{
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+}
+.payment-time p{
+  font-size: var(--font-size-s2-medium);
+  color: var(--text-color);
+
+}
+
+.payment-time h5{
+  font-size: var(--font-size-h5-regular);
+  font-weight: 500;
+  color: var(--primary-color);
+}
+
+.container-payment h6{
+  font-size: var(--font-size-h6-medium);
+  font-weight: 500;
+}
+.container-payment a{
+ font-size: var(--font-size-14-custom);
+ color: var(--primary-color);
+ text-decoration: underline; /* เพิ่มเส้นใต้ */
+
+}
+
+.bank-logo{
+  width: 53px;
+  height: 53px;
+}
+.qr-payment{
+width: 180px;
+height: 180px;
+}

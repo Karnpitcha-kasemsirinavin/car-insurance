@@ -1,0 +1,23 @@
+.tax-included h1{
+font-size:  var(--font-size-h4-regular);
+color: var(--color-white);
+}
+
+.tax-included p{
+  font-size:  var(--font-size-l2-semibold);
+  color: var(--color-white);
+  }
+  
+
+  .tax-included{
+    line-height: 1.2;
+  }
+
+
+  @media (max-width:425px) {
+    .tax-included h1{
+      font-size:  var(--font-size-h5-regular);
+   
+      }
+      
+  }
