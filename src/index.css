@@ -38,6 +38,7 @@
   --font-size-l2-semibold:10px;
 
   /* Custom Size ✅ */
+  --font-size-32-custom: 32px;  /* ขนาด 12px สำหรับใช้งานทั่วไป */
 --font-size-16-custom: 16px;  /* ขนาด 16px สำหรับใช้งานทั่วไป */
 --font-size-14-custom: 14px;  /* ขนาด 14px สำหรับใช้งานทั่วไป */
 --font-size-12-custom: 12px;  /* ขนาด 12px สำหรับใช้งานทั่วไป */

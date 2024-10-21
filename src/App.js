@@ -18,6 +18,7 @@ import VerifiedPage from "./page/VerifiedPage/VerifiedPage.js"
 import PoliciesPage from "./page/PoliciesPage/PoliciesPage.js"
 import TaxPaymentUploadPage from "./page/TaxPaymentUpLoadPage/TaxPaymentPage.js";
 import FileUploaderPage from "./page/FileUploaderPage/FileUploaderPage.js"
+import ReceiptPage  from "./page/ReceiptPage/ReceiptPage.js";
 function AppContent() {
   const location = useLocation(); // ใช้ useLocation ภายใน Router context
 
@@ -47,6 +48,7 @@ function AppContent() {
         <Route path="/verified-page" element={<VerifiedPage />} />
         <Route path="/policies-page" element={<PoliciesPage />} />
         <Route path="/fileUploader-Page" element={<FileUploaderPage />} />
+        <Route path="/receipt-page" element={<ReceiptPage />} />
       </Routes>
     </div>
   );

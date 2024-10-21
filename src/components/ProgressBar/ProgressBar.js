@@ -23,6 +23,15 @@ function ProgressBar({ type }) {
         { name: "แจ้งชำระเงิน", path: ["/payment-notification"] },
         { name: "ใบเสร็จ", path: ["/receipt"] },
       ];
+    } else if (type === "act&tax") {
+      return [
+        { name: "เริ่ม", path: ["/tax-renewal"] },
+        { name: "ผู้เอาประกัน", path: ["/tax-payment-page","/fileUploader-Page"] },
+        { name: "ชําระภาษี", path: ["/tax-summary"] },
+        { name: "ชําระเงิน", path: ["/payment-notification"] },
+        { name: "เเจ้งชําระเงิน", path: ["/receipt"] },
+        { name: "ใบเสร็จ", path: ["/receipt"] },
+      ];
     }
     return [];
   };
@@ -39,11 +48,18 @@ function ProgressBar({ type }) {
     return stepIndex <= currentIndex ? "active" : "";
   };
 
+  // คำนวณจำนวนขั้นตอนและกำหนดสไตล์
+  const stepWidth = currentSteps.length > 5 ? "16%" : "20%";
+
   return (
     <div className="container">
       <ul className="progressbar">
         {currentSteps.map((step, index) => (
-          <li key={index} className={getClassName(index)}>
+          <li
+            key={index}
+            className={getClassName(index)}
+            style={{ width: stepWidth }} // ปรับ width ตามจำนวนขั้นตอน
+          >
             {step.name}
           </li>
         ))}

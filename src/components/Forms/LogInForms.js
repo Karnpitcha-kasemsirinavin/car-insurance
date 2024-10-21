@@ -61,7 +61,7 @@ function LogInForms() {
       console.log("ข้อมูลที่ส่ง:", formData);
       // ทำการส่งข้อมูลที่นี่
 
-      navigate("/policy-ownerInfo");
+      navigate("/");
     }
   };
 

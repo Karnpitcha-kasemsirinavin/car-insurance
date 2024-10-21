@@ -129,8 +129,8 @@ function RegisterForms() {
   return (
     <div>
       <FormContainer
-        paddingBottom="40px"
-        padding="0px" 
+        paddingBottom="0px"
+        padding="0px"
         backgroundColor=""
         boxShadow="none"
       >

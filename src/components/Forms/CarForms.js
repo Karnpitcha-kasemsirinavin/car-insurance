@@ -71,7 +71,7 @@ function CarForms() {
   });
 
   const navigate = useNavigate();
-  const isSmallScreen = useMediaQuery("(max-width:536px)"); // ตรวจสอบขนาดหน้าจอ
+  const isSmallScreen = useMediaQuery("(max-width:702px)"); // ตรวจสอบขนาดหน้าจอ
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -374,8 +374,8 @@ function CarForms() {
           />
           <TextField
             label="เลขทะเบียนรถ"
-            name="RegistrationFt" // ตั้งชื่อฟิลด์ที่เก็บใน state
-            value={formData.RegistrationFt} // ค่าของฟิลด์ที่เก็บใน state
+            name="licensePlate" // ตั้งชื่อฟิลด์ที่เก็บใน state
+            value={formData.licensePlate} // ค่าของฟิลด์ที่เก็บใน state
             onChange={handleChange} // ฟังก์ชันที่ใช้จัดการการเปลี่ยนแปลง
             variant="outlined"
             fullWidth
@@ -391,10 +391,6 @@ function CarForms() {
                 : "" // ไม่มีข้อผิดพลาด
             } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
           />
-        </ResponsiveStack>
-
-        {/* เเถวที่4 */}
-        <ResponsiveStack isSmallScreen={isSmallScreen}>
           <TextField
             label="เลขทะเบียนรถ (กลุ่มที่ 2)"
             name="RegistrationSd" // ตั้งชื่อฟิลด์ที่เก็บใน state
@@ -417,31 +413,21 @@ function CarForms() {
           />
           <TextField
             label="ปีที่จดทะเบียน"
-            name="RegisteredYear"
-            type="number"
-            value={formData.RegisteredYear} // เชื่อมโยงกับ state
+            name="registrationYear"
+            value={formData.registrationYear} // เชื่อมโยงกับ state
             onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
             variant="outlined"
             fullWidth
-            error={errors.RegisteredYear} // แสดงข้อผิดพลาด
+            error={errors.registrationYear} // แสดงข้อผิดพลาด
             helperText={
-              errors.RegisteredYear
-                ? "กรุณากรอก (ค.ศ เท่านั้น เช่น 2001 )"
+              errors.registrationYear
+                ? "กรุณากรอก (พ.ศ เท่านั้น เช่น 2567 )"
                 : ""
             } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
           />
         </ResponsiveStack>
         <ResponsiveStack>
-          <SelectField
-            label="จัดหวัดที่จดทะเบียน"
-            name="RegisteredProvCd"
-            value={formData.RegisteredProvCd} 
-            onChange={handleChange} 
-            options={province || []}
-            error={errors.RegisteredProvCd}
-          />
-          {/* // TODO: fix field province */}
-          {/* <Autocomplete
+          <Autocomplete
             fullWidth
             options={province || []}
             renderInput={(params) => (
@@ -463,7 +449,7 @@ function CarForms() {
               />
             )}
             freeSolo
-          /> */}
+          />
         </ResponsiveStack>
 
         <SectionTitle text="ข้อมูลทางเทคนิค" iconClass="fa fa-cogs" />

@@ -12,9 +12,10 @@ function RegisterPage() {
       <div className="auth-container" style={{ position: "relative" }}>
         <div className="auth-image">
           <Logo /> {/* แสดงโลโก้ */}
-          <CarIllustration  src={CityDriver} width="234px"/> {/* แสดงภาพประกอบรถ */}
+          <CarIllustration  src={CityDriver} width="160px"/> {/* แสดงภาพประกอบรถ */}
         </div>
         <RegisterForms />
+        <ConnectOptions />
       </div>
     </div>
   );

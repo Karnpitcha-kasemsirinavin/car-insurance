@@ -14,7 +14,7 @@
 
 .progressbar li {
   float: left;
-  width: 20%;
+  width: 16%;
   position: relative;
   text-align: center;
   font-size: var(--font-size-l2-semibold);
