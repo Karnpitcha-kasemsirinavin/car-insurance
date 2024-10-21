@@ -374,8 +374,8 @@ function CarForms() {
           />
           <TextField
             label="เลขทะเบียนรถ"
-            name="licensePlate" // ตั้งชื่อฟิลด์ที่เก็บใน state
-            value={formData.licensePlate} // ค่าของฟิลด์ที่เก็บใน state
+            name="RegistrationFt" // ตั้งชื่อฟิลด์ที่เก็บใน state
+            value={formData.RegistrationFt} // ค่าของฟิลด์ที่เก็บใน state
             onChange={handleChange} // ฟังก์ชันที่ใช้จัดการการเปลี่ยนแปลง
             variant="outlined"
             fullWidth
@@ -413,21 +413,29 @@ function CarForms() {
           />
           <TextField
             label="ปีที่จดทะเบียน"
-            name="registrationYear"
-            value={formData.registrationYear} // เชื่อมโยงกับ state
+            name="RegisteredYear"
+            value={formData.RegisteredYear} // เชื่อมโยงกับ state
             onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
             variant="outlined"
             fullWidth
-            error={errors.registrationYear} // แสดงข้อผิดพลาด
+            error={errors.RegisteredYear} // แสดงข้อผิดพลาด
             helperText={
-              errors.registrationYear
+              errors.RegisteredYear
                 ? "กรุณากรอก (พ.ศ เท่านั้น เช่น 2567 )"
                 : ""
             } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
           />
         </ResponsiveStack>
         <ResponsiveStack>
-          <Autocomplete
+          <SelectField
+            label="จัดหวัดที่จดทะเบียน"
+            name="RegisteredProvCd"
+            value={formData.RegisteredProvCd} 
+            onChange={handleChange}
+            options={province || []} 
+            error={errors.RegisteredProvCd} 
+          />
+          {/* <Autocomplete
             fullWidth
             options={province || []}
             renderInput={(params) => (
@@ -449,7 +457,7 @@ function CarForms() {
               />
             )}
             freeSolo
-          />
+          /> */}
         </ResponsiveStack>
 
         <SectionTitle text="ข้อมูลทางเทคนิค" iconClass="fa fa-cogs" />

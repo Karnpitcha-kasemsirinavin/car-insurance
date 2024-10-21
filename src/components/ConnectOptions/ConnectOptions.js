@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { baseURL } from "../../App.js";
 import liff from "@line/liff";
-import { useNavigate } from "react-router-dom";
 
 function ConnectOptions() {
   const [message, setMessage] = useState("");

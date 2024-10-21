@@ -6,6 +6,7 @@ import "../../components/layout-wrapper/layout-wrapper.css";
 import icon1 from "../../assets/car1.svg"; // นำเข้ารูปภาพ
 import icon2 from "../../assets/car2.svg";
 import icon3 from "../../assets/car3.svg";
+import icon5 from "../../assets/car5.svg";
 import SimpleCarCard from "../../components/CarCard/SimpleCarCard";
 import { baseURL } from "../../App";
 import axios from "axios";
@@ -15,6 +16,8 @@ const mapVehType = {
   Freight: ["รถบรรทุก", icon2],
   Bus: ["รถตู้", icon3],
   Sedan: ["รถเก๋ง", icon1],
+  Motorcycle: ["รถจักรยานยนต์", icon5],
+  default: ["พาหนะ", icon1],
 }
 
 
@@ -57,30 +60,22 @@ function TaxRenewal() {
       <PageTitle title="ประเภทรถของคุณคือ?" />
       <div className="container-card customize">
       {vehicleType.length !== 0 && vehicleType.map((type, index) => (
-        <SimpleCarCard
+        mapVehType[type.VehicleType] ? (
+          <SimpleCarCard
             key={type.VehicleCode || index}
             image={mapVehType[type.VehicleType][1]}
-            title={mapVehType[type.VehicleType][0]} 
+            title={mapVehType[type.VehicleType][0]}
             onClick={() => handleCardClick("/tax-payment-page", type)}
-        />
+          />
+        ):
+        <SimpleCarCard
+        key={type.VehicleCode || index}
+        image={mapVehType["default"][1]}
+        title={mapVehType["default"][0]}
+        onClick={() => handleCardClick("/tax-payment-page", type)}
+      />
       ))}
-      {/* <SimpleCarCard 
-        image={icon1}
-        title="รถเก๋ง"
-        onClick={() => handleCardClick("/tax-payment-page")}
-      />
-      <SimpleCarCard 
-        image={icon2}
-        title="รถบรรทุก"
-        onClick={() => handleCardClick("/tax-payment-page")}
-      />
-        <SimpleCarCard 
-        image={icon3}
-        title="รถตู้"
-        onClick={() => handleCardClick("/tax-payment-page")}
-      /> */}
-      {/* เพิ่ม SimpleCarCard อื่น ๆ ตามต้องการ */}
-    </div>
+      </div>
     </div>
   );
 }

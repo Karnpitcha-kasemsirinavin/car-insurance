@@ -32,15 +32,15 @@ function TaxPaymentForms() {
   console.log(inputData);
 
   const [formData, setFormData] = useState({
-    registrationBook: null,
-    inspectionCertificate: null,
-    vehicleTax: null,
+    RegistrationBook: null,
+    // inspectionCertificate: null,
+    VehicleTax: null,
   });
 
   const [errors, setErrors] = useState({
-    registrationBook: false,
-    inspectionCertificate: false,
-    vehicleTax: false,
+    RegistrationBook: false,
+    // inspectionCertificate: false,
+    VehicleTax: false,
   });
 
   const isSmallScreen = useMediaQuery("(max-width:536px)");
@@ -94,21 +94,22 @@ function TaxPaymentForms() {
   // };
 
   const handleSubmit = () => {
-    const { registrationBook, inspectionCertificate, vehicleTax } = formData;
+    const { RegistrationBook, VehicleTax } = formData;
+    // const { RegistrationBook, inspectionCertificate, VehicleTax } = formData;
 
     const newErrors = {
-      registrationBook: !registrationBook,
-      inspectionCertificate: !inspectionCertificate,
-      vehicleTax: !vehicleTax,
+      RegistrationBook: !RegistrationBook,
+      // inspectionCertificate: !inspectionCertificate,
+      VehicleTax: !VehicleTax,
     };
 
     setErrors(newErrors);
     console.log("ข้อมูลปัจจุบันของฟอร์ม:", formData);
 
     if (
-      !newErrors.registrationBook &&
-      !newErrors.inspectionCertificate &&
-      !newErrors.vehicleTax
+      !newErrors.RegistrationBook &&
+      // !newErrors.inspectionCertificate &&
+      !newErrors.VehicleTax
     ) {
       console.log("ข้อมูลที่ส่ง:", formData);
       // ทำการส่งข้อมูลที่นี่
@@ -154,11 +155,11 @@ function TaxPaymentForms() {
           <TextField
             label="สมุดคู่มือจดทะเบียนรถ (ฉบับจริง หรือสำเนาก็ได้)"
             type="file"
-            name="registrationBook" // เปลี่ยนชื่อฟิลด์เป็น registrationBook
+            name="RegistrationBook" // เปลี่ยนชื่อฟิลด์เป็น RegistrationBook
             onChange={handleFileChange} // ใช้ฟังก์ชันจัดการการเปลี่ยนแปลง
-            error={errors.registrationBook} // ข้อผิดพลาดสำหรับ registrationBook
+            error={errors.RegistrationBook} // ข้อผิดพลาดสำหรับ RegistrationBook
             fullWidth
-            helperText={errors.registrationBook ? "กรุณาอัปโหลดเอกสาร" : ""}
+            helperText={errors.RegistrationBook ? "กรุณาอัปโหลดเอกสาร" : ""}
             accept=".png, .jpg, .jpeg"
             InputLabelProps={{
               shrink: true, // ทำให้ label อยู่ด้านบน
@@ -166,7 +167,7 @@ function TaxPaymentForms() {
           />
         </ResponsiveStack>
 
-        <ResponsiveStack>
+        {/* <ResponsiveStack>
           <TextField
             label="หนังสือรับรองการตรวจสภาพรถ"
             type="file"
@@ -182,17 +183,17 @@ function TaxPaymentForms() {
               shrink: true, // ทำให้ label อยู่ด้านบน
             }}
           />
-        </ResponsiveStack>
+        </ResponsiveStack> */}
 
         <ResponsiveStack>
           <TextField
             label="ใบภาษีรถยนต์"
             type="file"
-            name="vehicleTax" // เปลี่ยนชื่อฟิลด์เป็น vehicleTax
+            name="VehicleTax" // เปลี่ยนชื่อฟิลด์เป็น VehicleTax
             onChange={handleFileChange} // ใช้ฟังก์ชันจัดการการเปลี่ยนแปลง
-            error={errors.vehicleTax} // ข้อผิดพลาดสำหรับ vehicleTax
+            error={errors.VehicleTax} // ข้อผิดพลาดสำหรับ VehicleTax
             fullWidth
-            helperText={errors.vehicleTax ? "กรุณาอัปโหลดเอกสาร" : ""}
+            helperText={errors.VehicleTax ? "กรุณาอัปโหลดเอกสาร" : ""}
             accept=".png, .jpg, .jpeg"
             InputLabelProps={{
               shrink: true, // ทำให้ label อยู่ด้านบน
