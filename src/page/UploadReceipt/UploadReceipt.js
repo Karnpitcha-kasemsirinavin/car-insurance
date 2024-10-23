@@ -13,7 +13,7 @@ import { useSearchParams } from 'react-router-dom';
 
 function UploadReceipt() {
   const [file, setFile] = useState(null);
-  const navigate = useNavigate(); // สร้างฟังก์ชัน navigate
+  const navigate = useNavigate();
   const [convertedFile, setConvertedFile] = useState(null)
   // Get a specific parameter
   const [searchParams] = useSearchParams();
@@ -57,8 +57,6 @@ function UploadReceipt() {
       console.log("Uploading file:", file);
       // เพิ่มโค้ดการอัปโหลดที่นี่
       await updateSlipPayment()
-      
-      navigate("/receipt-page");
     } else {
       alert("กรุณาเลือกไฟล์ก่อน");
     }
@@ -79,10 +77,13 @@ function UploadReceipt() {
         )
 
         if (response && response.data.status === "success") {
-          // * proceed to nect step
-          console.log("success");
-          // navigate("/document-page");
-            // setActiveStep(activeStep + 1);
+          // * proceed to next step
+          // console.log("success");
+          navigate("/receipt-page", {
+            state: {
+              orderId: response.data.data.orderId
+            }
+          });
         }
     } catch (error) {
         console.log("error: ", error);

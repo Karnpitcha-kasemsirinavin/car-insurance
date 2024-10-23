@@ -81,8 +81,11 @@ function UploadReceipt() {
         if (response && response.data.status === "success") {
           // * proceed to nect step
           console.log("success");
-          // navigate("/document-page");
-            // setActiveStep(activeStep + 1);
+          navigate("/receipt-page", {
+            state: {
+              orderId: response.data.data.orderId
+            }
+          });
         }
     } catch (error) {
         console.log("error: ", error);

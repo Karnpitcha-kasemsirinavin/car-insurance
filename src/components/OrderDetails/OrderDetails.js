@@ -19,7 +19,7 @@ import Vector14 from "../../assets/Vector14.svg";
 import Vector15 from "../../assets/Vector15.svg";
 
 
-function OrderDetails() {
+function OrderDetails({ CMIDetails }) {
   return (
     <div className="container-order-details">
       <div className="order-details__title">
@@ -33,20 +33,20 @@ function OrderDetails() {
               <div className="order-details__header-product-name">
                 <h1>กรมธรรม์</h1>
                 <p>
-                  รหัสสินค้า <span>#Q1002404</span>
+                  รหัสสินค้า <span>{CMIDetails.Qcode}</span>
                 </p>
               </div>
             </div>
             <div className="order-details__header-product-detail-box">
               <p>
-                ผู้เอาประกันภัย: <span>นางสาว กานต์พิชชา เกษมศิรินาวิน</span>{" "}
+                ผู้เอาประกันภัย: <span>{`${CMIDetails.InsuredTitle} ${CMIDetails.InsuredName} ${CMIDetails.InsuredSurname}`}</span>{" "}
               </p>
               <p>
-                เบอร์โทร: <span>0922607795</span>{" "}
+                เบอร์โทร: <span>{CMIDetails.PhoneNumber}</span>{" "}
               </p>
-              <p>
+              {/* <p>
                 อีเมล:: <span>test@gamail.com</span>{" "}
-              </p>
+              </p> */}
             </div>
           </div>
           <div className="order-details__header-company">
@@ -62,64 +62,64 @@ function OrderDetails() {
             <div className="order-details__content-item">
               <img src={CarIcon} alt="" />
               <div className="order-details__content-item-text" >
-                <p>ประเภทรถยนต์</p>
-                <p>รถเก๋ง</p>
+                <p>ประเภทพาหนะ</p>
+                <p>{CMIDetails.VehicleCode}</p>
               </div>
             </div>
             <div className="order-details__content-item">
               <img src={Vector2} alt="" />
               <div className="order-details__content-item-text" >
                 <p>ปริมาตรกระบอกสูบ (CC)</p>
-                <p>2000</p>
+                <p>{CMIDetails.Displacement ?? "-"}</p>
               </div>
             </div>
             <div className="order-details__content-item">
               <img src={Vector3} alt="" />
               <div className="order-details__content-item-text" >
                 <p>นํ้าหนักรถ (kg)</p>
-                <p>2000</p>
+                <p>{CMIDetails.GrossVehOrCombinedWeight ?? "-"}</p>
               </div>
             </div>
             <div className="order-details__content-item">
               <img src={Vector4} alt="" />
               <div className="order-details__content-item-text" >
                 <p>จํานวนที่นั่ง</p>
-                <p>4</p>
+                <p>{CMIDetails.SeatingCapacity ?? "-"}</p>
               </div>
             </div>
             <div className="order-details__content-item">
               <img src={Vector5} alt="" />
               <div className="order-details__content-item-text" >
                 <p>สีรถยนต์</p>
-                <p>สีเทา</p>
+                <p>{CMIDetails.Colour}</p>
               </div>
             </div>
             <div className="order-details__content-item">
               <img src={Vector6} alt="" />
               <div className="order-details__content-item-text" >
                 <p>ชนิดทะเบียนรถยนต์</p>
-                <p>รถยนต์ในประเทศ มีทะเบียน</p>
+                <p>{CMIDetails.PlateType}</p>
               </div>
             </div>
             <div className="order-details__content-item">
               <img src={Vector7} alt="" />
               <div className="order-details__content-item-text" >
-                <p>เลขทะเบียนรถยนต์ (กลุ่มที่ 1)</p>
-                <p>หก</p>
+                <p>เลขทะเบียนรถยนต์</p>
+                <p>{`${CMIDetails.RegistrationFt} ${CMIDetails.RegistrationSd} ${CMIDetails.RegisteredProvCd}`}</p>
               </div>
             </div>
-            <div className="order-details__content-item">
+            {/* <div className="order-details__content-item">
               <img src={Vector7} alt="" />
               <div className="order-details__content-item-text" >
                 <p>เลขทะเบียนรถยนต์ (กลุ่มที่ 2)</p>
                 <p>3241</p>
               </div>
-            </div>
+            </div> */}
             <div className="order-details__content-item">
               <img src={Vector8} alt="" />
               <div className="order-details__content-item-text" >
                 <p>อายุรถยนต์ (ปี)</p>
-                <p>4 ปี</p>
+                <p>{`${CMIDetails.VehAge} ปี`}</p>
               </div>
             </div>
             <div className="order-details__content-item">
@@ -129,13 +129,13 @@ function OrderDetails() {
                 <p>ไทย</p>
               </div>
             </div>
-            <div className="order-details__content-item">
+            {/* <div className="order-details__content-item">
               <img src={Vector10} alt="" />
               <div className="order-details__content-item-text" >
                 <p>ลักษณะการซ่อม</p>
-                <p>ซ่อมอู่</p>
+                <p>{CMIDetails.GarageTypeCd}</p>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="order-details__content-box">
             <div className="order-details__content-title">
@@ -145,16 +145,17 @@ function OrderDetails() {
               <img src={Vector11} alt="" />
               <div className="order-details__content-item-text" >
                 <p>หมายเลขเครื่อง</p>
-                <p>Chasis43sdfsdd23fsdef234</p>
+                <p>{CMIDetails.ChassisSerialNumber ?? "-"}</p>
               </div>
             </div>
             <div className="order-details__content-item">
               <img src={Vector12} alt="" />
               <div className="order-details__content-item-text" >
                 <p>หมายเลขตัวถัง</p>
-                <p>Chasis43sdfsdd23fsdef234</p>
+                <p>{CMIDetails.EngineSerialNumber ?? "-"}</p>
               </div>
             </div>
+
             <div className="order-details__content-title">
               <h1>ข้อมูลผู้ของเอกสาร</h1>
             </div>
@@ -162,37 +163,53 @@ function OrderDetails() {
               <img src={Vector13} alt="" />
               <div className="order-details__content-item-text" >
                 <p>ประเภทผู้ขอเอกสาร</p>
-                <p>บุคคลธรรมดา</p>
+                <p>{CMIDetails.InsuredType}</p>
               </div>
-            </div>
-            <div className="order-details__content-item">
-              <img src={Vector14} alt="" />
-              <div className="order-details__content-item-text" >
-                <p>สาขาผู้ขอเอกสาร:</p>
-                <p>-</p>
-              </div>
-            </div>
-            <div className="order-details__content-title">
-              <h1>ข้อมูลบัตรประจําตัว</h1>
             </div>
             <div className="order-details__content-item">
               <img src={Vector15} alt="" />
               <div className="order-details__content-item-text" >
                 <p>ประเภทบัตร</p>
-                <p>IDType</p>
+                <p>{CMIDetails.IDType}</p>
               </div>
             </div>
             <div className="order-details__content-item">
               <img src={Vector15} alt="" />
               <div className="order-details__content-item-text" >
                 <p>วันบัตรหมดอายุ</p>
-                <p>22 ก.ค. 2024</p>
+                <p>{CMIDetails.InsuredUniqueIDExpDt}</p>
               </div>
             </div>
+            {/* <div className="order-details__content-item">
+              <img src={Vector14} alt="" />
+              <div className="order-details__content-item-text" >
+                <p>สาขาผู้ขอเอกสาร:</p>
+                <p>-</p>
+              </div>
+            </div> */}
+
+            <div className="order-details__content-title">
+              <h1>ข้อมูลการคุ้มครอง</h1>
+            </div>
+            
+            <div className="order-details__content-item">
+              <img src={Vector15} alt="" />
+              <div className="order-details__content-item-text" >
+                <p>วันที่เริ่มต้นการคุ้มครอง</p>
+                <p>{CMIDetails.CMIEffectiveDt}</p>
+              </div>
+            </div>
+            <div className="order-details__content-item">
+              <img src={Vector15} alt="" />
+              <div className="order-details__content-item-text" >
+                <p>วันที่สิ้นสุดการคุ้มครอง</p>
+                <p>{CMIDetails.CMIExpirationDt}</p>
+              </div>
+            </div>
+
+          </div>
             
           </div>
-       
-        </div>
         
       </div>
     </div>

@@ -21,7 +21,8 @@ import Calendar from "../../assets/Calendar.svg";
 import Calendar1 from "../../assets/Calendar1.svg";
 import Calendar2 from "../../assets/Calendar2.svg";
 import Calendar3 from "../../assets/Calendar3.svg";
-function OrderDetailsTax() {
+
+function OrderDetailsTax({ TaxDetails, UserDetails }) {
   return (
     <div className="container-order-details">
     <div className="order-details__title">
@@ -35,23 +36,20 @@ function OrderDetailsTax() {
             <div className="order-details__header-product-name">
               <h1>ต่อภาษี</h1>
               <p>
-                รหัสสินค้า <span>#Q1002404</span>
+                รหัสสินค้า <span>{TaxDetails.taxId}</span>
               </p>
             </div>
           </div>
           <div className="order-details__header-product-detail-box">
             <p>
-              ผู้เอาประกันภัย: <span>นางสาว กานต์พิชชา เกษมศิรินาวิน</span>{" "}
+              Username: <span>{UserDetails.Username}</span>{" "}
             </p>
             <p>
-              เบอร์โทร: <span>0922607795</span>{" "}
-            </p>
-            <p>
-              อีเมล:: <span>test@gamail.com</span>{" "}
+              เบอร์โทร: <span>{UserDetails.phoneNumber}</span>{" "}
             </p>
           </div>
         </div>
-   
+
       </div>
       <div className="order-details__content-section">
         <div className="order-details__content-box">
@@ -61,11 +59,17 @@ function OrderDetailsTax() {
           <div className="order-details__content-item">
             <img src={Vector2} alt="" />
             <div className="order-details__content-item-text" >
-              <p>ปริมาตรกระบอกสูบ (CC)</p>
-              <p>ความจุกระบอกสูบ (ซีซี)</p>
+            <p>ปริมาตรกระบอกสูบ (CC)</p>
+            <p>{TaxDetails.Displacement ?? "-"}</p>
             </div>
           </div>
-       
+          <div className="order-details__content-item">
+            <img src={Vector2} alt="" />
+            <div className="order-details__content-item-text" >
+            <p>นํ้าหนักรถ (kg)</p>
+            <p>{TaxDetails.Weights ?? "-"}</p>
+            </div>
+          </div>
         </div>
         <div className="order-details__content-box">
           <div className="order-details__content-title">
@@ -75,32 +79,32 @@ function OrderDetailsTax() {
             <img src={Calendar1} alt="" />
             <div className="order-details__content-item-text" >
               <p>วันที่จดทะเบียน</p>
-              <p>1/02/2567</p>
+              <p>{TaxDetails.RegisteredYear}</p>
             </div>
           </div>
           <div className="order-details__content-item">
             <img src={Calendar2} alt="" />
             <div className="order-details__content-item-text" >
               <p>ปีล่าสุดที่จ่าย</p>
-              <p>1/02/2567</p>
+              <p>{TaxDetails.DocumentYear}</p>
             </div>
           </div>
           <div className="order-details__content-item">
             <img src={Calendar3} alt="" />
             <div className="order-details__content-item-text" >
               <p>วันที่ต้องการทําการจ่ายภาษี</p>
-              <p>1/02/2567</p>
+              <p>{TaxDetails.IssuedDate}</p>
             </div>
           </div>
+          {/* // TODO: fix add the issueddate of system */}
           <div className="order-details__content-item">
             <img src={Calendar3} alt="" />
             <div className="order-details__content-item-text" >
-              <p>วันที่ต้องการทําการจ่ายภาษี</p>
-              <p>1/02/2567</p>
+              <p>วันที่ทําการจ่ายภาษี</p>
+              <p>{TaxDetails.IssuedDate}</p>
             </div>
           </div>
         </div>
-     
       </div>
       
     </div>

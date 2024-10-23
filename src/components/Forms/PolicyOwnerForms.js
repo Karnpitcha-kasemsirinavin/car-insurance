@@ -116,8 +116,9 @@ function PolicyOwnerForms() {
         console.log(isUserValid);
         if (!isUserValid) {
           navigate("/login-page");
+        } else {
+          navigate("/payment-page");
         }
-        navigate("/payment-page");
       } else {
         // * flow 3: CMI N Tax
         // check user
@@ -167,12 +168,13 @@ function PolicyOwnerForms() {
   // * request Document (create order)
   async function requestDocument() {
     console.log(formData)
+    const id = IDType.find(item => item.description === formData.IDType)
     const CMINTax = TaxVeh ? true : false;
     try {
         const response = await axios.post(`${baseURL}/createDoc`, {
             ...inputData,
             ...formData,
-            IDType: IDType[formData.IDType],
+            IDType: id.IDType,
             Company: "ind",
             PackageCode: inputData.vehiclecode,
             VehicleCode: inputData.vehiclecode,
