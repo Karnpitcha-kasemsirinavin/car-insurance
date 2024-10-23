@@ -27,7 +27,7 @@ function TaxPaymentForms() {
   const navigate = useNavigate();
   // * get from previous page
   const location = useLocation();
-  const { inputData } = location.state || {};
+  const { inputData, CMINTax } = location.state || {};
 
   console.log(inputData);
 
@@ -113,7 +113,13 @@ function TaxPaymentForms() {
     ) {
       console.log("ข้อมูลที่ส่ง:", formData);
       // ทำการส่งข้อมูลที่นี่
-      requestCreateResult()
+      if (!CMINTax) {
+        // * flow 2: Tax
+        requestCreateResult();
+      } else {
+        // * flow 3: CMI N Tax
+        requestCreateResultwithCMI();
+      }
       // navigate("/payment-page");
     }
   };
@@ -140,7 +146,31 @@ function TaxPaymentForms() {
     } catch (error) {
         console.log("error: ", error )
     }
-}
+  }
+
+  // * create tax result with CMI
+  async function requestCreateResultwithCMI() {
+    try {
+        const response = await axios.post(`${baseURL}/tax/createTaxResultwithCMI`, {
+            ...inputData,
+            ...formData
+        }, { withCredentials: true })
+
+        console.log("pass: ", response);
+        if (response.data.status === "success") {
+            // * check whether the user is already login
+            if (!response.data.validUser) {
+                // * go to auth page
+                navigate('/login-page');
+            } else {
+                // * proceed to next step
+                navigate("/payment-page-taxAndLaw")
+            }
+        }
+    } catch (error) {
+        console.log("error: ", error )
+    }
+  }
 
   return (
     <div>

@@ -6,12 +6,13 @@ import Buttons from '../../components/Buttons/Buttons';
 import Receipt from '../../components/Receipt/Receipt';
 import OrderDetails from "../../components/OrderDetails/OrderDetails"
 import OrderDetailsTax from "../../components/OrderDetailsTax/OrderDetailsTax"
-import html2pdf from 'html2pdf.js'; // นำเข้าไลบรารี html2pdf.js
+import html2pdf from 'html2pdf.js'; 
+
 function ReceiptPage() {
   const generatePDF = () => {
     const element = document.getElementById('receipt-content');
     const opt = {
-     
+
         filename:     'ใบเสร็จ.pdf',
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2 }, // การปรับขนาดเพื่อความชัดเจน
@@ -22,8 +23,8 @@ function ReceiptPage() {
 
   return (
     <div>
-         <HandleBack />{/* ปุ่มย้อนกลับ */}
-         <div className="layout-wrapper customize">
+        <HandleBack />{/* ปุ่มย้อนกลับ */}
+        <div className="layout-wrapper customize">
           <div className='button-container-right' >
           <Buttons  iconClass='fa-solid fa-download' variant='primary'  width='119px' height="51px" label="โหลดใบเสร็จ" fontSize='14px'  onClick={generatePDF} />
           </div>
@@ -31,8 +32,8 @@ function ReceiptPage() {
           <Receipt />
       < OrderDetails />
       <OrderDetailsTax/>
-           </div>
-         </div>
+        </div>
+        </div>
     </div>
   )
 }

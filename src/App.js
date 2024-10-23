@@ -48,6 +48,8 @@ function AppContent() {
       
       <Routes>
         <Route path="/" element={<SelectService />} />
+
+        {/* flow 1: CMI */}
         <Route path="/buy-insurance" element={<BuyInsurance />} />
         <Route path="/car-info" element={<CarInfo />} />
         <Route path="/policy-ownerInfo" element={<PolicyOwnerInfo />} />
@@ -55,35 +57,39 @@ function AppContent() {
         <Route path="/upload-receipt" element={<UploadReceipt />} />
         <Route path="/document-page" element={<DocumentPage />} />
 
+        {/* flow 2: Tax */}
         <Route path="/tax-renewal" element={<TaxRenewal />} />
         <Route path="/tax-payment-page" element={<TaxPaymentPage />} />
         <Route path="/tax-summary" element={<TaxSummary />} />
-
-        <Route path="/login-page" element={<LoginPage />} />
-        <Route path="/register-page" element={<RegisterPage />} />
-        <Route path="/otp-page" element={<OtpPage />} />
-        
-        <Route path="/verified-page" element={<VerifiedPage />} />
-        <Route path="/policies-page" element={<PoliciesPage />} />
         <Route path="/fileUploader-Page" element={<FileUploaderPage />} />
-        <Route path="/receipt-page" element={<ReceiptPage />} />
 
-        <Route path="/admin/users" element={<UsersBoard/>}/>
-
+        {/* flow 3: CMI N Tax */}
         <Route path="/insurance-page-taxAndLaw" element={<InsurancePageTaxAndLaw />} /> 
-
         <Route path="/carInfo-page-taxAndLaw" element={<CarInfoPagetaxAndLaw/>} /> 
         <Route path="/policy-page-taxAndLaw" element={<PolicyPagetaxAndLaw/>} /> 
         <Route path="/policy-page-taxAndLaw" element={<PolicyPagetaxAndLaw/>} /> 
-        <Route path="/paymen-page-taxAndLaw" element={<PaymenPagetaxAndLaw/>} /> 
+        <Route path="/payment-page-taxAndLaw" element={<PaymenPagetaxAndLaw/>} /> 
         <Route path="/tax-payment-page-taxAndLaw" element={<TaxPaymentPagetaxAndLaw/>} /> 
-
         <Route path="/tax-summary-page-taxAndLaw" element={< TaxSummaryPagetaxAndLaw/>} /> 
-
         <Route path="/fileUp-loader-page-taxAndLaw" element={<FileUploaderPagetaxAndLaw/>} /> 
         <Route path="/uploadReceipt-page-taxAndLaw" element={<UploadReceiptPageTaxAndLaw/>} /> 
         <Route path="/receipt-page-taxAndLaw" element={<ReceiptPageTaxAndLaw/>} /> 
-     
+
+        {/* Summary N Receipt Page */}
+        <Route path="/receipt-page" element={<ReceiptPage />} />
+
+        {/* Login N Register Page */}
+        <Route path="/login-page" element={<LoginPage />} />
+        <Route path="/register-page" element={<RegisterPage />} />
+        <Route path="/otp-page" element={<OtpPage />} />
+        <Route path="/verified-page" element={<VerifiedPage />} />
+
+        {/* // TODO: Change to popup instead */}
+        {/* <Route path="/policies-page" element={<PoliciesPage />} /> */}
+        
+        {/* admin */}
+        <Route path="/admin/users" element={<UsersBoard/>}/>
+
       </Routes>
     </div>
   );

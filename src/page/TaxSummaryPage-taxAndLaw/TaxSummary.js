@@ -10,52 +10,126 @@ import { useNavigate } from 'react-router-dom'; // สำหรับการ�
 import Buttons from "../../components/Buttons/Buttons.js";
 import StickyFooter from "../../components/StickyFooter/StickyFooter.js";
 
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { baseURL } from "../../App.js";
+import { useState } from "react";
+import { useEffect } from "react";
+
+const mapVehType = {
+  Freight: ["รถบรรทุก"],
+  Bus: ["รถตู้"],
+  Sedan: ["รถเก๋ง"],
+}
+
 function TaxSummary() {
   const navigate = useNavigate(); // เรียกใช้ useNavigate
+  // * get from previous page
+  const location = useLocation();
+  const { inputData, displayVeh, CMINTax } = location.state || {};
+
+  const [result, setResult] = useState({});
+
   const carData = [
-    { label: "รถยนต์เก๋ง", value: "3 ปี", iconClass: "fa-car" },
-    { label: "รถกระบะ", value: "2 ปี", iconClass: "fa-truck" },
+    { label: `${mapVehType[displayVeh] ?? "ไม่ทราบ"} `, value: `${result.VehicleAge?? "ไม่ทราบ"}  ปี`, iconClass: "fa-car" },
   ];
 
   const productPrice = [
-    { label: "ราคาต้น", value: "2,900 บาท", iconClass: "fa-tag" },
+    { label: "ราคาต้น", 
+      value: `${result.OriginalPrice ?? "ไม่ทราบ"} บาท`, 
+      iconClass: "fa-tag" },
+    {
+      label: "ส่วนลด %",
+      value: `${result.DiscountPercent ?? "ไม่ทราบ"} %`,
+      iconClass: "fa-dollar-sign",
+    },
+    {
+      label: "ส่วนลด",
+      value: `${result.Discount ?? "ไม่ทราบ"} บาท`,
+      iconClass: "fa-dollar-sign",
+    },
     {
       label: "ราคาหลังส่วนลด",
-      value: "2,900 บาท",
+      value: `${result.DiscountedPrice ?? "ไม่ทราบ"} บาท`,
       iconClass: "fa-dollar-sign",
     },
   ];
   const lateFees = [
-    { label: "จำนวนเดือนค่าปรับ", value: "20 เดือน", iconClass: "fa-clock" }, // ตัวอย่างไอคอน
-    { label: "ค่าปรับทั้งหมด", value: "580 บาท", iconClass: "fa-money-bill" }, // ตัวอย่างไอคอน
+    { label: "จำนวนเดือนค่าปรับ", 
+      value: `${result.FineMonths ?? "ไม่ทราบ"} เดือน`, 
+      iconClass: "fa-clock" },
+    { label: "ค่าปรับทั้งหมด", 
+      value: `${result.Fine ?? "ไม่ทราบ"} บาท`, 
+      iconClass: "fa-money-bill" },
     {
-      label: "ราคาค่าปรับเพิ่ม",
-      value: "3,480 บาท",
+      label: "ราคาหลังเพิ่มค่าปรับ",
+      value: `${(result.DiscountedPrice + result.Fine) ?? "ไม่ทราบ"} บาท`,
       iconClass: "fa-plus-circle",
-    }, // ตัวอย่างไอคอน
+    }, 
   ];
 
   const ServiceShippingCosts = [
-    { label: "ค่าบริการ", value: "30 บาท", iconClass: "fa-cogs" }, // ตัวอย่างไอคอน
-    { label: "ค่าจัดส่ง", value: "32 บาท", iconClass: "fa-truck" }, // ตัวอย่างไอคอน
-    { label: "ราคาค่าจัดส่ง", value: "3,542 บาท", iconClass: "fa-tag" }, // ตัวอย่างไอคอน
+    { label: "ค่าบริการทั้งหมด", 
+      value: `${(result.TotalPrice) ?? "ไม่ทราบ"} บาท`, 
+      iconClass: "fa-cogs" 
+    },
+    { label: "ค่าแพ็คเกจและบริการทั้งหมด", 
+      value: `${(result.TotalService) ?? "ไม่ทราบ"} บาท`, 
+      iconClass: "fa-cogs" 
+    },
+    // { label: "ค่าจัดส่ง", value: "32 บาท", iconClass: "fa-truck" },
+    // { label: "ราคาค่าจัดส่ง", value: "3,542 บาท", iconClass: "fa-tag" },
   ];
   const Holiday = [
-    { label: "ราคาวันหยุด", value: "3,480 บาท", iconClass: "fa-calendar" }, // ตัวอย่างไอคอน
-    { label: "จำนวนวันหยุด", value: "0 วัน", iconClass: "fa-calendar-check" }, // ตัวอย่างไอคอน
+    { label: "ราคาเนื่องจากวันหยุด", 
+      value: `${(result.IssuedHolidayAddition) ?? "ไม่ทราบ"} บาท`, 
+      iconClass: "fa-calendar" },
+    { label: "จำนวนวันหยุด", 
+      value: `${(result.IssuedHolidayDays) ?? "ไม่ทราบ"} วัน`, 
+      iconClass: "fa-calendar-check" },
   ];
   const TimeBasedPricing = [
     {
-      label: "การเพิ่มเวลาในการคิดราคา",
-      value: "30 บาท",
+      label: "ราคาเนื่องจากเวลาทำการ",
+      value: `${(result.IssuedTimeAddition) ?? "ไม่ทราบ"} บาท`, 
       iconClass: "fa-clock",
     }, // ตัวอย่างไอคอน
-    { label: "ราคาคิดเวลารวม", value: "3,510 บาท", iconClass: "fa-money-bill" }, // ตัวอย่างไอคอน
-    { label: "จำนวนวันในการคิดเวลา", value: "0 วัน", iconClass: "fa-calendar" }, // ตัวอย่างไอคอน
+    { label: "จำนวนวันในที่เกิดจากเวลาทำการ", 
+      value: `${(result.IssuedTimeDays) ?? "ไม่ทราบ"} วัน`,
+      iconClass: "fa-calendar" },
   ];
-  const handlePurchaseClick = () => {
-    navigate('/payment-page'); // นำผู้ใช้ไปยังหน้าชำระเงิน
-  };
+
+    async function requestCalculation(inputData) {
+      try {
+          const response = await axios.post(`${baseURL}/tax/calc`,
+              inputData
+          );
+          if (response) {
+              console.log(response.data);
+              setResult(response.data)
+          }
+      } catch (error) {
+          console.log("error: ", error)
+      }
+    }
+
+    // * naviagte to upload page
+    const handlePurchaseClick = () => {
+      if (CMINTax) {
+        // * flow 3: CMI N Tax
+        navigate("/fileUp-loader-page-taxAndLaw ", {
+          state: {
+            inputData: {...inputData, ...result},
+            CMINTax: CMINTax
+          }
+        })
+      }
+    };
+
+  useEffect(() => {
+    requestCalculation(inputData);
+  }, [])
+  
   return (
     <div>
       <HandleBack /> {/* ปุ่มย้อนกลับ */}
@@ -83,7 +157,7 @@ function TaxSummary() {
               padding: "20px",
             }}
           >
-            <TaxIncluded totalPrice="3,542 บาท" />
+            <TaxIncluded totalPrice={`${(result.TotalPrice) ?? "ไม่ทราบ"} บาท`} />
 
             <Buttons
               label="ซื้อเลย"

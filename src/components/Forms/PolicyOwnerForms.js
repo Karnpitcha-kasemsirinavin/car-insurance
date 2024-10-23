@@ -34,7 +34,7 @@ function PolicyOwnerForms() {
 
   // * get from previous page
   const location = useLocation();
-  const { inputData } = location.state || {};
+  const { inputData, TaxVeh } = location.state || {};
   // * nedd to be request according to each other
   const requestFields = ["SubDistrict", "District", "Province", "PostalCode"]
   // * assign value from input fields
@@ -108,13 +108,29 @@ function PolicyOwnerForms() {
     if (Object.values(newErrors).every(value => value === false)) {
       console.log("ข้อมูลที่ส่ง:", formData);
       // * ทำการส่งข้อมูลที่นี่
-      // check user
-      const isUserValid = await requestDocument()
-      console.log(isUserValid);
-      if (!isUserValid) {
-        navigate("/login-page");
+
+      if (!TaxVeh) {
+        // * flow 1: CMI
+        // check user
+        const isUserValid = await requestDocument();
+        console.log(isUserValid);
+        if (!isUserValid) {
+          navigate("/login-page");
+        }
+        navigate("/payment-page");
+      } else {
+        // * flow 3: CMI N Tax
+        // check user
+        const isUserValid = await requestDocument();
+        navigate("/tax-payment-page-taxAndLaw", {
+          state: {
+            vehicleCode: TaxVeh.VehicleCode,
+            displayVeh: TaxVeh.VehicleType,
+            CMINTax: true
+          }
+        });
       }
-      navigate("/payment-page");
+      
     }
   };
 
@@ -151,6 +167,7 @@ function PolicyOwnerForms() {
   // * request Document (create order)
   async function requestDocument() {
     console.log(formData)
+    const CMINTax = TaxVeh ? true : false;
     try {
         const response = await axios.post(`${baseURL}/createDoc`, {
             ...inputData,
@@ -159,7 +176,7 @@ function PolicyOwnerForms() {
             Company: "ind",
             PackageCode: inputData.vehiclecode,
             VehicleCode: inputData.vehiclecode,
-            CMINTax: false,
+            CMINTax: CMINTax,
             // Product: "test2", //TODO: fix change product Id
             },
             { withCredentials: true},

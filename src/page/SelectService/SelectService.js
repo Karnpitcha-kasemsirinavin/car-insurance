@@ -33,7 +33,7 @@ function SelectService() {
           <i className="fa-solid fa-chevron-right"></i>
         </div>
 
-        <div className="select-service__card" onClick={() => handleCardClick("/renew-tax-and-insurance")}>
+        <div className="select-service__card" onClick={() => handleCardClick("/insurance-page-taxAndLaw")}>
           <div className="select-service__content">
             <img src={icon3} alt="" className="select-service__card-image" />
             <p>ต่อภาษี เเละออก พรบ</p>

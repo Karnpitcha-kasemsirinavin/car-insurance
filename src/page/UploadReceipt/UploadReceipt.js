@@ -57,8 +57,8 @@ function UploadReceipt() {
       console.log("Uploading file:", file);
       // เพิ่มโค้ดการอัปโหลดที่นี่
       await updateSlipPayment()
-      // หลังจากอัปโหลดเสร็จแล้ว นำทางไปยังหน้าเอกสารกรมธรรม์
-      // navigate("/document-page");
+      
+      navigate("/receipt-page");
     } else {
       alert("กรุณาเลือกไฟล์ก่อน");
     }

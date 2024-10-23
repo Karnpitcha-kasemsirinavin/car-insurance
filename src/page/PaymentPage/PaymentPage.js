@@ -30,8 +30,8 @@ function PaymentPage() {
 
   const [isCookieSet, setIsCookieSet] = useState(false);
 
-  // * create payment CMI
-  async function requestPaymentCMI() {
+
+  async function requestPayment() {
     console.log("pass")
     try {
         const response = await axios.post(`${baseURL}/transaction/createPayment/${product}`, {
@@ -48,18 +48,41 @@ function PaymentPage() {
     }
   }
 
+  // * check productId
+  async function requestProduct() {
+    try {
+        const response = await axios.post(`${baseURL}/order/product`, {
+        }, {
+            withCredentials: true 
+        });
+
+        if (response && response.data.status === "success") {
+          setProduct(response.data.data)
+        }
+    } catch (error) {
+        console.log("error :", error)
+    }
+  }
+
   useEffect(() => {
     const tempProduct = searchParams.get('product');
-    setProduct(tempProduct);
+
+    if (tempProduct) {
+      setProduct(tempProduct);
+    } else {
+      // * request product Id
+      requestProduct();
+    }
     
   }, []);
 
   useEffect(() => {
     if (product) {
-      requestPaymentCMI(); 
+      requestPayment(); 
     }
     
   }, [product]);
+
 
 
   return (

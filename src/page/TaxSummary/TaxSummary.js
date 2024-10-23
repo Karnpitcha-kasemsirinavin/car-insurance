@@ -25,7 +25,7 @@ function TaxSummary() {
   const navigate = useNavigate();
   // * get from previous page
   const location = useLocation();
-  const { inputData, displayVeh } = location.state || {};
+  const { inputData, displayVeh, CMINTax } = location.state || {};
 
 
   const [result, setResult] = useState({});
@@ -120,11 +120,24 @@ function TaxSummary() {
 
   // * naviagte to upload page
   const handlePurchaseClick = () => {
-    navigate("/fileUploader-Page", {
-      state: {
-        inputData: {...inputData, ...result}
-      }
-    })
+    if (!CMINTax) {
+      // * flow 2: Tax
+      navigate("/fileUploader-Page", {
+        state: {
+          inputData: {...inputData, ...result},
+          
+        }
+      })
+    } 
+    // else {
+    //   // * flow 3: CMI N Tax
+    //   navigate("/fileUp-loader-page-taxAndLaw ", {
+    //     state: {
+    //       inputData: {...inputData, ...result},
+    //       CMINTax: CMINTax
+    //     }
+    //   })
+    // }
   };
 
 

@@ -30,48 +30,49 @@ import { IconButton, InputAdornment } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import axios from "axios";
 import { baseURL } from "../../App.js";
+import { ConnectingAirportsOutlined } from "@mui/icons-material";
 
 function CarForms() {
   // * get from previous page
   const location = useLocation();
-  const { vehicleCode } = location.state || {};
+  const { vehicleCode, TaxVeh } = location.state || {};
 
   const [formData, setFormData] = useState({
-    Manufacturer: "", // ฟิลด์สำหรับเก็บยี่ห้อรถยนต์
-    Model: "", // ฟิลด์สำหรับเก็บรุ่นรถยนต์
-    Colour: "", // ฟิลด์สำหรับเก็บสีรถยนต์
-    PlateType: "", // ฟิลด์สำหรับเก็บชนิดทะเบียนรถยนต์
-    RegistrationFt: "", // ฟิลด์สำหรับเก็บเลขทะเบียนรถ
-    RegistrationSd: "", // เพิ่มฟิลด์เลขทะเบียนรถ (กลุ่มที่ 2)
-    RegisteredYear: "", // เพิ่มฟิลด์ปีที่จดทะเบียน
-    Displacement: "", // เพิ่มฟิลด์ขนาดรถยนต์
-    GrossVehOrCombinedWeight: "", // เพิ่มฟิลด์นํ้าหนักรถ
-    SeatingCapacity: "", //เพิ่มฟิลด์จํานวนที่นั่ง
-    ChassisSerialNumber: "", // /เพิ่มฟิลด์ หมายเลขตัวถัง
-    RegisteredProvCd: "", //เพิ่มฟิลด์ จังหวัดที่ลงทะเบียน
-    CMIEffectiveDt: "", // เพิ่มฟิลด์ วันที่ต้องการเริ่มใช้งานเอกสาร
+    Manufacturer: "", 
+    Model: "",
+    Colour: "",
+    PlateType: "", 
+    RegistrationFt: "",
+    RegistrationSd: "",
+    RegisteredYear: "", 
+    Displacement: "", 
+    GrossVehOrCombinedWeight: "", 
+    SeatingCapacity: "", 
+    ChassisSerialNumber: "", 
+    RegisteredProvCd: "", 
+    CMIEffectiveDt: "", 
     CMIExpirationDt: ""
   });
 
   const [errors, setErrors] = useState({
-    Manufacturer: false, // แสดงสถานะข้อผิดพลาดสำหรับฟิลด์ยี่ห้อรถยนต์
-    Model: false, // แสดงสถานะข้อผิดพลาดสำหรับฟิลด์รุ่นรถยนต์
-    Colour: false, // แสดงสถานะข้อผิดพลาดสำหรับฟิลด์สีรถยนต์
-    PlateType: false, // แสดงสถานะข้อผิดพลาดสำหรับฟิลด์ชนิดทะเบียนรถยนต์
-    RegistrationFt: false, // แสดงสถานะข้อผิดพลาดสำหรับฟิลด์เลขทะเบียนรถ
-    RegistrationSd: false, // เพิ่มข้อผิดพลาดสำหรับเลขทะเบียนรถ (กลุ่มที่ 2)
-    RegisteredYear: false, // เพิ่มข้อผิดพลาดฟิลด์ปีที่จดทะเบียน
-    Displacement: false, //  เพิ่มข้อผิดพลาดฟิลด์ขนาดรถยนต์
-    GrossVehOrCombinedWeight: false, // เพิ่มข้อผิดพลาดฟิลด์นํ้าหนักรถ
-    SeatingCapacity: false, // เพิ่มข้อผิดพลาดฟิลด์จํานวนที่นั้ง
-    ChassisSerialNumber: false, // เพิ่มข้อผิดพลาดฟิลด์หมายเลขตัวถัง
-    RegisteredProvCd: false, // เพิ่มข้อผิดพลาดฟิลด์จังหวัดที่ลงทะเบียน
-    CMIEffectiveDt: false, // เพิ่มข้อผิดพลาดฟิลด์วันที่ต้องการเริ่มใช้งานเอกสาร
+    Manufacturer: false, 
+    Model: false,
+    Colour: false, 
+    PlateType: false, 
+    RegistrationFt: false, 
+    RegistrationSd: false,
+    RegisteredYear: false, 
+    Displacement: false,
+    GrossVehOrCombinedWeight: false, 
+    SeatingCapacity: false, 
+    ChassisSerialNumber: false, 
+    RegisteredProvCd: false, 
+    CMIEffectiveDt: false,
     CMIExpirationDt: false
   });
 
   const navigate = useNavigate();
-  const isSmallScreen = useMediaQuery("(max-width:702px)"); // ตรวจสอบขนาดหน้าจอ
+  const isSmallScreen = useMediaQuery("(max-width:702px)"); 
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -163,11 +164,23 @@ function CarForms() {
     if (Object.values(newErrors).every(value => value === false)) {
       console.log("ข้อมูลที่ส่ง:", formData);
       // * ทำการส่งข้อมูลที่นี่
-      navigate("/policy-ownerInfo", {
-        state: {
-          inputData: {vehiclecode: vehicleCode, ...formData},
-        }
-      });
+      if (!TaxVeh) {
+        // * flow 1: CMI
+        navigate("/policy-ownerInfo", {
+          state: {
+            inputData: {vehiclecode: vehicleCode, ...formData},
+            TaxVeh: TaxVeh
+          }
+        });
+      } else {
+        // * flow 3: CMI N Tax
+        navigate("/policy-page-taxAndLaw", {
+          state: {
+            inputData: {vehiclecode: vehicleCode, ...formData},
+            TaxVeh: TaxVeh
+          }
+        });
+      }
     }
   };
 

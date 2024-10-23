@@ -23,7 +23,7 @@ import { useLocation } from "react-router-dom";
 function TaxPaymentForms() {
   // * get from previous page
   const location = useLocation();
-  const { vehicleCode, displayVeh } = location.state || {};
+  const { vehicleCode, displayVeh, CMINTax } = location.state || {};
 
   const [formData, setFormData] = useState({
     value: "",
@@ -99,13 +99,26 @@ function TaxPaymentForms() {
       console.log("ข้อมูลที่ส่ง:", formData);
       // ทำการส่งข้อมูลที่นี่
 
-      // * send data with it
-      navigate("/tax-summary", {
+      if (!CMINTax) {
+        // * flow 2: Tax
+        // * send data with it
+        navigate("/tax-summary", {
         state: {
           inputData: {...formData, vehiclecode: vehicleCode},
           displayVeh: displayVeh
         }
-      });
+        });
+      } else {
+        // * flow 3: CMINTax
+        navigate("/tax-Summary-page-taxAndLaw", {
+          state: {
+            inputData: {...formData, vehiclecode: vehicleCode},
+            displayVeh: displayVeh,
+            CMINTax: CMINTax
+          }
+          });
+      }
+      
     }
   };
 

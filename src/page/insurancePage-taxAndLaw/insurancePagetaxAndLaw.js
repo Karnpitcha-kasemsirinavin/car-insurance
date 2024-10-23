@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from "react-router-dom"; // นำเข้า useNavigate
 
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
@@ -11,12 +11,61 @@ import icon5 from "../../assets/car5.svg";
 import CarCard from "../../components/CarCard/CarCard";
 import PageTitle from "../../components/PageTitle/PageTitle";
 
-function InsurancePageTaxAndLaw() {
-  const navigate = useNavigate(); // สร้างฟังก์ชันนำทาง
+import axios from 'axios';
+import { baseURL } from '../../App';
+import { useState } from 'react';
+import { ConnectingAirportsOutlined } from '@mui/icons-material';
 
-  const handleCardClick = (path) => {
-    navigate(path); // นำทางไปยังเส้นทางที่ถูกส่งเข้ามา
+// * map details for vehicle type display
+const mapVehType = {
+  Motorcycle: ["รถจักรยานยนต์", icon5],
+  Freight: ["รถบรรทุก", icon2],
+  Bus: ["รถตู้", icon3],
+  Sedan: ["รถเก๋ง", icon1],
+}
+
+function InsurancePageTaxAndLaw() {
+  const navigate = useNavigate();
+  const [vehicletypeCMI, setVehicletypeCMI] = useState([]);
+  const [vehicletypeTax, setVehicletypeTax] = useState([]);
+  const [validvehType, setValidVehType] = useState([]);
+  
+  async function requestVehType() {
+    let taxVehType = [];
+    let CMIVehType = [];
+
+    // * request vehicel type for CMI
+    try {
+        const response = await axios.post(`${baseURL}/option/cmiNtaxvehicletype`);
+        if (response.data.status === "success") {
+          const data = response.data.data
+          setVehicletypeCMI(data.CMIVehType);
+          setVehicletypeTax(data.TaxVehType);
+          setValidVehType(data.ValidVehType);
+        }
+    } catch (error) {
+      // ! error
+      console.log("error: ", error);
+    }
+    
+}
+
+  const handleCardClick = (path, vehType) => {
+    // * map vehicle code for CMI
+    const matchingVehicle = vehicletypeTax.find(vehicle => 
+      vehicle.VehicleType === vehType.VehicleType );
+
+    navigate(path, {
+      state: {
+        vehicleCode: vehType.VehicleCode,
+        TaxVeh: matchingVehicle
+      }
+    }); 
   };
+
+  useEffect(() => {
+    requestVehType();
+  }, [])
 
   return (
     <div className="layout-wrapper">
@@ -27,7 +76,17 @@ function InsurancePageTaxAndLaw() {
       />
 
       <div className="container-card">
+      {validvehType.length !== 0 && validvehType.map((type, index) => (
         <CarCard
+            key={type.VehicleCode || index}
+            image={mapVehType[type.VehicleType][1]}
+            title={mapVehType[type.VehicleType][0] + ` ${type.VehicleCode}`} 
+            // discount="645"
+            price="499" // original price
+            onClick={() => handleCardClick("/carInfo-page-taxAndLaw", type)}
+        />
+      ))}
+        {/* <CarCard
           image={icon1}
           title="รถเก๋ง"
           discount="645"
@@ -61,7 +120,7 @@ function InsurancePageTaxAndLaw() {
           discount="645"
           price="499"
           onClick={() => handleCardClick("/carInfo-page-taxAndLaw")}
-        />
+        /> */}
       </div>
     </div>
   );
