@@ -1,8 +1,7 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom";
 import  "./handleBack.css"
-function handleBack() {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+function HandleBack() {
   const navigate = useNavigate(); // ใช้ useNavigate
 
   const handleBack = () => {
@@ -16,4 +15,4 @@ function handleBack() {
   )
 }
 
-export default handleBack
+export default HandleBack
