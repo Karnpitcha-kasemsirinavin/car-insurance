@@ -1,0 +1,148 @@
+.table-container{
+  padding: 0 10%;
+  margin:  40px auto 0;
+}
+.table{
+  width: 100%;
+  border-collapse:collapse ;
+}
+.table thead{
+  /* background-color:var(--primary-color);*/
+  background-color: #ffffff;
+ 
+}
+.table thead tr th{
+  font-size: 14px;
+  font-weight: medium;
+  letter-spacing: 0.35px;
+ 
+  /* color: #ffffff;
+   border: 1px solid #dee2e685;
+  
+  */
+  opacity: 1;
+  padding: 12px;
+  vertical-align: top;
+ 
+}
+.table tbody tr td {
+  font-size: 14px;
+  letter-spacing: 0.35px;
+  font-weight: normal;
+  color: var(--text-color);
+ background-color: #ffffff;
+  /* background-color: #3c3f44;
+   border: 1px solid #dee2e685;
+  */
+  padding: 8px;
+  text-align: center;
+ 
+}
+.table .text_open{
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 0.35px;
+  color: #FF1046;
+}
+.table tbody tr td .btn{
+ 
+  text-decoration: none;
+  line-height: 35px;
+  display: inline-block;
+  text-align: center;
+  background-color: var(--primary-color);
+  font-weight: medium;
+  color: #ffffff;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  font-size: 14px;
+  opacity: 1;
+  width: 130px;
+}
+/* สีสถานะเมื่อเป็น "ตรวจสอบเเล้ว" */
+.status-checked {
+  color: green !important; /* หรือใช้โค้ดสีที่คุณต้องการ */
+  
+}
+
+/* สีสถานะเมื่อไม่ใช่ "ตรวจสอบเเล้ว" */
+.status-pending {
+  color: red !important;
+}
+/* สีพื้นหลังและข้อความเมื่อสถานะเป็น "ตรวจสอบเเล้ว" */
+.status-checked-bg {
+  background-color: green; /* สีพื้นหลัง */
+  color: white; /* สีข้อความ */
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+/* สีพื้นหลังและข้อความเมื่อสถานะเป็นอย่างอื่น */
+.status-pending-bg {
+  background-color: gray; /* สีพื้นหลัง */
+  color: white; /* สีข้อความ */
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.table-title{
+  padding: 20px 30px;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  font-size: 23px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+}
+
+.policy-container{
+  display: flex;
+  align-items: flex-start;
+  gap: 37px;
+  
+}
+.policy__table-box{
+  width: 100%;
+  max-height: 500px;
+  overflow-y: auto;
+}
+@media  (max-width:768px) {
+  .table thead{
+    display: none;
+  }
+  .table, .table tbody,.table tr,.table td{
+    display: block;
+  
+  }
+  .table tr{
+    margin-bottom: 15px;
+  }
+  .table tbody tr td{
+    text-align: right;
+  padding-left: 50%;
+  position: relative;
+  }
+  .table td::before{
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 50%;
+    padding-left: 15px;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: left;
+    /*    color: #ffffff;*/
+
+  }
+  .policy__table-box{
+    max-height: none;
+    overflow-y: hidden;
+  }
+}

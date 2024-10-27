@@ -1,0 +1,65 @@
+.customer-menu-container-main{
+  max-width: 309px;
+  width: 100%;
+}
+
+.customer-menu-container {
+  display: grid;
+  gap: 34px;
+  padding: 20px 30px;
+  background: var(--color-white);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+  max-height: 350px; /* กำหนดความสูงสูงสุดที่ต้องการ */
+  overflow-y: auto; /* เปิดการเลื่อนในแนวตั้งถ้าเนื้อหาเกิน */
+}
+
+/* ปรับขนาดและสไตล์ของ scrollbar */
+.customer-menu-container::-webkit-scrollbar {
+  width: 8px; /* ความกว้างของสกอล์บาร์ */
+}
+
+.customer-menu-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2); /* สีของตัวเลื่อน */
+  border-radius: 0px; /* ปรับความโค้งของตัวเลื่อน */
+}
+
+.customer-menu-container::-webkit-scrollbar-track {
+  background: #f1f1f1; /* สีพื้นหลังของแทร็ค */
+}
+.customer-menu-box{
+  display: grid;
+  gap: 15px;
+}
+
+.customer-menu-title{
+  font-size: var(--font-size-s2-medium);
+  color: var(--primary-color);
+}
+.customer-menu-name{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-p1-regular);
+}
+
+
+.customer-menu-footer {
+  padding-top: 18px;
+ border-top: 1px solid ;
+}
+.customer-menu-footer h1{
+  font-size: var(--font-size-p1-regular);
+}
+
+.customer-menu-footer p{
+font-size: 10px;
+}
+
+
+/* ซ่อนการสกอล์บาร์ในขนาดหน้าจอมือถือ */
+@media (max-width: 1023px) { /* กำหนดขนาดหน้าจอตามต้องการ */
+  .customer-menu-container {
+    max-height: none; /* ยกเลิกการกำหนดความสูง */
+    overflow-y: hidden; /* ปิดการเลื่อนในแนวตั้ง */
+  }
+}

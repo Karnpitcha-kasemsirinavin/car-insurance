@@ -1,0 +1,178 @@
+.profile-details{
+  max-width: 870px;
+  width: 100%;
+}
+.profile-details-container{
+  padding: 20px;
+  background-color: var(--color-white);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-details-title{
+  display: flex;
+  gap: 8px;
+  background: var(--primary-color);
+  padding: 20px 30px;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-h5-regular);
+  color: var(--color-white);
+  border-top-right-radius:8px ;
+  border-top-left-radius:8px ;
+}
+
+
+.profile-info{
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.profile-img-container{
+  position: relative; 
+  
+}
+.profile-img-container img{
+width: 50px;
+border-radius: 50%; /* ทำให้รูปภาพเป็นวงกลม */
+} 
+.change-icon {
+  position: absolute; /* ทำให้ไอคอนลอยอยู่บนรูปภาพ */
+  bottom: 5px; /* ระยะห่างจากด้านล่าง */
+  right: 0px; /* ระยะห่างจากด้านขวา */
+  background-color: var(--primary-color); /* สีพื้นหลังไอคอน */
+  border-radius: 50%; /* ทำให้ไอคอนกลม */
+  padding: 5px;
+  font-size: 10px;
+  cursor: pointer; /* เปลี่ยนเป็น pointer เมื่อ hover */
+  z-index: 1; /* ให้ไอคอนอยู่ด้านบนสุด */
+  color: #fff;
+}
+
+.change-icon:hover {
+  background-color: var(--primary60-color); /* เปลี่ยนสีเมื่อ hover */
+}
+.profile-text{
+display: grid;
+justify-content: center;
+}
+.profile-name{
+font-size: var(--font-size-19-custom);
+}
+.profile-email{
+  font-size: var(--font-size-p1-regular);
+  color: #ABABAB;
+}
+.account-info-actions{
+  display: flex;
+  gap: 24px;
+}
+.account-info-text{
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  font-size: var(--font-size-12-custom);
+padding: 6px 20px;
+background-color: rgba(63, 171, 217, 0.2);
+align-items: center;
+border-radius: 8px;
+}
+.account-info-text i{
+  font-size: 24px;
+  color: var(--primary-color);
+}
+.account-info-warning{
+  display: grid;
+  gap: 10px;
+}
+
+
+
+.profile-field-container{
+  display: flex;
+  align-items: flex-start;
+  gap: 37px;
+}
+.account-info-warning.mobile{
+  display: none;
+}
+.profile-info-container{
+  display: flex;
+  justify-content: space-between;
+  gap: 70px;
+}
+
+@media (max-width:1023px) {
+.customer-menu-container-main{
+  display: none;
+}
+.customer-menu-container-main.mobile{
+  display: block;
+  max-width: none;
+}
+.account-info-warning{
+  display: none;
+}
+.account-info-warning.mobile{
+  display: grid;
+}
+}
+
+@media (max-width:426px) {
+  .profile-info-container{
+    display: flex;
+
+   }
+}
+
+
+
+
+
+.popup-confirm{
+  display: grid;
+  gap: 20px
+  ;
+  text-align: center;
+  justify-content: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  font-size: 16px;
+  color: #333;
+  
+}
+.popup-confirm i{
+  font-size: 40px;
+  color: var(--primary-color);
+}
+
+
+.popup-confirm__buttons{
+  display: flex;
+  gap: 10px;
+}
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+.popup-confirm__title{
+  display: grid;
+  gap: 20px;
+  font-size: 24px;
+}
+
+.popup-confirm__title i{
+  font-size: 40px;
+}

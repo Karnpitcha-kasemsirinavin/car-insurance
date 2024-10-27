@@ -11,6 +11,7 @@
   --color-white:#ffffff; /*สีพื้นหลังขาว*/
   --color-line:#00C300; /*สีเขียว line*/
   --primary-color-custom:#3fabd9ab;
+  
   /*ขนาดอักษรที่ใช้ในโปรเจค ✨*/
 
   /*Heading ✅*/
@@ -40,6 +41,7 @@
   /* Custom Size ✅ */
   --font-size-32-custom: 32px;  /* ขนาด 12px สำหรับใช้งานทั่วไป */
   --font-size-24-custom: 24px;
+  --font-size-19-custom: 19px;  /* ขนาด 16px สำหรับใช้งานทั่วไป */
   --font-size-18-custom: 18px;  /* ขนาด 18px สำหรับใช้งานทั่วไป */
 --font-size-16-custom: 16px;  /* ขนาด 16px สำหรับใช้งานทั่วไป */
 --font-size-14-custom: 14px;  /* ขนาด 14px สำหรับใช้งานทั่วไป */

@@ -1,19 +1,17 @@
 import React from "react";
-import { Stack } from "@mui/material"; // นำเข้า Stack จาก MUI
+import { Stack } from "@mui/material";
 
-function ResponsiveStack({ isSmallScreen, children ,boxShadow}) {
-  // รับ props isSmallScreen และ children
+function ResponsiveStack({ isSmallScreen, children, boxShadow, spacing = 2 }) {
   return (
     <Stack
-      direction={isSmallScreen ? "column" : "row"} // ใช้ isSmallScreen เพื่อตั้งค่า direction
-      spacing={2}
+      direction={isSmallScreen ? "column" : "row"}
+      spacing={spacing} // ใช้ spacing ที่ส่งเข้ามา
       justifyContent="space-between"
       sx={{
-        boxShadow: boxShadow || "none", // ใช้ค่า boxShadow ที่ส่งเข้ามาหรือไม่มีเงา
-      
+        boxShadow: boxShadow || "none",
       }}
     >
-      {children} {/* แสดง children ที่ถูกส่งมา */}
+      {children}
     </Stack>
   );
 }

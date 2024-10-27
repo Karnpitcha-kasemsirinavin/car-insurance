@@ -55,7 +55,7 @@ function Receipt({details, totalProducts, totalService, totalPrice}) {
           <p>กรุงเทพมหานคร, ประเทศไทย</p>
         </div>
       </div>}
-      
+      <div style={{ overflowX: 'auto' }}>
       {/* // * receipt details */}
       {Object.keys(details).length !== 0 && 
       <table className="receipt__table">
@@ -82,7 +82,7 @@ function Receipt({details, totalProducts, totalService, totalPrice}) {
           })}
         </tbody>
       </table>}
-
+      </div>
       <div className="receipt__footer">
         <div className="receipt__footer-title">
         <p>ข้อมูลเพิ่มเติม</p>

@@ -1,0 +1,24 @@
+.member-profile-container{
+  display:  flex;
+
+  gap: 10px;
+  margin-bottom: 23px;
+}
+.member-profile-welcome{
+font-size: var(--font-size-h5-regular);
+}
+.welcome-date{
+  font-size: var(--font-size-p1-regular);
+  color: #ABABAB;
+}
+.member-profile-img img{
+  width: 50px;
+}
+
+
+
+@media (max-width:376px) {
+  .member-profile-container{
+    justify-content: space-around;
+  }
+}

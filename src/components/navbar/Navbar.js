@@ -113,8 +113,12 @@ function Navbar() {
           </a>
         </div>
         <div className="navbar__icon">
+          <a href="/member-page">
           <i className="fa-solid fa-user"></i>
-          <span>เข้าสู่ระบบ</span>
+          <span>Todsapon</span>
+          {/*<span>เข้าสู่ระบบ</span> */}
+          </a>
+         
         </div>
       </div>
 

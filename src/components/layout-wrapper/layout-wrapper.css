@@ -11,6 +11,24 @@
   gap: 19px;
 }
 
+@media (min-width: 1024px) {
+  .layout-wrapper.desktop{
+    padding: 57px 60px 30px 60px; 
+    max-width: 70rem;
+  
+    margin: 0 auto; /* ทำให้คอนเทนต์อยู่ตรงกลางแนวนอน */
+    display: grid;
+    gap: 19px;
+  }
+  .layout-wrapper.desktop.custom{
+    padding: 57px 20px 30px 20px; 
+    max-width: 70rem;
+  
+    margin: 0 auto; /* ทำให้คอนเทนต์อยู่ตรงกลางแนวนอน */
+    display: grid;
+    gap: 19px;
+  }
+}
 @media (max-width: 1024px) {
   .layout-wrapper {
 
@@ -20,7 +38,11 @@
   
   }
 }
-
+@media (max-width: 910px) {
+  .layout-wrapper.desktop{
+    padding-top: 60px;
+  }
+}
 @media (max-width: 768px) {
   .layout-wrapper {
     padding: 30px 30px; /* ปรับ padding สำหรับมือถือ */
@@ -29,11 +51,24 @@
   
     padding-top: 60px;
   }
-  
+  .layout-wrapper.desktop{
+    padding-top: 60px;
+  }
 }
 
 @media (max-width: 480px) {
   .layout-wrapper {
     padding: 30px 20px; /* ปรับ padding สำหรับมือถือขนาดเล็ก */
+  }
+}
+
+
+
+
+@media (max-width: 335px) {
+
+  .layout-wrapper.desktop{
+   padding-left: 10px;
+   padding-right: 10px;
   }
 }

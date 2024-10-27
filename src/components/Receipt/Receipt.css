@@ -70,8 +70,9 @@ width: 100%;
 
 
 .receipt__table {
-  width: 100%;
   border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
 
 }
 .receipt__header-row{
@@ -127,6 +128,7 @@ font-weight: 300;
   gap: 8px;
   color: var(--color-white);
   font-size: var(--font-size-12-custom);
+ 
 }
 
 
@@ -146,4 +148,15 @@ font-weight: 300;
   display: flex; /* เปลี่ยนเป็น Flexbox */
   flex-direction: column; /* จัดเรียงเป็นแนวตั้ง */
   gap: 20px;
+}
+@media (max-width:533px) {
+  .receipt__table {
+    width: 150%;
+  }
+  #receipt-content {
+padding: 20px;
+  }
+
+  
+  
 }

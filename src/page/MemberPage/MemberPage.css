@@ -1,0 +1,21 @@
+.member-page-container{
+  display: flex;
+    align-items: flex-start;
+    gap: 37px;
+}
+.member-page__welcome{
+  width: 100%;
+    display: flex;
+    justify-content: center;
+
+    /* background: var(--color-white);*/
+   
+}
+
+
+
+@media (max-width: 1023px) { /* กำหนดขนาดหน้าจอตามต้องการ */
+  .member-page__welcome {
+  display: none;
+  }
+}

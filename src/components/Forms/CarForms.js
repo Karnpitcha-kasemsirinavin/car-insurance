@@ -329,7 +329,7 @@ function CarForms() {
     <div>
       {/* เพิ่มหัวข้อหลัก */}
       <MainTitle text="ข้อมูลรถยนต์" />
-      <FormContainer>
+      <FormContainer >
         {/* เเถวที่ 1 */}
         <SectionTitle text="ข้อมูลรถยนต์" iconClass="fa-solid fa-car" />
         <ResponsiveStack isSmallScreen={isSmallScreen}>

@@ -30,6 +30,12 @@ import FileUploaderPagetaxAndLaw from "./page/fileUploader-page-taxAndLaw/FileUp
 import UploadReceiptPageTaxAndLaw from "./page/UploadReceiptPage-taxAndLaw/UploadReceipt.js"
 import ReceiptPageTaxAndLaw from "./page/ReceiptPage-taxAndLaw/ReceiptPage"
 
+import MemberPage from "./page/MemberPage/MemberPage.js";
+
+import ProfileDetailsPage from "./page/ProfileDetailsPage/ProfileDetailsPage.js";
+import MyPolicyPage from "./page/MyPolicyPage/MyPolicyPage.js";
+import ResetPasswordPage from "./page/ResetPasswordPage/ResetPassword";
+
 import SettingBoard from "./page/Admin/Dashboard/SettingBoard.js";
 import UserOrdersBoard from "./page/Admin/Dashboard/UserOrdersBoard.js";
 
@@ -71,6 +77,13 @@ function AppContent() {
         <Route path="/uploadReceipt-page-taxAndLaw" element={<UploadReceiptPageTaxAndLaw/>} /> 
         <Route path="/receipt-page-taxAndLaw" element={<ReceiptPageTaxAndLaw/>} /> 
 
+        <Route path="/member-page" element={<MemberPage/>} /> 
+
+        <Route path="/profile-details-page" element={<ProfileDetailsPage/>} /> 
+        <Route path="/my-policy-page" element={< MyPolicyPage/>} /> 
+
+        <Route path="/reset-password-page" element={<ResetPasswordPage/>} /> 
+        
         {/* Summary N Receipt Page */}
         <Route path="/receipt-page" element={<ReceiptPage />} />
 

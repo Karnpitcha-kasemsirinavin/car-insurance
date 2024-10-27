@@ -1,7 +1,7 @@
 import React from "react";
 import { TextField, MenuItem } from "@mui/material";
 
-function SelectField({ label, name, value, onChange, options, error, disabled }) {
+function SelectField({ label, name, value, onChange, options, error, disabled ,sx}) {
   return (
     <TextField
       select
@@ -15,6 +15,7 @@ function SelectField({ label, name, value, onChange, options, error, disabled })
       error={error}
       helperText={error ? "กรุณาเลือก " + label : ""}
       disabled={disabled}
+      sx={sx}
       InputProps={{
         sx: {
           "&.Mui-disabled": {
