@@ -1,0 +1,28 @@
+
+.custom-data-row {
+    height: fit-content;
+}
+
+.custom-cell-row {
+    max-width: 10px !important;
+    
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 150px;
+    white-space: normal;
+}
+
+.custom-text-field-row {
+    max-width: 100px;
+
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    white-space: normal !important;
+}
+
+.auto-height-text-field {
+    width: 100%; /* Full width */
+    resize: none; /* Prevent manual resizing */
+    overflow-wrap: break-word; /* Allow word wrapping */
+    white-space: normal; /* Allow normal whitespace behavior */
+}

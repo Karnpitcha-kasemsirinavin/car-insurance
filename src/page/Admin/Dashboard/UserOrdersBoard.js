@@ -54,7 +54,7 @@ function UserOrdersBoard() {
     }, [])
 
     return (
-        <div className="table-container">
+        <div className="admin-table-container">
             {fields && data && <OrdersTable data={data} fields={fields} reset={requestUserData}/>}
         </div>
     )

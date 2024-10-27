@@ -38,6 +38,7 @@ import ResetPasswordPage from "./page/ResetPasswordPage/ResetPassword";
 
 import SettingBoard from "./page/Admin/Dashboard/SettingBoard.js";
 import UserOrdersBoard from "./page/Admin/Dashboard/UserOrdersBoard.js";
+import OptionsBoard from "./page/Admin/Dashboard/OptionsBoard.js";
 
 function AppContent() {
   const location = useLocation(); // ใช้ useLocation ภายใน Router context
@@ -101,6 +102,7 @@ function AppContent() {
         <Route path="/orders/user" element={<UserOrdersBoard />} />
 
         <Route path="/admin/setting" element={<SettingBoard/>}/>
+        <Route path="/admin/options" element={<OptionsBoard />} />
       </Routes>
     </div>
   );

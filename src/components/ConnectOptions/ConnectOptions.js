@@ -15,13 +15,31 @@ function ConnectOptions() {
   const [error, setError] = useState("");
   const [userProfile, setUserProfile] = useState()
   const navigate = useNavigate();
+  const [liffId, setLiffId] = useState();
+  const [redirectUri, setRedirectUri] = useState();
+
+  const requesteliffSettingData = async () => {
+    try {
+        const response = await axios.get(`${baseURL}/sys/data/liffsys`);
+        if (response && response.data.status === "success") {
+          const data = (response.data.data)[0]
+          setLiffId(data.liffId);
+          setRedirectUri(data.redirectUri);
+        } else {
+          // ! error
+        }
+    } catch (error) {
+        //! error
+        
+    }
+  };
 
   // * setting for liff
-  async function liftSetting() {
+  async function liffSetting() {
     console.log("pass")
     await liff
     .init({
-        liffId: "2006420246-rQkg2M50",
+        liffId: liffId,
         // withLoginOnExternalBrowser: true,
     })
     .then(() => {
@@ -77,7 +95,7 @@ function ConnectOptions() {
 
   async function loginLine() {
     if (!liff.isLoggedIn()) {
-        liff.login({ redirectUri: "https://751b-184-22-106-199.ngrok-free.app/login-page" });
+        liff.login({ redirectUri: redirectUri });
     } else {
         try {
             const profile = await liff.getProfile();
@@ -92,9 +110,15 @@ function ConnectOptions() {
 
   useEffect(() => {
     console.log("pass")
-    liftSetting();
+    requesteliffSettingData();
 
   }, [])
+
+  useEffect(() => {
+    if (liffId && redirectUri) {
+      liffSetting();
+    }
+  }, [liffId, redirectUri])
   
   return (
     <div className="connect-options">

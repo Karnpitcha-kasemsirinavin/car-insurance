@@ -598,7 +598,7 @@ function OrdersTable({ fields, data , reset}) {
             }
             <div>
                 <Button variant='contained' onClick={handleStatusCMI} disabled={isEditCMI}
-                className={editableCMI.Status === 0 ? "status-pending" : "status-approved"}>
+                className={editableCMI.Status === 0 ? "status-pending-button" : "status-approved-button"}>
                     {editableCMI.Status === 0 ? "รอการอนุมัติ" : "อนุมัติเรียบร้อย"}
                 </Button>
             </div>
@@ -668,7 +668,7 @@ function OrdersTable({ fields, data , reset}) {
 
             <div>
                 <Button variant='contained' onClick={handleStatusTax} disabled={isEditTax}
-                className={editableTax.Status === 0 ? "status-pending" : "status-approved"}>
+                className={editableTax.Status === 0 ? "status-pending-button" : "status-approved-button"}>
                     {editableTax.Status === 0 ? "รอการอนุมัติ" : "อนุมัติเรียบร้อย"}
                 </Button>
             </div>

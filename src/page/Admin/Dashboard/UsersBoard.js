@@ -44,7 +44,7 @@ function UsersBoard() {
     }, [])
 
     return (
-        <div className="table-container">
+        <div className="admin-table-container">
             {fields && data && <UsersTable data={data} fields={fields} reset={requestUserData}/>}
         </div>
     )
