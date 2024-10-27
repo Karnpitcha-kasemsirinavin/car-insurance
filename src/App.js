@@ -20,23 +20,19 @@ import TaxPaymentUploadPage from "./page/TaxPaymentUpLoadPage/TaxPaymentPage.js"
 import FileUploaderPage from "./page/FileUploaderPage/FileUploaderPage.js"
 import ReceiptPage  from "./page/ReceiptPage/ReceiptPage.js";
 import UsersBoard from "./page/Admin/Dashboard/UsersBoard.js";
-
 import InsurancePageTaxAndLaw from "./page/insurancePage-taxAndLaw/insurancePagetaxAndLaw.js";
 import CarInfoPagetaxAndLaw from "./page/CarInfoPage-taxAndLaw/CarInfoPagetaxAndLaw.js";
-
 import PolicyPagetaxAndLaw from "./page/policyPage-taxAndLaw/policyPagetaxAndLaw"
 import PaymenPagetaxAndLaw from "./page/PaymenPage-taxAndLaw/PaymenPagetaxAndLaw.js"
-
 import TaxPaymentPagetaxAndLaw from "./page/TaxPaymentPage-taxAndLaw/TaxPaymentPagetaxAndLaw.js"
 import TaxSummaryPagetaxAndLaw from "./page/TaxSummaryPage-taxAndLaw/TaxSummary.js"
-
 import FileUploaderPagetaxAndLaw from "./page/fileUploader-page-taxAndLaw/FileUploaderPage.js";
-
-
 import UploadReceiptPageTaxAndLaw from "./page/UploadReceiptPage-taxAndLaw/UploadReceipt.js"
-
-
 import ReceiptPageTaxAndLaw from "./page/ReceiptPage-taxAndLaw/ReceiptPage"
+
+import SettingBoard from "./page/Admin/Dashboard/SettingBoard.js";
+import UserOrdersBoard from "./page/Admin/Dashboard/UserOrdersBoard.js";
+
 function AppContent() {
   const location = useLocation(); // ใช้ useLocation ภายใน Router context
 
@@ -89,12 +85,13 @@ function AppContent() {
         
         {/* admin */}
         <Route path="/admin/users" element={<UsersBoard/>}/>
+        <Route path="/orders/user" element={<UserOrdersBoard />} />
 
+        <Route path="/admin/setting" element={<SettingBoard/>}/>
       </Routes>
     </div>
   );
 }
-
 
 export const baseURL = "http://localhost:8000";
 

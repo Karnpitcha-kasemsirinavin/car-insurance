@@ -77,7 +77,7 @@ function ConnectOptions() {
 
   async function loginLine() {
     if (!liff.isLoggedIn()) {
-        liff.login({ redirectUri: "https://6e67-2405-9800-b651-be20-855d-251c-879e-604a.ngrok-free.app/login-page" });
+        liff.login({ redirectUri: "https://751b-184-22-106-199.ngrok-free.app/login-page" });
     } else {
         try {
             const profile = await liff.getProfile();

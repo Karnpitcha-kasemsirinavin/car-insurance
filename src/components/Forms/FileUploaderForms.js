@@ -69,10 +69,10 @@ function TaxPaymentForms() {
         // Handle the file as a Data URL (for image preview)
         reader.onloadend = () => {
             if (reader.result && typeof reader.result === 'string') {
-                // Optionally, you can call an update function if needed
+                const base64String = reader.result.replace(/^data:image\/\w+;base64,/, '');
                 setFormData({
                   ...formData,
-                  [name]: reader.result,
+                  [name]: base64String,
                 });
             }
         };

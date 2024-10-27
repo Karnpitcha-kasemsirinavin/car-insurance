@@ -6,7 +6,7 @@ import { baseURL } from "../../../App";
 import { useEffect, useState } from "react";
 
 
-function UsersBoard() {
+function SettingBoard() {
     const [fields, setFields] = useState();
     const [data, setData] = useState();
 
@@ -45,9 +45,10 @@ function UsersBoard() {
 
     return (
         <div className="table-container">
+            Setting
             {fields && data && <UsersTable data={data} fields={fields} reset={requestUserData}/>}
         </div>
     )
 }
 
-export default UsersBoard;
+export default SettingBoard;
