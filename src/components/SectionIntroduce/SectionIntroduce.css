@@ -1,0 +1,206 @@
+.section-introduce {
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 40px 0;
+}
+
+
+
+
+.intro-container {
+  display: flex;
+
+  align-items: center;
+  max-width: 1166px;
+  margin: auto;
+  padding: 0 16px;
+  width: 100%;
+}
+
+
+.intro-main-title {
+  font-size: 58px;
+  font-weight: bold;
+  display: inline-block;
+  position: relative;
+  /* เพื่อให้ ::after อ้างอิงกับตำแหน่งของ .intro-main-title */
+  padding-bottom: 5px;
+}
+
+.intro-main-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  /* ความกว้างของเส้นใต้เท่ากับความกว้างข้อความ */
+  height: 8px;
+  background-color: #ff6b35;
+  opacity: 0.24;
+  /* ควบคุมความโปร่งแสง */
+  border-radius: 4px;
+  /* ทำให้ขอบเส้นโค้งมน */
+}
+
+.intro-btn-container {
+  padding-top: 40px;
+}
+
+.intro-sub-title {
+  font-size: 46px;
+  padding-bottom: 12px;
+}
+
+.intro-slogan {
+  font-size: 18px;
+}
+
+.intro-text-box {
+  width: 100%;
+}
+
+.banner-lottie-wrapper {
+  width: 100%;
+}
+
+.banner-lottie-wrapper img {
+  max-width: 500px;
+  max-height: 500px;
+  width: 100%;
+}
+
+
+.intro-text-box {
+  position: relative;
+}
+
+@media (max-width:1200px) {
+  .intro-container {
+    max-width: 1100px;
+  }
+
+  .fa-sharp.fa-regular.fa-sparkles {
+    right: 139px !important;
+  }
+}
+
+@media (max-width:1156px) {
+  .intro-container {
+    max-width: 1050px;
+  }
+}
+
+@media (max-width:1100px) {
+  .intro-container {
+    max-width: 970px;
+  }
+
+  .fa-sharp.fa-regular.fa-sparkles {
+    right: 86px !important;
+  }
+}
+
+@media (max-width:1024px) {
+  .intro-container {
+
+    max-width: 980px;
+
+  }
+
+  .fa-sharp.fa-regular.fa-sparkles {
+    right: 86px !important;
+  }
+
+  .fa-regular.fa-circle.one {
+    left: -15px !important;
+  }
+}
+
+@media (max-width:1020px) {
+  .intro-container {
+    max-width: 900px;
+  }
+
+  .fa-sharp.fa-regular.fa-sparkles {
+    right: 50px !important;
+  }
+}
+
+
+
+@media (max-width:940px) {
+  .intro-container {
+    max-width: 800px;
+  }
+
+  .fa-sharp.fa-regular.fa-sparkles {
+    right: 3px !important;
+  }
+}
+
+
+@media (max-width:840px) {
+  .section-introduce{
+    padding: 40px 30px;
+  }
+  .intro-container {
+    display: grid;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .banner-lottie-wrapper{
+text-align: center;
+  }
+  .fa-sharp.fa-regular.fa-sparkles {
+   left: 359px;
+}
+}
+@media (max-width: 768px) {
+  .section-introduce{
+    padding: 30px 30px; /* ปรับ padding สำหรับมือถือ */
+  }
+}
+@media (max-width:591px) {
+
+  .intro-main-title {
+    font-size: 46px;
+
+  }
+
+  .intro-sub-title {
+    font-size: 23px;
+
+  }
+  
+  .intro-slogan {
+    font-size: 15px;
+  }
+  .fa-sharp.fa-regular.fa-sparkles {
+    left: 287px;
+ }
+}
+
+
+@media (max-width:431px) {
+  .intro-btn-container {
+    padding-top: 20px;
+}
+}
+
+
+
+@media (max-width: 480px) {
+  .section-introduce{
+    padding: 30px 20px; /* ปรับ padding สำหรับมือถือขนาดเล็ก */
+  }
+}
+
+@media (max-width:360px) {
+.fa-sharp.fa-regular.fa-sparkles
+  
+}
