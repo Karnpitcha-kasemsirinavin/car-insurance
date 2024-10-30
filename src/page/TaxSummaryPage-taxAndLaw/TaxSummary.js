@@ -12,7 +12,7 @@ import StickyFooter from "../../components/StickyFooter/StickyFooter.js";
 
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { baseURL } from "../../App.js";
+import { baseURL } from "../../AuthContext.js";
 import { useState } from "react";
 import { useEffect } from "react";
 

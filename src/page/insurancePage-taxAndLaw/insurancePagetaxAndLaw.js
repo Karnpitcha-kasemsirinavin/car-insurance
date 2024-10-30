@@ -12,7 +12,7 @@ import CarCard from "../../components/CarCard/CarCard";
 import PageTitle from "../../components/PageTitle/PageTitle";
 
 import axios from 'axios';
-import { baseURL } from '../../App';
+import { baseURL } from '../../AuthContext';
 import { useState } from 'react';
 import { ConnectingAirportsOutlined } from '@mui/icons-material';
 

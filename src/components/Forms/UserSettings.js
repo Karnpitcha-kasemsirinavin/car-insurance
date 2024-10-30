@@ -1,34 +1,20 @@
-/*ของ React */
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-/*material Ui*/
 import {
   TextField,
   useMediaQuery,
-  Autocomplete,
-  Stack,
-  Button,
-  Link,
   Typography,
 } from "@mui/material";
-
-/*เเสดงผลฟอร์ม ui*/
-import FormContainer from "./FormContainer.js"; /* โครงสร้างฟอร์ม */
-
-import SectionTitle from "./SectionTitleTypography.js"; /* หัวข้อรอง */
-
-/*เเสดงปุ่มกด ui*/
-import Buttons from "../Buttons/Buttons.js";
-import StickyFooter from "../StickyFooter/StickyFooter.js";
-
-// นำเข้า SelectField คอมโพเนนต์เพื่อใช้ในการแสดงฟิลด์แบบเลือก (dropdown)
-// ซึ่งสามารถกำหนดตัวเลือก, จัดการค่า, แสดงข้อผิดพลาด และรองรับสถานะ disabled ได้
-import SelectField from "./SelectField.js";
-
+import FormContainer from "./FormContainer.js";
 import ResponsiveStack from "./ResponsiveStack.js";
+import Button from "@mui/material/Button";
+import line from "../../assets/LINE.png"
+import { type } from "@testing-library/user-event/dist/type/index.js";
 
-function LogInForms() {
+function UserSettings({ userdata, isEdit }) {
+  // const [userData, setUserData]  = useState();
+
   const [formData, setFormData] = useState({
     Username: "",
     Password: "",
@@ -40,18 +26,18 @@ function LogInForms() {
   });
 
   const navigate = useNavigate();
-  const isSmallScreen = useMediaQuery("(max-width:768px)"); // ตรวจสอบขนาดหน้าจอ
+  const isSmallScreen = useMediaQuery("(max-width:768px)");
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
+    const { DisplayName, value } = event.target;
 
     setFormData({
       ...formData,
-      [name]: value,
+      [DisplayName]: value,
     });
 
     if (value) {
-      setErrors({ ...errors, [name]: false });
+      setErrors({ ...errors, [DisplayName]: false });
     }
   };
 
@@ -73,298 +59,148 @@ function LogInForms() {
     }
   };
 
+
   return (
-    <div>
-      <FormContainer
+  <div>
+    <FormContainer
       paddingTop="15px"
-        paddingBottom="16px"
-        padding="0px"
-        spacing={2}
-        boxShadow="none"
-      >
-        <ResponsiveStack isSmallScreen={isSmallScreen} spacing={2}>
-          <div
-            style={{
-              width: "100%", // ให้ div กว้างเต็มพื้นที่
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{ fontSize: "16px", marginBottom: "4px" }}
-            >
-              {" "}
-              ชื่อ
+      paddingBottom="16px"
+      padding="0px"
+      spacing={2}
+      boxShadow="none"
+    >
+      <ResponsiveStack isSmallScreen={isSmallScreen} spacing={2}>
+        {[
+          { label: "Username", errorKey: "Username", type: "text", disabled: false},
+          { label: "Password", errorKey: "Password", type: "password", disabled: false },
+
+        ].map((field) => (
+          <div key={field.label} style={{ width: "100%" }}>
+            <Typography variant="h6" sx={{ fontSize: "16px", marginBottom: "4px" }}>
+              {field.label}
             </Typography>
             <TextField
-              name="name"
-              value="Todsaporn"
+              name={field.errorKey}
+              value={userdata[field.errorKey]}
               onChange={handleChange}
-              error={errors.name}
+              type={field.type}
+              disabled={field.disabled === false ? !isEdit: field.disabled}
+              error={errors[field.errorKey]}
               fullWidth
               helperText={
-                errors.name
-                  ? !formData.name
-                    ? "กรุณากรอก ชื่อ"
+                errors[field.errorKey]
+                  ? !formData[field.errorKey]
+                    ? `กรุณากรอก ${field.label}`
                     : "กรุณากรอก (ในรูปแบบที่ถูกต้อง)"
-                  : "" // ไม่มีข้อผิดพลาด
-              } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
+                  : ""
+              }
               sx={{
                 backgroundColor: "#F9F9F9",
                 borderRadius: "8px",
-                height: "52px", // กำหนดความสูงที่ต้องการ
-                "& .MuiInputBase-root": {
-                  height: "100%", // ทำให้ InputBase มีความสูงเต็ม
-                },
+                height: "52px",
+                "& .MuiInputBase-root": { height: "100%" },
                 "& .MuiOutlinedInput-root": {
-                  border: "none", // ไม่มีกรอบปกติ
-                  "& fieldset": {
-                    border: "none", // ไม่มีกรอบปกติ
-                  },
-                  "&:focus-within fieldset": {
-                    border: "2px solid #3FABD9", // กรอบตอนโฟกัส (เปลี่ยนสีตามต้องการ)
-                  },
+                  border: "none",
+                  "& fieldset": { border: "none" },
+                  "&:focus-within fieldset": { border: "2px solid #3FABD9" },
                 },
               }}
-            ></TextField>
+            />
           </div>
+        ))}
+      </ResponsiveStack>
 
-          <div
-            style={{
-              width: "100%", // ให้ div กว้างเต็มพื้นที่
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{ fontSize: "16px", marginBottom: "4px" }}
-            >
-              นามสกุล
+      <ResponsiveStack isSmallScreen={isSmallScreen} spacing={2}>
+        {[
+          { label: "เบอร์โทร", errorKey: "phoneNumber" , type: "tel", disabled: false},
+          { label: "วันที่เริ่มเข้าร่วม", errorKey: "CreatedDate", type: "date", disabled: true},
+          
+        ].map((field) => (
+          <div key={field.label} style={{ width: "100%" }}>
+            <Typography variant="h6" sx={{ fontSize: "16px", marginBottom: "4px" }}>
+              {field.label}
             </Typography>
             <TextField
-              name="surname"
-              value="meepon"
+              name={field.errorKey}
+              value={userdata[field.errorKey]}
+              type={field.type}
+              disabled={field.disabled === false ? !isEdit: field.disabled}
               onChange={handleChange}
-              error={errors.surname}
+              error={errors[field.errorKey]}
               fullWidth
               helperText={
-                errors.surname
-                  ? !formData.surname
-                    ? "กรุณากรอก นามสกุล"
+                errors[field.errorKey]
+                  ? !formData[field.errorKey]
+                    ? `กรุณากรอก ${field.label}`
                     : "กรุณากรอก (ในรูปแบบที่ถูกต้อง)"
-                  : "" // ไม่มีข้อผิดพลาด
-              } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
+                  : ""
+              }
               sx={{
                 backgroundColor: "#F9F9F9",
                 borderRadius: "8px",
-                height: "52px", // กำหนดความสูงที่ต้องการ
-                "& .MuiInputBase-root": {
-                  height: "100%", // ทำให้ InputBase มีความสูงเต็ม
-                },
+                height: "52px",
+                "& .MuiInputBase-root": { height: "100%" },
                 "& .MuiOutlinedInput-root": {
-                  border: "none", // ไม่มีกรอบปกติ
-                  "& fieldset": {
-                    border: "none", // ไม่มีกรอบปกติ
-                  },
-                  "&:focus-within fieldset": {
-                    border: "2px solid #3FABD9", // กรอบตอนโฟกัส (เปลี่ยนสีตามต้องการ)
-                  },
+                  border: "none",
+                  "& fieldset": { border: "none" },
+                  "&:focus-within fieldset": { border: "2px solid #3FABD9" },
                 },
               }}
-            ></TextField>
-          </div>
-        </ResponsiveStack>
-
-        <ResponsiveStack  isSmallScreen={isSmallScreen} spacing={2}>
-          <div   style={{
-              width: "100%", // ให้ div กว้างเต็มพื้นที่
-            }}>
-        <Typography
-            variant="h6"
-            sx={{ fontSize: "16px", marginBottom: "4px" }}
-          >
-            คำนำหน้าชื่อ
-          </Typography>
-          <SelectField
-            name="prefix"
-            value={["นาง"]}
-            onChange={handleChange}
-            options={["นาย", "นาง", "นางสาว"]}
-            error={errors.prefix}
-            fullWidth
-            sx={{
-              backgroundColor: "#F9F9F9", // เปลี่ยนสีพื้นหลัง
-              borderRadius: "8px", // ปรับความโค้งของกรอบ
-              "& .MuiInputBase-root": {
-                height: "52px", // กำหนดความสูงของ input
-              },
-              "& .MuiOutlinedInput-root": {
-                border: "none", // ไม่มีเส้นกรอบปกติ
-                "& fieldset": {
-                  border: "none", // ไม่มีกรอบ
-                },
-                "&:focus-within fieldset": {
-                  border: "2px solid #3FABD9", // กรอบตอนโฟกัส
-                },
-              },
-            }}
-          />
-          </div>
-  
-  <div   style={{
-              width: "100%", // ให้ div กว้างเต็มพื้นที่
-            }}>
-   <Typography
-            variant="h6"
-            sx={{ fontSize: "16px", marginBottom: "4px" }}
-          >
-            วัน/เดือน/ปีเกิด
-          </Typography>
-          <TextField
-            type="date" // กำหนดประเภทเป็นวันที่
-            name="expirationDate" // ชื่อฟิลด์
-            value={formData.expirationDate} // ค่าปัจจุบันจากฟอร์ม
-            onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
-            error={errors.expirationDate} // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
-            helperText={
-              errors.expirationDate ? "กรุณากรอกวันเกิด" : "" // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
-            }
-            InputLabelProps={{
-              shrink: true,
-            }}
-            fullWidth
-            sx={{
-              backgroundColor: "#F9F9F9",
-              borderRadius: "8px",
-              height: "52px", // กำหนดความสูงที่ต้องการ
-              "& .MuiInputBase-root": {
-                height: "100%", // ทำให้ InputBase มีความสูงเต็ม
-              },
-              "& .MuiOutlinedInput-root": {
-                border: "none", // ไม่มีกรอบปกติ
-                "& fieldset": {
-                  border: "none", // ไม่มีกรอบปกติ
-                },
-                "&:focus-within fieldset": {
-                  border: "2px solid #3FABD9", // กรอบตอนโฟกัส (เปลี่ยนสีตามต้องการ)
-                },
-              },
-            }}
-          />
-
-
-            </div>
-        </ResponsiveStack>
-  
-
-        <ResponsiveStack isSmallScreen={isSmallScreen}   spacing={2}>
-          <div style={{
-              width: "100%", // ให้ div กว้างเต็มพื้นที่
-            }} >
-    <Typography
-            variant="h6"
-            sx={{ fontSize: "16px", marginBottom: "4px" }}
-          >
-            อีเมล
-          </Typography>
-          <TextField
-            value="sampon251095@gmail.com"
-            onChange={handleChange}
-            error={errors.email}
-            fullWidth
-            helperText={
-              errors.email
-                ? !formData.email
-                  ? "กรุณากรอก อีเมล"
-                  : "กรุณากรอก (ในรูปแบบที่ถูกต้อง)"
-                : "" // ไม่มีข้อผิดพลาด
-            } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
-            sx={{
-              backgroundColor: "#F9F9F9",
-              borderRadius: "8px",
-              height: "52px", // กำหนดความสูงที่ต้องการ
-              "& .MuiInputBase-root": {
-                height: "100%", // ทำให้ InputBase มีความสูงเต็ม
-              },
-              "& .MuiOutlinedInput-root": {
-                border: "none", // ไม่มีกรอบปกติ
-                "& fieldset": {
-                  border: "none", // ไม่มีกรอบปกติ
-                },
-                "&:focus-within fieldset": {
-                  border: "2px solid #3FABD9", // กรอบตอนโฟกัส (เปลี่ยนสีตามต้องการ)
-                },
-              },
-            }}
-          ></TextField>
-          </div>
-          <div style={{
-              width: "100%", // ให้ div กว้างเต็มพื้นที่
-            }} >
-        <Typography
-            variant="h6"
-            sx={{ fontSize: "16px", marginBottom: "4px" }}
-          >
-            เบอร์โทร
-          </Typography>
-          <TextField
-            value="0960401443"
-            onChange={handleChange}
-            error={errors.phonenumber}
-            fullWidth
-            helperText={
-              errors.phonenumber
-                ? !formData.phonenumber
-                  ? "กรุณากรอก อีเมล"
-                  : "กรุณากรอก (ในรูปแบบที่ถูกต้อง)"
-                : "" // ไม่มีข้อผิดพลาด
-            } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
-            sx={{
-              backgroundColor: "#F9F9F9",
-              borderRadius: "8px",
-              height: "52px", // กำหนดความสูงที่ต้องการ
-              "& .MuiInputBase-root": {
-                height: "100%", // ทำให้ InputBase มีความสูงเต็ม
-              },
-              "& .MuiOutlinedInput-root": {
-                border: "none", // ไม่มีกรอบปกติ
-                "& fieldset": {
-                  border: "none", // ไม่มีกรอบปกติ
-                },
-                "&:focus-within fieldset": {
-                  border: "2px solid #3FABD9", // กรอบตอนโฟกัส (เปลี่ยนสีตามต้องการ)
-                },
-              },
-            }}
-          ></TextField>
-</div>
-        </ResponsiveStack>
-
-
-{/* <div className="account-info-warning mobile">
-          <div class="account-info-text">
-            <i class="fa-solid fa-circle-exclamation"></i>{" "}
-            <p>ข้อมูลเจ้าของบัญชีไม่มีผลกระทบกับกรมธรรม์</p>
-          </div>
-          <div class="account-info-actions">
-            <Buttons
-              onClick
-              label="ยกเลิก"
-              variant="cancel"
-              height="36px"
-              fontSize="14px"
-            />
-            <Buttons
-              onClick
-              label="บันทึก"
-              variant="primary"
-              height="36px"
-              fontSize="14px"
             />
           </div>
-        </div> */}
-       
-      </FormContainer>
-    </div>
+        ))}
+      </ResponsiveStack>
+
+      {/* // * LINE */}
+      <div isSmallScreen={isSmallScreen} spacing={2} style={{display: "flex", flexDirection: "row", justifyItems: "center", gap: "10px"}}>
+        {[
+          { label: "ชื่อจาก LINE", errorKey: "DisplayName" , type: "text", disabled: true},
+          
+        ].map((field) => (
+          <div key={field.label} style={{ width: "100%" }}>
+            <Typography variant="h6" sx={{ fontSize: "16px", marginBottom: "4px" }}>
+              {field.label}
+              <span style={{color: "#82C3DE"}}> *หากต้องการเชื่อมใหม่ โปรดกดทางด้านขวา</span>
+            </Typography>
+            <TextField
+              name={field.errorKey}
+              value={userdata[field.errorKey]}
+              onChange={handleChange}
+              type={field.type}
+              disabled={field.disabled}
+              error={errors[field.errorKey]}
+              fullWidth
+              helperText={
+                errors[field.errorKey]
+                  ? !formData[field.errorKey]
+                    ? `กรุณากรอก ${field.label}`
+                    : "กรุณากรอก (ในรูปแบบที่ถูกต้อง)"
+                  : ""
+              }
+              sx={{
+                backgroundColor: "#F9F9F9",
+                borderRadius: "8px",
+                height: "52px",
+                "& .MuiInputBase-root": { height: "100%" },
+                "& .MuiOutlinedInput-root": {
+                  border: "none",
+                  "& fieldset": { border: "none" },
+                  "&:focus-within fieldset": { border: "2px solid #3FABD9" },
+                },
+              }}
+            />
+          </div>
+        ))}
+        <Button>
+          <img src={line} alt="Separator line" style={{maxWidth: "50px", marginBottom: "-30px"}}/>
+        </Button>
+
+      </div>
+
+    </FormContainer>
+
+  </div>
   );
 }
 
-export default LogInForms;
+export default UserSettings;

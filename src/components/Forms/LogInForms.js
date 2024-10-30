@@ -19,8 +19,13 @@ import StickyFooter from "../StickyFooter/StickyFooter.js";
 import SelectField from "./SelectField.js";
 
 import ResponsiveStack from "./ResponsiveStack.js";
+import axios from "axios";
+import { baseURL } from "../../AuthContext.js";
+import { useAuth } from "../../AuthContext.js";
 
 function LogInForms() {
+  const { setUserRole } = useAuth(); 
+
   const [formData, setFormData] = useState({
     Username: "",
     Password: "",
@@ -47,7 +52,7 @@ function LogInForms() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const { Username, Password } = formData;
 
     const newErrors = {
@@ -61,9 +66,31 @@ function LogInForms() {
       console.log("ข้อมูลที่ส่ง:", formData);
       // ทำการส่งข้อมูลที่นี่
 
-      navigate("/");
+      await requestLogin();
     }
   };
+
+  async function requestLogin() {
+    try {
+      const response = await axios.post(`${baseURL}/login`, formData,
+        {withCredentials: true}
+      )
+      if (response && response.data.status === "success") {
+        // * set role
+        setUserRole(response.data.role);
+        localStorage.setItem("userRole", response.data.role);
+        if (response.data.order === true && response.data.isRegistered) {
+          navigate(`/payment-page?product=${response.data.productId}`);
+        } else {
+          navigate("/")
+        }
+      } else {
+        console.log("invalid")
+      }
+    } catch (error) {
+      console.log("error: ", error)
+    }
+  }
 
   return (
     <div>

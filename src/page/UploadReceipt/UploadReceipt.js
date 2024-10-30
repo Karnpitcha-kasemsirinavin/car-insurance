@@ -7,7 +7,7 @@ import "./UploadReceipt.css";
 import Buttons from "../../components/Buttons/Buttons";
 
 import axios from "axios";
-import { baseURL } from "../../App.js";
+import { baseURL } from "../../AuthContext";
 
 import { useSearchParams } from 'react-router-dom';
 
@@ -79,7 +79,7 @@ function UploadReceipt() {
         if (response && response.data.status === "success") {
           // * proceed to next step
           // console.log("success");
-          navigate("/receipt-page", {
+          navigate("/deliveryaddr-page", {
             state: {
               orderId: response.data.data.orderId
             }

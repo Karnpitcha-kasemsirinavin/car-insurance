@@ -11,7 +11,7 @@ import Buttons from "../../components/Buttons/Buttons";
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { baseURL } from '../../App';
+import { baseURL } from '../../AuthContext';
 
 function PaymentPageTaxAndLaw() {
   const [searchParams] = useSearchParams();

@@ -39,9 +39,21 @@ import ResetPasswordPage from "./page/ResetPasswordPage/ResetPassword";
 import SettingBoard from "./page/Admin/Dashboard/SettingBoard.js";
 import UserOrdersBoard from "./page/Admin/Dashboard/UserOrdersBoard.js";
 import OptionsBoard from "./page/Admin/Dashboard/OptionsBoard.js";
+import { AuthProvider } from "./AuthContext.js";
+import { useAuth } from "./AuthContext.js";
+import CustomProtectedRoute from "./ProtectedRoute.js";
+import VehTypeBoard from "./page/Admin/Dashboard/VehTypeBoard.js";
+import PackageBoard from "./page/Admin/Dashboard/PackageBoard.js";
+import RolesBoard from "./page/Admin/Dashboard/RolesBoard.js";
+import DeliveryAddr from "./page/DeliveryAddr/DeliveryAddr.js";
 
 function AppContent() {
-  const location = useLocation(); // ใช้ useLocation ภายใน Router context
+  const location = useLocation();
+  const { permissions, userRole } = useAuth();
+
+  const hasPermission = (requiredPermission) => {
+    return permissions.includes(requiredPermission);
+  } 
 
   return (
     <div>
@@ -58,6 +70,7 @@ function AppContent() {
         <Route path="/policy-ownerInfo" element={<PolicyOwnerInfo />} />
         <Route path="/payment-page" element={<PaymentPage />} />
         <Route path="/upload-receipt" element={<UploadReceipt />} />
+        <Route path="/deliveryaddr-page" element={<DeliveryAddr />} />
         <Route path="/document-page" element={<DocumentPage />} />
 
         {/* flow 2: Tax */}
@@ -78,12 +91,16 @@ function AppContent() {
         <Route path="/uploadReceipt-page-taxAndLaw" element={<UploadReceiptPageTaxAndLaw/>} /> 
         <Route path="/receipt-page-taxAndLaw" element={<ReceiptPageTaxAndLaw/>} /> 
 
+        {permissions.includes("user_setting") && (
         <Route path="/member-page" element={<MemberPage/>} /> 
-
-        <Route path="/profile-details-page" element={<ProfileDetailsPage/>} /> 
+        )}
+        {permissions.includes("user_setting") && (
+          <Route path="/profile-details-page" element={<ProfileDetailsPage/>} /> 
+        )}
+        {permissions.includes("user_setting") && (
         <Route path="/my-policy-page" element={< MyPolicyPage/>} /> 
-
-        <Route path="/reset-password-page" element={<ResetPasswordPage/>} /> 
+        )}
+        {/* <Route path="/reset-password-page" element={<ResetPasswordPage/>} />  */}
         
         {/* Summary N Receipt Page */}
         <Route path="/receipt-page" element={<ReceiptPage />} />
@@ -97,24 +114,62 @@ function AppContent() {
         {/* // TODO: Change to popup instead */}
         {/* <Route path="/policies-page" element={<PoliciesPage />} /> */}
         
-        {/* admin */}
-        <Route path="/admin/users" element={<UsersBoard/>}/>
-        <Route path="/orders/user" element={<UserOrdersBoard />} />
-
-        <Route path="/admin/setting" element={<SettingBoard/>}/>
-        <Route path="/admin/options" element={<OptionsBoard />} />
+        {/* Admin Routes =============================================================== */}
+        {permissions.includes("manage") && (
+            <Route 
+                path="/admin/users" 
+                element={<UsersBoard />} 
+            />
+        )}
+        {permissions.includes("manage") && (
+            <Route 
+                path="/orders/user" 
+                element={<UserOrdersBoard />} 
+            />
+        )}
+        {permissions.includes("manage") && (
+            <Route 
+                path="/admin/setting" 
+                element={<SettingBoard />} 
+            />
+        )}
+        {permissions.includes("manage") && (
+            <Route 
+                path="/admin/options" 
+                element={<OptionsBoard />} 
+            />
+        )}
+        {permissions.includes("manage") && (
+            <Route 
+                path="/admin/vehtype" 
+                element={<VehTypeBoard />} 
+            />
+        )}
+        {permissions.includes("manage") && (
+            <Route 
+                path="/admin/package" 
+                element={<PackageBoard />} 
+            />
+        )}
+        {permissions.includes("manage") && (
+            <Route 
+                path="/admin/userRoles" 
+                element={<RolesBoard />} 
+            />
+        )}
       </Routes>
     </div>
   );
 }
 
-export const baseURL = "http://localhost:8000";
-
 function App() {
   return (
-    <Router>
-      <AppContent />  {/* ใช้ AppContent ภายใน Router */}
-    </Router>
+    
+      <Router>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </Router>
   );
 }
 

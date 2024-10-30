@@ -7,8 +7,9 @@ import line from "../../assets/LINE.png";
 import { useEffect, useState } from "react";
 
 import axios from "axios";
-import { baseURL } from "../../App.js";
+import { baseURL } from "../../AuthContext.js";
 import liff from "@line/liff";
+import { useAuth } from "../../AuthContext.js";
 
 function ConnectOptions() {
   const [message, setMessage] = useState("");
@@ -17,6 +18,7 @@ function ConnectOptions() {
   const navigate = useNavigate();
   const [liffId, setLiffId] = useState();
   const [redirectUri, setRedirectUri] = useState();
+  const { setUserRole } = useAuth(); 
 
   const requesteliffSettingData = async () => {
     try {
@@ -74,10 +76,14 @@ function ConnectOptions() {
             profile,
             {withCredentials: true}
         )
-        console.log(response.data);
         if (response.data.status === "success") {
+        // * set role
+        setUserRole(response.data.role);
+        localStorage.setItem("userRole", response.data.role);
           if (response.data.order === true && response.data.isRegistered) {
               navigate(`/payment-page?product=${response.data.productId}`);
+          } else {
+            navigate("/")
           } 
         if (!response.data.isRegistered) {
           console.log(response.data)

@@ -63,6 +63,7 @@
   height: auto;  /* ปรับความสูงอัตโนมัติตามความกว้าง */
 }
 .close-btn {
+
   background: none;  /* ลบพื้นหลัง */
   border: none;  /* ลบเส้นขอบ */
   cursor: pointer;  /* เปลี่ยนเคอร์เซอร์ */
@@ -122,7 +123,8 @@
   border-radius: 8px;
 }
 
-.sidenav__dropdown-list li {
+.sidenav__dropdown-list li,
+.sidenav__dropdown-list a {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -131,12 +133,19 @@
   color: var(--text-color);
  /* border-bottom: 1px dashed #d8dbe9; */
 }
+
+.sidenav__dropdown-list a {
+  padding: 0px 0px !important;
+}
+
 .sidenav__dropdown-list li:last-child {
   border-bottom: none; /* ลบเส้นของ li ตัวสุดท้าย */
 }
-.sidenav__dropdown-list li i{
+.sidenav__dropdown-list li i {
   color: var(--primary-color);
 }
 
-
-
+.sidenav-topic {
+  color: var(--primary-color);
+  margin-top: 20px;
+}

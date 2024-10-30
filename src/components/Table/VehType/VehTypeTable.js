@@ -7,11 +7,11 @@ import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete'; // Import Delete Icon
 import axios from 'axios';
 import MainTitleTable from '../MainTitleTable';
-import { baseURL } from "../../../AuthContext";
+import { baseURL } from '../../../AuthContext';
 import { Popup } from '../../Popup/Popup';
 import { ErrorPopup } from '../../Popup/Popup';
 
-const OptionTable = ({ title, table }) => {
+const VehTypeTable = ({ title, table }) => {
     const [data, setData] = useState([]);
     const [fields, setFields] = useState([]);
     const [editingRow, setEditingRow] = useState(null);
@@ -32,7 +32,7 @@ const OptionTable = ({ title, table }) => {
     // * request Fields
     const requestServiceSysFields = async () => {
         try {
-            const response = await axios.get(`${baseURL}/sys/columns/options/${table}`);
+            const response = await axios.get(`${baseURL}/sys/columns/vehtype/${table}`);
             if (response && response.data.status === "success") {
                 setFields(response.data.data);
                 // Default to the first field for searching
@@ -52,7 +52,7 @@ const OptionTable = ({ title, table }) => {
     // * request Data
     const requestServiceSysData = async () => {
         try {
-            const response = await axios.get(`${baseURL}/sys/data/options/${table}`);
+            const response = await axios.get(`${baseURL}/sys/data/vehtype/${table}`);
             if (response && response.data.status === "success") {
                 setData(response.data.data);
             } else {
@@ -80,6 +80,14 @@ const OptionTable = ({ title, table }) => {
         }
     };
 
+    // * toggle Status (tax)
+    const handleTaxStatusToggle = () => {
+        if (editedRow) {
+            const newStatus = editedRow.TaxStatus === 1 ? 0 : 1;
+            setEditedRow({ ...editedRow, TaxStatus: newStatus });
+        }
+    };
+
     // * clcik save
     const handleSaveClick = () => {
         setIsEdit(false);
@@ -89,7 +97,7 @@ const OptionTable = ({ title, table }) => {
     // * update Edit
     const confirmSave = async () => {
         try {
-            const response = await axios.put(`${baseURL}/sys/update/options/${table}`, editedRow);
+            const response = await axios.put(`${baseURL}/sys/update/vehtype/${table}`, editedRow);
 
             if (response && response.data.status === "success") {
                 const updatedData = [...data];
@@ -248,6 +256,10 @@ const OptionTable = ({ title, table }) => {
                                                 <Button onClick={handleStatusToggle}> {/* Toggle status on button click */}
                                                     {editedRow && editedRow.Status === 1 ? <CheckIcon /> : <CloseIcon />}
                                                 </Button>
+                                            ) : field.field === 'TaxStatus' ? (
+                                                <Button onClick={handleTaxStatusToggle}> {/* Toggle status on button click */}
+                                                    {editedRow && editedRow.TaxStatus === 1 ? <CheckIcon /> : <CloseIcon />}
+                                                </Button>
                                             ) : (
                                                 <TextField
                                                     variant="standard"
@@ -258,6 +270,10 @@ const OptionTable = ({ title, table }) => {
                                             ) : field.field === 'Status' ? (
                                                 <Button>
                                                     {row.Status === 1 ? <CheckIcon /> : <CloseIcon />}
+                                                </Button>
+                                            ) : field.field === 'TaxStatus' ? (
+                                                <Button>
+                                                    {row.TaxStatus === 1 ? <CheckIcon /> : <CloseIcon />}
                                                 </Button>
                                             ) : (
                                                 row[field.field]
@@ -311,4 +327,4 @@ const OptionTable = ({ title, table }) => {
     );
 };
 
-export default OptionTable;
+export default VehTypeTable;

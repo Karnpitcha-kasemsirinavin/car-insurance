@@ -15,10 +15,10 @@ function Receipt({details, totalProducts, totalService, totalPrice}) {
           {/* // * top left order details */}
           {Object.keys(details).length !== 0 && 
           <>
-          <h1>ใบเสร็จ</h1>
+          <h1>ใบคําสั่งซื้อ</h1>
           <div className="receipt__summary-top__content">
             <p>
-              วันที่ออกใบเสร็จ: <span>{`${details.ReceiptDate}`}</span>
+              วันที่ออกใบคําสั่งซื้อ: <span>{`${details.ReceiptDate}`}</span>
             </p>
             <p>
               รหัสออเดอร์: <span>{`${details.OrderDetails.orderId}`}</span>

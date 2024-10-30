@@ -9,8 +9,7 @@ import { useNavigate } from 'react-router-dom'; // สำหรับการ�
 /*เเสดงปุ่มกด ui*/
 import Buttons from "../../components/Buttons/Buttons.js";
 import StickyFooter from "../../components/StickyFooter/StickyFooter.js";
-
-import { baseURL } from "../../App.js";
+import { baseURL } from "../../AuthContext.js";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { ConnectingAirportsOutlined } from "@mui/icons-material";

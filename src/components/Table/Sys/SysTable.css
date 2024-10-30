@@ -26,3 +26,31 @@
     overflow-wrap: break-word; /* Allow word wrapping */
     white-space: normal; /* Allow normal whitespace behavior */
 }
+
+/* Icon ====================================================== */
+
+.delete-icon-table {
+    color: var(--warning-color);
+}
+
+.edit-icon-table {
+    color: var(--secondary-color);
+}
+
+.status-table {
+    border-radius: 5px !important;
+    color: var(--color-white) !important;
+}
+
+.editing-status {
+    background-color: var(--secondary-color) !important;
+    color: var(--color-white) !important;
+}
+
+.valid-icon {
+    background-color: var(--color-line) !important;
+}
+
+.invalid-icon {
+    background-color: var(--warning-color) !important;
+}

@@ -10,7 +10,7 @@ import icon4 from "../../assets/car4.svg";
 import icon5 from "../../assets/car5.svg";
 import CarCard from "../../components/CarCard/CarCard";
 import PageTitle from "../../components/PageTitle/PageTitle";
-import { baseURL } from "../../App";
+import { baseURL } from "../../AuthContext";
 import axios from "axios";
 
 // * map details for vehicle type display

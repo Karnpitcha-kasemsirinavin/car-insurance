@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 
 import { useNavigate } from 'react-router-dom';
 import Buttons from '../Buttons/Buttons';
-import { baseURL } from '../../App';
+import { baseURL } from '../../AuthContext';
 import axios from 'axios';
 
 import correct from "../../assets/check.png"
@@ -20,7 +20,7 @@ import { CMIResultEdit } from './Edit/CMIResultEdit';
 export const popupTextCondition = {
     save: "คุณต้องการแก้ไขใช่หรือไม่",
     cancel: "คุณต้องการยกเลิกการแก้ไขใช่หรือไม่",
-    status: "คุณต้องแก้ไขการอนุมัตืใช่หรือไม่"
+    status: "คุณต้องแก้ไขการอนุมัติใช่หรือไม่"
 }
 
 
@@ -221,6 +221,8 @@ function OrdersTable({ fields, data , reset}) {
     // * request docuemnt data
     async function requestDocument() {
         if (!selectedRow || !selectedRow.CMIId) {
+            setSelectedCMI({})
+            setEditableCMI({})
             return;
         }
         try {
@@ -314,6 +316,8 @@ function OrdersTable({ fields, data , reset}) {
     // * request tax data
     async function requestTax() {
         if (!selectedRow || !selectedRow.taxResultId) {
+            setSelectedTax({})
+            setEditableTax({})
             return;
         }
 

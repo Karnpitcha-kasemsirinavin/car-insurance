@@ -3,11 +3,16 @@ import "./navbar.css";
 import "../layout-wrapper/layout-wrapper.css"; // css ปรับขนาดหน้าจอต่างๆ
 import logo from "../../assets/logo.svg"; // รูป logo ของ bard
 import Sidenav from '../sidenav/Sidenav'; // เปลี่ยนชื่อให้ตรงกับชื่อไฟล์จริง
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../AuthContext";
 
 function Navbar() {
   const [isSidenavOpen, setIsSidenavOpen] = useState(false); // สร้าง state สำหรับจัดการ Sidenav
   const [openDropdown, setOpenDropdown] = useState(null); // สร้าง state สำหรับจัดการ dropdown ที่เปิดอยู่
   const dropdownRef = useRef(null); // สร้าง ref สำหรับ dropdown
+  const navigate = useNavigate();
+  const { permissions, userRole } = useAuth();
+
 
   const toggleSidenav = () => {
     setIsSidenavOpen(!isSidenavOpen); // สลับสถานะ Sidenav
@@ -43,21 +48,21 @@ function Navbar() {
       <div className="navbar-center" ref={dropdownRef}>
         <div className="navbar-item" onClick={() => toggleDropdown("insurance")}>
           <span>
-            ซื้อประกันออนไลน์{" "}
-           <i
+            บริการออนไลน์{" "}
+          <i
     className={`fa-solid fa-chevron-down transition-icon ${openDropdown === "insurance" ? "rotate" : ""}`}
   ></i>
           </span>
           <div className={`dropdown ${openDropdown === "insurance" ? "open" : ""}`}>
             <ul>
-              <li><i className="fa-solid fa-shield"></i>รายการ 1</li>
-              <li><i className="fa-solid fa-shield"></i>รายการ 2</li>
-              <li><i className="fa-solid fa-shield"></i>รายการ 3</li>
+              <li onClick={() => navigate("/buy-insurance")}><i className="fa-solid fa-shield"></i>ออก พรบ</li>
+              <li onClick={() => navigate("/tax-renewal")}><i className="fa-solid fa-shield"></i>คำนวณและต่อภาษี</li>
+              <li onClick={() => navigate("/insurance-page-taxAndLaw")}><i className="fa-solid fa-shield"></i>ออก พรบ และ ต่อภาษี</li>
             </ul>
           </div>
         </div>
 
-        <div className="navbar-item" onClick={() => toggleDropdown("articles")}>
+        {/* <div className="navbar-item" onClick={() => toggleDropdown("articles")}>
           <span>
             บทความ{" "}
             <i className={`fa-solid fa-chevron-down transition-icon ${openDropdown === "articles" ? "rotate" : ""}`}></i>
@@ -69,7 +74,7 @@ function Navbar() {
               <li>บทความ 3</li>
             </ul>
           </div>
-        </div>
+        </div> */}
 
         <div className="navbar-item" onClick={() => toggleDropdown("promotions")}>
           <span>
@@ -85,7 +90,7 @@ function Navbar() {
           </div>
         </div>
 
-        <div className="navbar-item" onClick={() => toggleDropdown("consultation")}>
+        {/* <div className="navbar-item" onClick={() => toggleDropdown("consultation")}>
           <span>
             ปรึกษาประกันฟรี{" "}
             <i className={`fa-solid fa-chevron-down transition-icon ${openDropdown === "consultation" ? "rotate" : ""}`}></i>
@@ -97,7 +102,9 @@ function Navbar() {
               <li>คำปรึกษา 3</li>
             </ul>
           </div>
-        </div>
+        </div> */}
+
+      {/* // TODO: make it dynamically */}
       </div>
       <div className="navbar__right">
         <div className="navbar__icon">
@@ -113,12 +120,16 @@ function Navbar() {
           </a>
         </div>
         <div className="navbar__icon">
+          {permissions.includes("user_setting") ? 
           <a href="/member-page">
           <i className="fa-solid fa-user"></i>
-          <span>Todsapon</span>
-          {/*<span>เข้าสู่ระบบ</span> */}
+          <span>{userRole}</span>
+          </a>:
+          <a href="/login-page">
+          <i className="fa-solid fa-user"></i>
+          <span>สมัคร/เข้าสู่ระบบ</span>
           </a>
-         
+          }
         </div>
       </div>
 

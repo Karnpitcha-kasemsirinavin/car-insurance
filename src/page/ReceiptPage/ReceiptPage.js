@@ -10,7 +10,7 @@ import html2pdf from 'html2pdf.js';
 import { useLocation } from 'react-router-dom';
 
 import { useState, useEffect } from 'react';
-import { baseURL } from '../../App';
+import { baseURL } from '../../AuthContext';
 import axios from 'axios';
 import StickyFooter from '../../components/StickyFooter/StickyFooter';
 import { useNavigate } from 'react-router-dom';
@@ -28,7 +28,7 @@ function ReceiptPage() {
     const element = document.getElementById('receipt-content');
     const opt = {
     
-        filename:     'ใบเสร็จ.pdf',
+        filename:     'ใบคําสั่งซื้อ.pdf',
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2 }, // การปรับขนาดเพื่อความชัดเจน
         jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' } // ขนาด A4

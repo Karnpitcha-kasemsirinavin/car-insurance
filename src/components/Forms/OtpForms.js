@@ -21,7 +21,7 @@ import SelectField from "./SelectField.js";
 import ResponsiveStack from "./ResponsiveStack.js";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { baseURL } from "../../App.js";
+import { baseURL } from "../../AuthContext.js";
 
 function OtpForms() {
   // * get from previous page

@@ -29,7 +29,7 @@ import { useLocation } from "react-router-dom";
 import { IconButton, InputAdornment } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import axios from "axios";
-import { baseURL } from "../../App.js";
+import { baseURL } from "../../AuthContext.js";
 import { ConnectingAirportsOutlined } from "@mui/icons-material";
 
 function CarForms() {
@@ -127,7 +127,7 @@ function CarForms() {
 
       PlateType: !PlateType,
       RegistrationFt: !RegistrationFt || !licensePlateRegex.test(RegistrationFt),
-      RegistrationSd: !RegistrationSd || !numberSizeRegex.test(RegistrationSd) || RegistrationSd.length !== 4, 
+      RegistrationSd: !RegistrationSd || !numberSizeRegex.test(RegistrationSd), 
       RegisteredYear: !RegisteredYear || !yearRegex.test(RegisteredYear),
       
       Displacement: !Displacement || !numberSizeRegex.test(Displacement), 
@@ -146,15 +146,27 @@ function CarForms() {
 
     };
 
-    // * request checking when all info available
-    if (CMIEffectiveDt) {
-      if (RegistrationFt && RegistrationSd) {
-        newErrors.PlateValidity = !(await checkPlateValidity());
-      }
+    // * redplate
+    if (isRedPlate) {
+      newErrors.RegistrationFt = false;
+      newErrors.RegistrationSd = false;
+      newErrors.RegisteredProvCd = false;
+    }
 
-      if (ChassisSerialNumber) {
-        newErrors.ChassisValidity = !(await checkChassisValidity());
+    // * request checking when all info available
+    if (!isRedPlate) {
+      if (CMIEffectiveDt) {
+        if (RegistrationFt && RegistrationSd) {
+          newErrors.PlateValidity = !(await checkPlateValidity());
+        }
+  
+        if (ChassisSerialNumber) {
+          newErrors.ChassisValidity = !(await checkChassisValidity());
+        }
       }
+    } else {
+      newErrors.PlateValidity = false;
+      newErrors.ChassisValidity = false;
     }
 
     console.log(newErrors);
@@ -163,6 +175,14 @@ function CarForms() {
     // * no Error
     if (Object.values(newErrors).every(value => value === false)) {
       console.log("ข้อมูลที่ส่ง:", formData);
+
+      // * redplate
+      if (isRedPlate) {
+        delete formData.RegistrationFt
+        delete formData.RegistrationSd
+        delete formData.RegisteredProvCd
+      }
+
       // * ทำการส่งข้อมูลที่นี่
       if (!TaxVeh) {
         // * flow 1: CMI
@@ -177,7 +197,14 @@ function CarForms() {
         navigate("/policy-page-taxAndLaw", {
           state: {
             inputData: {vehiclecode: vehicleCode, ...formData},
-            TaxVeh: TaxVeh
+            TaxVeh: TaxVeh,
+            CarData: {
+              Manufacturer: Manufacturer,
+              Model: Model,
+              RegistrationFt: RegistrationFt,
+              RegistrationSd: RegistrationSd,
+              RegisteredProvCd: RegisteredProvCd
+            }
           }
         });
       }
@@ -215,7 +242,7 @@ function CarForms() {
   }
 
   // * request options ===================================================================
-  
+
   // * request vehicle manufacturer and model
   const [Brand, setBrand] = useState({})
   const [manufacturer, setManufacturer] = useState([])
@@ -317,12 +344,42 @@ function CarForms() {
     }
   }
 
+  function defaultDate() {
+    if (formData.CMIEffectiveDt) {
+      const date = new Date(formData.CMIEffectiveDt);
+      // Add one year
+      date.setFullYear(date.getFullYear() + 1);
+      const newDate = date.toISOString().split('T')[0];
+      console.log(newDate);
+      setFormData( {...formData, CMIExpirationDt: newDate})
+    }
+  }
+
+  const [isRedPlate, setIsRedPlate]  = useState(false);
+
+
+  useEffect(() => {
+    console.log(formData.PlateType);
+    if (formData.PlateType === "รถในประเทศ  ป้ายแดง") {
+      setIsRedPlate(true);
+    } else {
+      setIsRedPlate(false);
+    }
+  }, [formData.PlateType])
+
+  useEffect(() => {
+    defaultDate();
+  }, [formData.CMIEffectiveDt])
+
+
   useEffect(() => {
     requestVehBrand();
     requestColour();
     requestPlatetype();
     requestProvince();
   }, [])
+
+  
 
   // * Display ===========================================================
   return (
@@ -385,7 +442,8 @@ function CarForms() {
             options={platetype || []} // ตัวเลือกของฟิลด์
             error={errors.PlateType} // ข้อผิดพลาดที่เกิดขึ้น
           />
-          <TextField
+          {!isRedPlate && <>
+            <TextField
             label="เลขทะเบียนรถ"
             name="RegistrationFt" // ตั้งชื่อฟิลด์ที่เก็บใน state
             value={formData.RegistrationFt} // ค่าของฟิลด์ที่เก็บใน state
@@ -407,7 +465,6 @@ function CarForms() {
           <TextField
             label="เลขทะเบียนรถ (กลุ่มที่ 2)"
             name="RegistrationSd" // ตั้งชื่อฟิลด์ที่เก็บใน state
-            type="number"
             value={formData.RegistrationSd} // ค่าของฟิลด์ที่เก็บใน state
             onChange={handleChange} // ฟังก์ชันที่ใช้จัดการการเปลี่ยนแปลง
             variant="outlined"
@@ -424,6 +481,7 @@ function CarForms() {
               maxLength: 4
             }}
           />
+          </>}
           <TextField
             label="ปีที่จดทะเบียน"
             name="RegisteredYear"
@@ -439,6 +497,7 @@ function CarForms() {
             } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
           />
         </ResponsiveStack>
+        {!isRedPlate && 
         <ResponsiveStack>
           <SelectField
             label="จัดหวัดที่จดทะเบียน"
@@ -448,30 +507,7 @@ function CarForms() {
             options={province || []} 
             error={errors.RegisteredProvCd} 
           />
-          {/* <Autocomplete
-            fullWidth
-            options={province || []}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="จัดหวัดที่จดทะเบียน"
-                name="RegisteredProvCd"
-                value={formData.RegisteredProvCd} // เชื่อมโยงกับ state
-                onChange={handleChange} // ฟังก์ชันจัดการการเปลี่ยนแปลง
-                variant="outlined"
-                error={errors.RegisteredProvCd} // แสดงข้อผิดพลาด
-                helperText={
-                  errors.RegisteredProvCd
-                    ? !formData.RegisteredProvCd
-                      ? "กรุณาเลือก จัดหวัดที่จดทะเบียน"
-                      : "กรุณากรอกให้ถูกต้อง ไม่เว้นเพิ่มที่ว่าง"
-                    : ""
-                } // ข้อความช่วยเหลือเมื่อเกิดข้อผิดพลาด
-              />
-            )}
-            freeSolo
-          /> */}
-        </ResponsiveStack>
+        </ResponsiveStack>}
 
         <SectionTitle text="ข้อมูลทางเทคนิค" iconClass="fa fa-cogs" />
         {/* เเถวที่5 */}
@@ -551,7 +587,7 @@ function CarForms() {
         <SectionTitle text="ข้อมูลการใช้งาน" iconClass="fa fa-info-circle" />
         <ResponsiveStack>
           <TextField
-            label="วันที่ต้องการเริ่มใช้งานเอกสาร"
+            label="วันทีเอกสารเริ่มการคุ้มครอง"
             type="date"
             name="CMIEffectiveDt"
             value={formData.CMIEffectiveDt}
@@ -566,7 +602,7 @@ function CarForms() {
             fullWidth
           />
           <TextField
-            label="วันที่สิ้นสุดการใช้งานเอกสาร"
+            label="วันที่การคุ้มครองของเอกสารสิ้นสุด"
             type="date"
             name="CMIExpirationDt"
             value={formData.CMIExpirationDt}

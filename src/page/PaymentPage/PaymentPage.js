@@ -9,7 +9,7 @@ import QrPayment from "../../assets/qr-payment.png";
 import Buttons from "../../components/Buttons/Buttons";
 
 import axios from "axios";
-import { baseURL } from "../../App.js";
+import { baseURL } from "../../AuthContext";
 import { useState } from "react";
 import Cookies from "js-cookie";
 

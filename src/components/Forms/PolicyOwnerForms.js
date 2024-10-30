@@ -21,7 +21,7 @@ import ResponsiveStack from "./ResponsiveStack.js";
 
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { baseURL } from "../../App.js";
+import { baseURL } from "../../AuthContext.js";
 import { type } from "@testing-library/user-event/dist/type/index.js";
 import { IconButton, InputAdornment } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -34,9 +34,7 @@ function PolicyOwnerForms() {
 
   // * get from previous page
   const location = useLocation();
-  const { inputData, TaxVeh } = location.state || {};
-  // * nedd to be request according to each other
-  const requestFields = ["SubDistrict", "District", "Province", "PostalCode"]
+  const { inputData, TaxVeh , CarData} = location.state || {};
   // * assign value from input fields
   const handleChange = async (event) => {
     const { name, value } = event.target;
@@ -127,7 +125,8 @@ function PolicyOwnerForms() {
           state: {
             vehicleCode: TaxVeh.VehicleCode,
             displayVeh: TaxVeh.VehicleType,
-            CMINTax: true
+            CMINTax: true,
+            CarData: CarData,
           }
         });
       }

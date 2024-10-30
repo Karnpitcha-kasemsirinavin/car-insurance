@@ -4,15 +4,16 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
-import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import MainTitleTable from '../MainTitleTable';
 import { baseURL } from '../../../AuthContext';
 import { Popup } from '../../Popup/Popup';
-import './SysTable.css';
+import '../Sys/SysTable.css';
 import { ErrorPopup } from '../../Popup/Popup';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import CreateRoleForm from '../Create/CreateRoleForm';
 
-const SysTable = ({ title, table }) => {
+const RolesTable = ({ title, table }) => {
     const [data, setData] = useState([]);
     const [fields, setFields] = useState([]);
     const [editingRow, setEditingRow] = useState(null);
@@ -20,6 +21,7 @@ const SysTable = ({ title, table }) => {
 
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [isErrorPopupOpen, setIsErrorPopupOpen] = useState(false);
+    const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
     const [isEdit, setIsEdit] = useState(false);
@@ -27,7 +29,7 @@ const SysTable = ({ title, table }) => {
     // * request Fields
     const requestServiceSysFields = async () => {
         try {
-            const response = await axios.get(`${baseURL}/sys/columns/${table}`);
+            const response = await axios.get(`${baseURL}/sys/columns/userRoles/${table}`);
             if (response && response.data.status === "success") {
                 setFields(response.data.data);
             } else {
@@ -43,7 +45,7 @@ const SysTable = ({ title, table }) => {
     // * request Data
     const requestServiceSysData = async () => {
         try {
-            const response = await axios.get(`${baseURL}/sys/data/${table}`);
+            const response = await axios.get(`${baseURL}/sys/data/userRoles/${table}`);
             if (response && response.data.status === "success") {
                 setData(response.data.data);
             } else {
@@ -75,11 +77,17 @@ const SysTable = ({ title, table }) => {
         setIsPopupOpen(true);
     };
 
+    const handleDeleteClick = (index) => {
+        setEditingRow(index);
+        setEditedRow({ ...data[index] });
+        setIsDeletePopupOpen(true);
+    };
+
     // * update Edit
     const confirmSave = async () => {
         console.log(editedRow)
         try {
-            const response = await axios.put(`${baseURL}/sys/update/${table}`, editedRow);
+            const response = await axios.put(`${baseURL}/sys/update/userRoles/${table}`, editedRow);
 
             if (response && response.data.status === "success") {
                 const updatedData = [...data];
@@ -88,6 +96,9 @@ const SysTable = ({ title, table }) => {
                 setIsPopupOpen(false);
                 setEditingRow(null);
                 setEditedRow(null);
+
+                // * request updated data
+                requestServiceSysData();
             } else {
                 // ! error
                 setIsPopupOpen(false);
@@ -99,6 +110,38 @@ const SysTable = ({ title, table }) => {
             setIsPopupOpen(false);
             setIsErrorPopupOpen(true);
             setErrorMessage(`ไม่สามารถอัปเดตข้อมูลได้เพราะ ${error}`)
+        }
+    };
+
+    // * update delete
+    const confirmDelete = async () => {
+        console.log(editedRow)
+        try {
+            const response = await axios.put(`${baseURL}/sys/delete/userRoles/${table}`,
+                editedRow
+            );
+
+            if (response && response.data.status === "success") {
+                const updatedData = [...data];
+                updatedData[editingRow] = editedRow;
+                setData(updatedData);
+                setIsDeletePopupOpen(false);
+                setEditingRow(null);
+                setEditedRow(null);
+
+                // * request updated data
+                requestServiceSysData();
+            } else {
+                // ! error
+                setIsDeletePopupOpen(false);
+                setIsErrorPopupOpen(true);
+                setErrorMessage("ไม่สามารถลบข้อมูลได้")
+            }
+        } catch (error) {
+            // ! error
+            setIsDeletePopupOpen(false);
+            setIsErrorPopupOpen(true);
+            setErrorMessage(`ไม่สามารถลบข้อมูลได้ ${error}`)
         }
     };
 
@@ -118,6 +161,8 @@ const SysTable = ({ title, table }) => {
 
     const handleClosePopup = () => {
         setIsPopupOpen(false);
+        setIsDeletePopupOpen(false);
+        setIsErrorPopupOpen(false);
         setEditingRow(null);
         setEditedRow(null); 
     };
@@ -151,7 +196,8 @@ const SysTable = ({ title, table }) => {
                                         <TableCell key={field.field + index.toString()} className='custom-cell-row'>
                                             {editingRow === index ? (
                                                 field.field === 'Status' ? (
-                                                    <Button onClick={handleStatusToggle}> {/* Toggle status on button click */}
+                                                    <Button onClick={handleStatusToggle}
+                                                    className={"editing-status"}>
                                                         {editedRow && editedRow.Status === 1 ? <CheckIcon /> : <CloseIcon />}
                                                     </Button>
                                                 ) : (
@@ -162,8 +208,9 @@ const SysTable = ({ title, table }) => {
                                                     />
                                                 )
                                             ) : field.field === 'Status' ? (
-                                                <Button onClick={() => handleEditClick(index)} disabled={!isEdit}>
-                                                    {row.Status === 1 ? <CheckIcon /> : <CloseIcon />}
+                                                <Button variant="contained" 
+                                                className={row.Status === 1 ? "status-table valid-icon": "status-table invalid-icon"}>
+                                                    {row.Status === 1 ? <CheckIcon/> : <CloseIcon />}
                                                 </Button>
                                             ) : (
                                                 row[field.field]
@@ -174,13 +221,20 @@ const SysTable = ({ title, table }) => {
                                         {editingRow === index ? (
                                             <>
                                                 <IconButton onClick={handleSaveClick}>
-                                                    <SaveIcon />
+                                                    <SaveIcon className='edit-icon-table'/>
                                                 </IconButton>
                                             </>
                                         ) : (
+                                            <>
+                                            {/* EditButton */}
                                             <IconButton onClick={() => handleEditClick(index)}>
-                                                <EditIcon />
+                                                <EditIcon className='edit-icon-table' />
                                             </IconButton>
+                                            {/* Delete Button */}
+                                            <IconButton onClick={() => handleDeleteClick(index)}>
+                                                <DeleteForeverIcon className='delete-icon-table'/>
+                                            </IconButton>
+                                            </>
                                         )}
                                     </TableCell>
                                 </TableRow>
@@ -189,6 +243,11 @@ const SysTable = ({ title, table }) => {
                         </Table>
                     )}
                 </Paper>
+
+                {/* Create Form ==============================================================================*/}
+                <CreateRoleForm fields={fields} tableName={`${table}`} resetData={requestServiceSysData}/>
+
+                {/* Popup ===============================================================================*/}
                 <Popup
                 isOpen={isPopupOpen}
                 onSubmit={confirmSave}
@@ -196,9 +255,16 @@ const SysTable = ({ title, table }) => {
                 title="แจ้งเตือน"
                 children={"คุณต้องการแก้ไขใช่หรือไม่"}
                 />
+                <Popup
+                isOpen={isDeletePopupOpen}
+                onSubmit={confirmDelete}
+                onClose={handleClosePopup}
+                title="แจ้งเตือน"
+                children={"คุณต้องการลบข้อมูลนี้ใช่หรือไม่"}
+                />
                 <ErrorPopup
                 isOpen={isErrorPopupOpen}
-                onClose={() => setIsErrorPopupOpen(false)}
+                onClose={handleClosePopup}
                 title="เกิดข้อผิดพลาด"
                 children={errorMessage}
                 />
@@ -207,4 +273,4 @@ const SysTable = ({ title, table }) => {
     );
 };
 
-export default SysTable;
+export default RolesTable;

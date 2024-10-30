@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import { baseURL } from "../../../App";
+import { baseURL } from "../../../AuthContext";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 

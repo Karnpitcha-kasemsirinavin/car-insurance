@@ -8,7 +8,7 @@ import icon2 from "../../assets/car2.svg";
 import icon3 from "../../assets/car3.svg";
 import icon5 from "../../assets/car5.svg";
 import SimpleCarCard from "../../components/CarCard/SimpleCarCard";
-import { baseURL } from "../../App";
+import { baseURL } from "../../AuthContext";
 import axios from "axios";
 import { useEffect, useState } from "react";
 

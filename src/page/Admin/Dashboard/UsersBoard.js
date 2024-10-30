@@ -2,7 +2,7 @@
 import axios from "axios";
 import UsersTable from "../../../components/Table/UsersTable";
 import './Dashboard.css';
-import { baseURL } from "../../../App";
+import { baseURL } from "../../../AuthContext";
 import { useEffect, useState } from "react";
 
 

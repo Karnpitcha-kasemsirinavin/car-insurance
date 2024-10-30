@@ -9,7 +9,8 @@ import Buttons from "../../components/Buttons/Buttons";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { baseURL } from "../../App";
+import { baseURL } from "../../AuthContext";
+
 
 function UploadReceipt() {
   const [file, setFile] = useState(null);
@@ -81,7 +82,7 @@ function UploadReceipt() {
         if (response && response.data.status === "success") {
           // * proceed to nect step
           console.log("success");
-          navigate("/receipt-page", {
+          navigate("/deliveryaddr-page", {
             state: {
               orderId: response.data.data.orderId
             }

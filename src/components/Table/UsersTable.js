@@ -10,7 +10,7 @@ import Buttons from '../Buttons/Buttons';
 
 import { Popup, ErrorPopup } from '../Popup/Popup';
 import axios from 'axios';
-import { baseURL } from '../../App';
+import { baseURL } from '../../AuthContext';
 
 const popupTextCondition = {
     save: "คุณต้องการแก้ไขใช่หรือไม่",
