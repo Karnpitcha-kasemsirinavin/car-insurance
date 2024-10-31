@@ -4,8 +4,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const AuthContext = createContext();
-// export const baseURL = "http://localhost:8000";
-export const baseURL = "http://13.213.41.31:8000";
+export const baseURL = "http://localhost:8000";
+// export const baseURL = "http://13.213.41.31:8000";
 
 
 export const fetchUserRoles = async () => {

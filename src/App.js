@@ -46,6 +46,7 @@ import VehTypeBoard from "./page/Admin/Dashboard/VehTypeBoard.js";
 import PackageBoard from "./page/Admin/Dashboard/PackageBoard.js";
 import RolesBoard from "./page/Admin/Dashboard/RolesBoard.js";
 import DeliveryAddr from "./page/DeliveryAddr/DeliveryAddr.js";
+import { Home } from "@mui/icons-material";
 
 function AppContent() {
   const location = useLocation();
@@ -62,6 +63,7 @@ function AppContent() {
 
       
       <Routes>
+
         <Route path="/" element={<SelectService />} />
 
         {/* flow 1: CMI */}
@@ -111,7 +113,6 @@ function AppContent() {
         <Route path="/otp-page" element={<OtpPage />} />
         <Route path="/verified-page" element={<VerifiedPage />} />
 
-        {/* // TODO: Change to popup instead */}
         {/* <Route path="/policies-page" element={<PoliciesPage />} /> */}
         
         {/* Admin Routes =============================================================== */}
