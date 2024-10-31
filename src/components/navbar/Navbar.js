@@ -43,7 +43,8 @@ function Navbar() {
         <button className="hamburger-menu" onClick={toggleSidenav}>
           <i className="fa-light fa-bars"></i>
         </button>
-        <img src={logo} alt="Logo" className="logo" />
+        <a href="/home-page">  <img src={logo} alt="Logo" className="logo" /></a>
+      
       </div>
       <div className="navbar-center" ref={dropdownRef}>
         <div className="navbar-item" onClick={() => toggleDropdown("insurance")}>

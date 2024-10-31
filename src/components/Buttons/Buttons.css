@@ -16,7 +16,7 @@
 }
 
 /* ปุ่มถัดไป (primary) */
-.button.primary {
+.button.primary{
   background-color: var(--primary-color);
   color: white;
   border-bottom: 6px solid #3586A9;
